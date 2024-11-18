@@ -1,10 +1,45 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.tsx'
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import App from './App';
+import './index.css';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import AllDWLRs from './pages/AllDWLRs';
+import Alert from './pages/Alert';
+import Report from './pages/Report';
+import LandingPage from './pages/LandingPage';
+import Dashboard from './pages/Dashboard';
 
-createRoot(document.getElementById('root')!).render(
+// Create the router without explicitly typing it as RouteObject[]
+const router = createBrowserRouter([
+  {
+    element: <App />,
+    children: [
+      {
+        path: '/dashboard',
+        element: <Dashboard />,
+      },
+      {
+        path: '/all-dwlrs',
+        element: <AllDWLRs />,
+      },
+      {
+        path: '/alert',
+        element: <Alert />,
+      },
+      {
+        path: '/report',
+        element: <Report />,
+      },
+    ],
+  },
+  {
+    path: '/',
+    element: <LandingPage />,
+  },
+]);
+
+createRoot(document.getElementById('root') as HTMLElement).render(
   <StrictMode>
-    <App />
+    <RouterProvider router={router} />
   </StrictMode>,
-)
+);
