@@ -3,9 +3,10 @@ import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { useRouter } from "expo-router";
 
-
 export default function Index() {
-  const router=useRouter();
+  const router = useRouter();
+
+
 
   return (
     <LinearGradient
@@ -61,27 +62,29 @@ export default function Index() {
           </View>
         </View>
 
-        <TouchableOpacity  onPress={() => router.push("dashboard")}>
+        <TouchableOpacity onPress={() => router.push("dashboard")}>
           <View
-            style={{ 
-                      width: 122,
-                       height: 42, 
-                       borderRadius: 22, 
-                       backgroundColor: '#DEFFFC', 
-                       justifyContent: 'center', 
-                       alignItems: 'center',
-                        marginTop:15, 
-                        left: 145 
-                   }}
-                   > 
-          <Text style={{ color: '#274c77', fontFamily: 'Kameron-SemiBold', fontSize: 15 }}>LOGIN</Text>
+            style={{
+              width: 122,
+              height: 42,
+              borderRadius: 22,
+              backgroundColor: '#DEFFFC',
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: 15,
+              left: 145
+            }}
+          >
+            <Text style={{ color: '#274c77', fontFamily: 'Kameron-SemiBold', fontSize: 15 }}>LOGIN</Text>
           </View>
         </TouchableOpacity>
 
         <Image source={require("../assets/images/five.png")}
-          style={{ marginLeft:-55, marginTop:-15, }}
+          style={{ marginLeft: -55, marginTop: -15, }}
         />
       </View>
+
+    
     </LinearGradient>
   );
 }

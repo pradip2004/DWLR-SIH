@@ -2,8 +2,13 @@ import { View, Text, Image, ScrollView, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
-import { MaterialIcons } from '@expo/vector-icons';
-import { FontAwesome5 } from '@expo/vector-icons';
+// import { MaterialIcons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+
 import { useFonts } from 'expo-font';
 
 
@@ -60,14 +65,14 @@ export default function Dashboard() {
                 />
             </View>
 
-            <ScrollView style={{ marginBottom: 8 }}>
+            <ScrollView style={{ marginBottom: 98 }}>
 
                 {/* State  */}
                 <View style={{ flexDirection: 'row', marginVertical: 20 }}>
                     <TouchableOpacity onPress={() => handleOptionPress("All")}>
                         <View style={getBoxStyle("All")}>
 
-                            <Text style={{ fontSize: 11, fontFamily: 'Kameron-SemiBold', paddingVertical: 10, paddingLeft: 42, color: '#5A6ACF' }}>All</Text>
+                            <Text style={{ fontSize: 11, fontFamily: 'Kameron-SemiBold', paddingVertical: 10, color: '#5A6ACF' }}>All</Text>
 
                         </View>
                     </TouchableOpacity>
@@ -78,7 +83,7 @@ export default function Dashboard() {
                                 style={{
                                     fontSize: 11,
                                     fontFamily: 'Kameron-SemiBold',
-                                    paddingVertical: 10, paddingLeft: 37,
+                                    paddingVertical: 10,
                                     color: '#5A6ACF'
                                 }}
 
@@ -92,7 +97,7 @@ export default function Dashboard() {
                     <TouchableOpacity onPress={() => handleOptionPress("Abnormal Data")}>
                         <View style={getBoxStyle("Abnormal Data")}>
 
-                            <Text style={{ fontSize: 11, fontFamily: 'Kameron-SemiBold', paddingVertical: 10, paddingLeft: 15, color: '#5A6ACF' }}>Abnormal Data</Text>
+                            <Text style={{ fontSize: 11, fontFamily: 'Kameron-SemiBold', paddingVertical: 10, color: '#5A6ACF' }}>Abnormal Data</Text>
 
                         </View>
                     </TouchableOpacity>
@@ -125,15 +130,24 @@ export default function Dashboard() {
 
                     <View></View>
 
-                    <View style={{ left: -35, top: 17.6 }}>
+                    <View style={{ left: -35, top: 18 }}>
                         <Image source={require('../assets/images/six.png')} style={{ position: 'relative' }} />
                         <Image source={require('../assets/images/seven.png')} style={{ position: 'absolute', top: 30 }} />
                     </View>
 
                     <TouchableOpacity>
-                        <View style={{ height: 40, width: 131, borderRadius: 10, borderColor: '#274c77', borderWidth: 1, top: -80, left: 150, padding: 4, flexDirection: 'row', }}>
+                        <View
+                            style={{
+                                height: 40,
+                                width: 131,
+                                borderRadius: 10,
+                                borderColor: '#274c77',
+                                borderWidth: 1, top: -80,
+                                left: 150, padding: 4,
+                                flexDirection: 'row',
+                            }}>
                             <MaterialIcons name="near-me" size={25} color="#274c77" />
-                            <Text style={{ color: '#274c77', fontSize: 12, fontFamily: 'Poppins-Medium', left: -90, top: 5 }}>
+                            <Text style={{ color: '#274c77', fontSize: 12, fontFamily: 'Poppins-Medium',  top: 5 }}>
                                 Get Location
                             </Text>
 
@@ -175,6 +189,52 @@ export default function Dashboard() {
                     </View>
                 </View>
             </ScrollView>
+
+             {/* Footer Navigation */}
+      <View style={{
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        backgroundColor: 'white',
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        height: 70,
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        zIndex: 10,
+        elevation: 10,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: -2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+      }}>
+        <TouchableOpacity style={{alignItems: 'center', marginTop: 15 }} onPress={() => router.push("dashboard")}>
+          <MaterialCommunityIcons name="view-dashboard-outline" size={26} color="#0077cc" />
+          <Text style={{fontSize: 12, color: '#0077cc' }}>Dashboard</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={{alignItems: 'center', marginTop: 15 }} >
+          <FontAwesome6 name="anchor-circle-check" size={24} color="#0077cc" />
+          <Text style={{fontSize: 12, color: '#0077cc' }}>DWLR</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={{alignItems: 'center', marginTop: 15 }}  onPress={() => router.push("report")}>
+          <MaterialIcons name="report-problem" size={26} color="#0077cc" />
+          <Text style={{fontSize: 12, color: '#0077cc' }}>Report</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={{alignItems: 'center', marginTop: 15 }}  onPress={() => router.push("alert")}>
+          <FontAwesome5 name="bell" size={24} color="#0077cc" />
+          <Text style={{fontSize: 12, color: '#0077cc' }}>Alert</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={{alignItems: 'center', marginTop: 15 }} onPress={() => router.push("analytic")}>
+          <Ionicons name="analytics" size={26} color="#0077cc" />
+          <Text style={{fontSize: 12, color: '#0077cc' }}>Analytics</Text>
+        </TouchableOpacity>
+      </View>
         </LinearGradient>
     );
 }
