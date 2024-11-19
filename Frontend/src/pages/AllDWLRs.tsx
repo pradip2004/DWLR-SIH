@@ -12,7 +12,7 @@ const AllDWLRs = () => {
   ];
 
   // State for selected filter
-  const [selectedFilter, setSelectedFilter] = useState('Active');
+  const [selectedFilter, setSelectedFilter] = useState('All');
 
   // Function to filter cards based on the selected filter
   const filteredCards = cardData.filter((card) =>
@@ -27,6 +27,12 @@ const AllDWLRs = () => {
           onClick={() => setSelectedFilter('All')}
         >
           All
+        </button>
+        <button
+          className={`border border-[#FED766] px-14 text-xl py-3 rounded-full ${selectedFilter === 'Active' && 'bg-[#FED766]'}`}
+          onClick={() => setSelectedFilter('Active')}
+        >
+          Active
         </button>
         <button
           className={`border border-[#FED766] px-14 text-xl py-3 rounded-full ${selectedFilter === 'No Data' && 'bg-[#FED766]'}`}

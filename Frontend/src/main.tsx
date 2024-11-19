@@ -8,6 +8,7 @@ import Alert from './pages/Alert';
 import Report from './pages/Report';
 import LandingPage from './pages/LandingPage';
 import Dashboard from './pages/Dashboard';
+import Analytics from './pages/Analytics';
 
 // Create the router without explicitly typing it as RouteObject[]
 const router = createBrowserRouter([
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
         path: '/report',
         element: <Report />,
       },
+      {
+        path: '/analytics',
+        element:<Analytics />
+      }
     ],
   },
   {
