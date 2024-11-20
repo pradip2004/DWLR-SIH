@@ -9,7 +9,7 @@ const connectDB = async () => {
   //   useNewUrlParser: true,
   //   useUnifiedTopology: true,
   // } as mongoose.ConnectOptions);
-  await mongoose.connect("mongodb+srv://pradipsadhukhan16:Pradip%402004@cluster0.5r5m0ij.mongodb.net/DWLR")
+  await mongoose.connect(mongoURI)
     .then(() => {
       console.log('Connected to MongoDB')
     }).catch(err => {
