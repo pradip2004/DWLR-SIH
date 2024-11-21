@@ -2,10 +2,18 @@ import { Text, View, Image, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { useRouter } from "expo-router";
+import { useFonts } from 'expo-font';
+
 
 export default function Index() {
   const router = useRouter();
 
+  const [fontsLoaded] = useFonts({
+    'Kameron-SemiBold': require('../assets/fonts/Kameron/Kameron-SemiBold.ttf'),
+    'Poppins-Regular': require('../assets/fonts/Poppins/Poppins-Regular.ttf'),
+    'Poppins-Medium': require('../assets/fonts/Poppins/Poppins-Medium.ttf'),
+
+});
 
 
   return (
@@ -62,7 +70,7 @@ export default function Index() {
           </View>
         </View>
 
-        <TouchableOpacity onPress={() => router.push("dashboard")}>
+        <TouchableOpacity onPress={() => router.push("/dashboard")}>
           <View
             style={{
               width: 122,
