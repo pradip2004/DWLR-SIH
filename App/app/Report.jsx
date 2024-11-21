@@ -63,186 +63,186 @@ export default function Report() {
 
     return (
         <LinearGradient
-        colors={["#DEFFFC", "#D4F8FA", "#488DDD"]}
-        locations={[0, 0.22, 28.5]} // Define color stops
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={{ flex: 1 }}
+            colors={["#DEFFFC", "#D4F8FA", "#488DDD"]}
+            locations={[0, 0.22, 28.5]} // Define color stops
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={{ flex: 1 }}
         >
-          <View style={styles.container}>
-    {/* Header Section */}
-    <View style={styles.nav}>
-        <Image source={require('./../assets/images/image 7.png')} style={styles.headerImage} />
-        <Image source={require('./../assets/images/image 7 (1).png')} style={styles.header1Image} />
-        <Image source={require('./../assets/images/image 7 (2).png')} style={styles.header2Image} />
-    </View>
-
-    {/* Main Content Section */}
-    <View contentContainerStyle={styles.scrollContent}>
-        {/* Card Section */}
-        <View style={styles.card}>
-            <Text style={styles.heading}>Download Data</Text>
-
-            {/* Start Date Input */}
-            <View style={styles.inputContainer}>
-                <TextInput
-                    style={styles.input}
-                    placeholder="Select Start Date"
-                    value={startDate}
-                    editable={false}
-                />
-                <TouchableOpacity onPress={() => setShowStartPicker(true)}>
-                    <FontAwesome name="calendar" size={24} color="black" style={styles.icon} />
-                </TouchableOpacity>
-            </View>
-            {showStartPicker && (
-                <DateTimePicker
-                    value={new Date()}
-                    mode="date"
-                    display="calendar"
-                    onChange={handleStartDateChange}
-                />
-            )}
-
-            {/* End Date Input */}
-            <View style={styles.inputContainer}>
-                <TextInput
-                    style={styles.input}
-                    placeholder="Select End Date"
-                    value={endDate}
-                    editable={false}
-                />
-                <TouchableOpacity onPress={() => setShowEndPicker(true)}>
-                    <FontAwesome name="calendar" size={24} color="black" style={styles.icon} />
-                </TouchableOpacity>
-            </View>
-            {showEndPicker && (
-                <DateTimePicker
-                    value={new Date()}
-                    mode="date"
-                    display="calendar"
-                    onChange={handleEndDateChange}
-                />
-            )}
-
-            {/* State Picker */}
-            <RNPickerSelect
-                onValueChange={(value) => setSelectedState(value)}
-                items={states}
-                placeholder={{ label: 'Select State', value: null }}
-                style={pickerSelectStyles}
-            />
-
-            {/* City Picker */}
-            <RNPickerSelect
-                onValueChange={(value) => setSelectedCity(value)}
-                items={cities}
-                placeholder={{ label: 'Select City', value: null }}
-                style={pickerSelectStyles}
-            />
-
-            {/* Get Data Button */}
-            <TouchableOpacity style={styles.button}>
-                <Text style={styles.buttonText}>Get Data</Text>
-            </TouchableOpacity>
-        </View>
-
-         {/* ScrollView for Form Content */}
-      <View contentContainerStyle={styles.scrollContent}>
-
-
-        <View style={styles.container2}>
-          {/* Main ScrollView */}
-          <View contentContainerStyle={styles.scrollContainer}>
-
-
-            <ScrollView style={styles.innerScrollContainer}>
-              <Text style={{
-                fontSize: 24,
-                fontWeight: 'bold',
-              }}>Download Data</Text>
-              
-              {[...Array(14)].map((_, index) => (
-                <View key={index} style={styles.notificationCard}>
-                 <FontAwesome6 name="bookmark" size={24} color="black" />
-
-                  <View style={styles.textContainer}>
-                    <Text style={styles.titleText}>DWLRs ID</Text>
-                    <Text style={styles.subtitleText}>Problem</Text>
-                    <Text style={styles.descriptionText}>Explain in one line</Text>
-                  </View>
-                  <View style={{  alignItems: 'center',}}>
-                    <TouchableOpacity style={styles.downloadButton}>
-                      <Text style={styles.downloadButtonText}>Download</Text>
-                    </TouchableOpacity>
-                    
-                  </View>
+            <View style={styles.container}>
+                {/* Header Section */}
+                <View style={styles.nav}>
+                    <Image source={require('./../assets/images/image 7.png')} style={styles.headerImage} />
+                    <Image source={require('./../assets/images/image 7 (1).png')} style={styles.header1Image} />
+                    <Image source={require('./../assets/images/image 7 (2).png')} style={styles.header2Image} />
                 </View>
-              ))}
+
+                {/* Main Content Section */}
+                <View contentContainerStyle={styles.scrollContent}>
+                    {/* Card Section */}
+                    <View style={styles.card}>
+                        <Text style={styles.heading}>Download Data</Text>
+
+                        {/* Start Date Input */}
+                        <View style={styles.inputContainer}>
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Select Start Date"
+                                value={startDate}
+                                editable={false}
+                            />
+                            <TouchableOpacity onPress={() => setShowStartPicker(true)}>
+                                <FontAwesome name="calendar" size={24} color="black" style={styles.icon} />
+                            </TouchableOpacity>
+                        </View>
+                        {showStartPicker && (
+                            <DateTimePicker
+                                value={new Date()}
+                                mode="date"
+                                display="calendar"
+                                onChange={handleStartDateChange}
+                            />
+                        )}
+
+                        {/* End Date Input */}
+                        <View style={styles.inputContainer}>
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Select End Date"
+                                value={endDate}
+                                editable={false}
+                            />
+                            <TouchableOpacity onPress={() => setShowEndPicker(true)}>
+                                <FontAwesome name="calendar" size={24} color="black" style={styles.icon} />
+                            </TouchableOpacity>
+                        </View>
+                        {showEndPicker && (
+                            <DateTimePicker
+                                value={new Date()}
+                                mode="date"
+                                display="calendar"
+                                onChange={handleEndDateChange}
+                            />
+                        )}
+
+                        {/* State Picker */}
+                        <RNPickerSelect
+                            onValueChange={(value) => setSelectedState(value)}
+                            items={states}
+                            placeholder={{ label: 'Select State', value: null }}
+                            style={pickerSelectStyles}
+                        />
+
+                        {/* City Picker */}
+                        <RNPickerSelect
+                            onValueChange={(value) => setSelectedCity(value)}
+                            items={cities}
+                            placeholder={{ label: 'Select City', value: null }}
+                            style={pickerSelectStyles}
+                        />
+
+                        {/* Get Data Button */}
+                        <TouchableOpacity style={styles.button}>
+                            <Text style={styles.buttonText}>Get Data</Text>
+                        </TouchableOpacity>
+                    </View>
+
+                    {/* ScrollView for Form Content */}
+                    <View contentContainerStyle={styles.scrollContent}>
+
+
+                        <View style={styles.container2}>
+                            {/* Main ScrollView */}
+                            <View contentContainerStyle={styles.scrollContainer}>
+
+
+                                <ScrollView style={styles.innerScrollContainer}>
+                                    <Text style={{
+                                        fontSize: 24,
+                                        fontWeight: 'bold',
+                                    }}>Download Data</Text>
+
+                                    {[...Array(14)].map((_, index) => (
+                                        <View key={index} style={styles.notificationCard}>
+                                            <FontAwesome6 name="bookmark" size={24} color="black" />
+
+                                            <View style={styles.textContainer}>
+                                                <Text style={styles.titleText}>DWLRs ID</Text>
+                                                <Text style={styles.subtitleText}>Problem</Text>
+                                                <Text style={styles.descriptionText}>Explain in one line</Text>
+                                            </View>
+                                            <View style={{ alignItems: 'center', }}>
+                                                <TouchableOpacity style={styles.downloadButton}>
+                                                    <Text style={styles.downloadButtonText}>Download</Text>
+                                                </TouchableOpacity>
+
+                                            </View>
+                                        </View>
+                                    ))}
 
 
 
-            </ScrollView>
+                                </ScrollView>
 
-          </View>
-        </View>
-
-
+                            </View>
+                        </View>
 
 
 
 
-      </View>
-    </View>
 
-    
 
-    {/* Footer Section */}
-    <View style={{
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        alignItems: 'center',
-        backgroundColor: 'white',
-        borderTopLeftRadius: 20,
-        borderTopRightRadius: 20,
-        height: 70,
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        zIndex: 10,
-        elevation: 10,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: -2 },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-      }}>
-        <TouchableOpacity style={{alignItems: 'center', marginTop: 15 }}  onPress={() => router.push("dashboard")}>
-          <MaterialCommunityIcons name="view-dashboard-outline" size={26} color="#0077cc" />
-          <Text style={{fontSize: 12, color: '#0077cc' }}>Dashboard</Text>
-        </TouchableOpacity>
+                    </View>
+                </View>
 
-        <TouchableOpacity style={{alignItems: 'center', marginTop: 15 }} onPress={() => router.push("dwlrs")}>
-          <FontAwesome6 name="anchor-circle-check" size={24} color="#0077cc" />
-          <Text style={{fontSize: 12, color: '#0077cc' }}>DWLR</Text>
-        </TouchableOpacity>
 
-        <TouchableOpacity style={{alignItems: 'center', marginTop: 15 }} >
-          <MaterialIcons name="report-problem" size={26} color="#0077cc" />
-          <Text style={{fontSize: 12, color: '#0077cc' }}>Report</Text>
-        </TouchableOpacity>
 
-        <TouchableOpacity style={{alignItems: 'center', marginTop: 15 }} onPress={() => router.push("alert")}>
-          <FontAwesome5 name="bell" size={24} color="#0077cc" />
-          <Text style={{fontSize: 12, color: '#0077cc' }}>Alert</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={{alignItems: 'center', marginTop: 15 }} onPress={() => router.push("analytic")}>
-          <Ionicons name="analytics" size={26} color="#0077cc" />
-          <Text style={{fontSize: 12, color: '#0077cc' }}>Analytics</Text>
-        </TouchableOpacity>
-      </View>
+                {/* Footer Section */}
+                <View style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-around',
+                    alignItems: 'center',
+                    backgroundColor: 'white',
+                    borderTopLeftRadius: 20,
+                    borderTopRightRadius: 20,
+                    height: 70,
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    zIndex: 10,
+                    elevation: 10,
+                    shadowColor: '#000',
+                    shadowOffset: { width: 0, height: -2 },
+                    shadowOpacity: 0.25,
+                    shadowRadius: 3.84,
+                }}>
+                    <TouchableOpacity style={{ alignItems: 'center', marginTop: 15 }} onPress={() => router.push("dashboard")}>
+                        <MaterialCommunityIcons name="view-dashboard-outline" size={26} color="#0077cc" />
+                        <Text style={{ fontSize: 12, color: '#0077cc' }}>Dashboard</Text>
+                    </TouchableOpacity>
 
-</View>
+                    <TouchableOpacity style={{ alignItems: 'center', marginTop: 15 }} onPress={() => router.push("dwlrs")}>
+                        <FontAwesome6 name="anchor-circle-check" size={24} color="#0077cc" />
+                        <Text style={{ fontSize: 12, color: '#0077cc' }}>DWLR</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={{ alignItems: 'center', marginTop: 15 }} >
+                        <MaterialIcons name="report-problem" size={26} color="#0077cc" />
+                        <Text style={{ fontSize: 12, color: '#0077cc' }}>Report</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={{ alignItems: 'center', marginTop: 15 }} onPress={() => router.push("alert")}>
+                        <FontAwesome5 name="bell" size={24} color="#0077cc" />
+                        <Text style={{ fontSize: 12, color: '#0077cc' }}>Alert</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{ alignItems: 'center', marginTop: 15 }} onPress={() => router.push("analytic")}>
+                        <Ionicons name="analytics" size={26} color="#0077cc" />
+                        <Text style={{ fontSize: 12, color: '#0077cc' }}>Analytics</Text>
+                    </TouchableOpacity>
+                </View>
+
+            </View>
 
         </LinearGradient>
     );
@@ -267,9 +267,9 @@ const styles = StyleSheet.create({
         top: 0,
         left: 0,
         right: 0,
-        zIndex: 10, 
-        elevation: 10, 
-        shadowColor: '#000', 
+        zIndex: 10,
+        elevation: 10,
+        shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
@@ -284,8 +284,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         borderRadius: 20,
         padding: 20,
-        height: 400, 
-        marginVertical: 70, 
+        height: 400,
+        marginVertical: 70,
         alignSelf: 'center',
         justifyContent: 'center',
         alignItems: 'center',
@@ -350,7 +350,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
 
-    
+
     footer: {
         flexDirection: 'row',
         justifyContent: 'space-around',
@@ -360,11 +360,11 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 20,
         height: 70,
         position: 'absolute',
-        bottom: 0, 
+        bottom: 0,
         left: 0,
         right: 0,
         zIndex: 10,
-        elevation: 10, 
+        elevation: 10,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: -2 },
         shadowOpacity: 0.25,
@@ -380,14 +380,14 @@ const styles = StyleSheet.create({
         marginTop: 4,
     },
 
-    
+
     scrollContainer: {
         flexGrow: 1,
         paddingBottom: 65,
         borderRadius: 30,
     },
 
-   
+
     innerScrollContainer: {
         backgroundColor: '#fff',
         height: 270,

@@ -27,6 +27,7 @@ export default function Dashboard() {
     // State to track selected option
     const [selectedOption, setSelectedOption] = useState("All");
 
+
     const handleOptionPress = (option: React.SetStateAction<string>) => {
         setSelectedOption(option);
     };
@@ -40,6 +41,7 @@ export default function Dashboard() {
         alignItems: 'center',
         backgroundColor: selectedOption === option ? '#FED766' : 'white', // Highlight selected option
     });
+
 
 
     return (
@@ -78,19 +80,11 @@ export default function Dashboard() {
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => handleOptionPress("No Data")}>
                         <View style={getBoxStyle("No Data")}>
-
-                            <Text
-                                style={{
-                                    fontSize: 11,
-                                    fontFamily: 'Kameron-SemiBold',
-                                    paddingVertical: 10,
-                                    color: '#5A6ACF'
-                                }}
-
-                            > No Data
+                            <Text style={{ fontSize: 11, fontFamily: 'Kameron-SemiBold', paddingVertical: 10, color: '#5A6ACF' }}>
+                                No Data
                             </Text>
-
                         </View>
+
                     </TouchableOpacity>
 
 
@@ -147,7 +141,7 @@ export default function Dashboard() {
                                 flexDirection: 'row',
                             }}>
                             <MaterialIcons name="near-me" size={25} color="#274c77" />
-                            <Text style={{ color: '#274c77', fontSize: 12, fontFamily: 'Poppins-Medium',  top: 5 }}>
+                            <Text style={{ color: '#274c77', fontSize: 12, fontFamily: 'Poppins-Medium', top: 5 }}>
                                 Get Location
                             </Text>
 
@@ -190,51 +184,51 @@ export default function Dashboard() {
                 </View>
             </ScrollView>
 
-             {/* Footer Navigation */}
-      <View style={{
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        alignItems: 'center',
-        backgroundColor: 'white',
-        borderTopLeftRadius: 20,
-        borderTopRightRadius: 20,
-        height: 70,
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        zIndex: 10,
-        elevation: 10,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: -2 },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-      }}>
-        <TouchableOpacity style={{alignItems: 'center', marginTop: 15 }} onPress={() => router.push("dashboard")}>
-          <MaterialCommunityIcons name="view-dashboard-outline" size={26} color="#0077cc" />
-          <Text style={{fontSize: 12, color: '#0077cc' }}>Dashboard</Text>
-        </TouchableOpacity>
+            {/* Footer Navigation */}
+            <View style={{
+                flexDirection: 'row',
+                justifyContent: 'space-around',
+                alignItems: 'center',
+                backgroundColor: 'white',
+                borderTopLeftRadius: 20,
+                borderTopRightRadius: 20,
+                height: 70,
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                right: 0,
+                zIndex: 10,
+                elevation: 10,
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: -2 },
+                shadowOpacity: 0.25,
+                shadowRadius: 3.84,
+            }}>
+                <TouchableOpacity style={{ alignItems: 'center', marginTop: 15 }} onPress={() => router.push("/dashboard")}>
+                    <MaterialCommunityIcons name="view-dashboard-outline" size={26} color="#0077cc" />
+                    <Text style={{ fontSize: 12, color: '#0077cc' }}>Dashboard</Text>
+                </TouchableOpacity>
 
-        <TouchableOpacity style={{alignItems: 'center', marginTop: 15 }} >
-          <FontAwesome6 name="anchor-circle-check" size={24} color="#0077cc" />
-          <Text style={{fontSize: 12, color: '#0077cc' }}>DWLR</Text>
-        </TouchableOpacity>
+                <TouchableOpacity style={{ alignItems: 'center', marginTop: 15 }} >
+                    <FontAwesome6 name="anchor-circle-check" size={24} color="#0077cc" />
+                    <Text style={{ fontSize: 12, color: '#0077cc' }}>DWLR</Text>
+                </TouchableOpacity>
 
-        <TouchableOpacity style={{alignItems: 'center', marginTop: 15 }}  onPress={() => router.push("report")}>
-          <MaterialIcons name="report-problem" size={26} color="#0077cc" />
-          <Text style={{fontSize: 12, color: '#0077cc' }}>Report</Text>
-        </TouchableOpacity>
+                <TouchableOpacity style={{ alignItems: 'center', marginTop: 15 }} onPress={() => router.push("/report")}>
+                    <MaterialIcons name="report-problem" size={26} color="#0077cc" />
+                    <Text style={{ fontSize: 12, color: '#0077cc' }}>Report</Text>
+                </TouchableOpacity>
 
-        <TouchableOpacity style={{alignItems: 'center', marginTop: 15 }}  onPress={() => router.push("alert")}>
-          <FontAwesome5 name="bell" size={24} color="#0077cc" />
-          <Text style={{fontSize: 12, color: '#0077cc' }}>Alert</Text>
-        </TouchableOpacity>
+                <TouchableOpacity style={{ alignItems: 'center', marginTop: 15 }} onPress={() => router.push("/alert")}>
+                    <FontAwesome5 name="bell" size={24} color="#0077cc" />
+                    <Text style={{ fontSize: 12, color: '#0077cc' }}>Alert</Text>
+                </TouchableOpacity>
 
-        <TouchableOpacity style={{alignItems: 'center', marginTop: 15 }} onPress={() => router.push("analytic")}>
-          <Ionicons name="analytics" size={26} color="#0077cc" />
-          <Text style={{fontSize: 12, color: '#0077cc' }}>Analytics</Text>
-        </TouchableOpacity>
-      </View>
+                <TouchableOpacity style={{ alignItems: 'center', marginTop: 15 }} onPress={() => router.push("/analytic")}>
+                    <Ionicons name="analytics" size={26} color="#0077cc" />
+                    <Text style={{ fontSize: 12, color: '#0077cc' }}>Analytics</Text>
+                </TouchableOpacity>
+            </View>
         </LinearGradient>
     );
 }
