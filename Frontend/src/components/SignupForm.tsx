@@ -8,21 +8,31 @@ const SignupForm = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false); // Toggle confirm password visibility
   const navigate = useNavigate(); // Navigation hook
 
+  // Toggle password visibility
   const togglePasswordVisibility = () => {
     setShowPassword((prevState) => !prevState);
   };
 
+  // Toggle confirm password visibility
   const toggleConfirmPasswordVisibility = () => {
     setShowConfirmPassword((prevState) => !prevState);
   };
 
+  // Handle form submission
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     console.log("Signup form submitted");
   };
 
+  // Handle Google Signup Button Click
+  const handleGoogleSignup = () => {
+    console.log("Google signup clicked");
+    // Add your Google signup logic here
+  };
+
+  // Redirect to the login page
   const redirectToLogin = () => {
-    navigate("/auth/signin"); // Redirects to the login page
+    navigate("/auth/signin");
   };
 
   return (
@@ -41,7 +51,7 @@ const SignupForm = () => {
         {/* Form Header */}
         <h2 className="text-3xl font-bold text-gray-800 mb-6 font-sans">Create Account</h2>
 
-        {/* Form */}
+        {/* Signup Form */}
         <form className="w-full flex flex-col gap-4 font-serif" onSubmit={handleSubmit}>
           {/* Name Field */}
           <input
@@ -102,10 +112,10 @@ const SignupForm = () => {
           </button>
         </form>
 
-        {/* Google Authentication Button */}
+        {/* Google Signup Button */}
         <button
           className="p-3 mt-6 w-full flex items-center justify-center bg-gray-100 bg-opacity-70 border border-gray-300 rounded-lg text-lg hover:bg-gray-200"
-          onClick={handleSubmit}
+          onClick={handleGoogleSignup} // Updated handler
         >
           <FcGoogle className="mr-2 text-2xl" /> {/* Google Icon */}
           Signup with Google

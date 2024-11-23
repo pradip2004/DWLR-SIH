@@ -7,17 +7,26 @@ const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false); // Toggle password visibility
   const navigate = useNavigate(); // Navigation hook
 
+  // Toggle password visibility
   const togglePasswordVisibility = () => {
     setShowPassword((prevState) => !prevState);
   };
 
+  // Handle form submission
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     console.log("Login form submitted");
   };
 
+  // Redirect to the signup page
   const redirectToSignup = () => {
-    navigate("/auth/signup"); // Redirect to the signup page
+    navigate("/auth/signup");
+  };
+
+  // Handle Google login click
+  const handleGoogleLogin = () => {
+    console.log("Google login clicked");
+    // Add your Google login functionality here
   };
 
   return (
@@ -38,7 +47,7 @@ const LoginForm = () => {
           Welcome Back
         </h2>
 
-        {/* Form */}
+        {/* Login Form */}
         <form
           className="w-full flex flex-col gap-4 font-serif"
           onSubmit={handleSubmit}
@@ -81,7 +90,7 @@ const LoginForm = () => {
         {/* Google Authentication Button */}
         <button
           className="p-3 mt-6 w-full flex items-center justify-center bg-gray-100 bg-opacity-70 border border-gray-300 rounded-lg text-lg hover:bg-gray-200"
-          onClick={handleSubmit}
+          onClick={handleGoogleLogin} // Updated handler
         >
           <FcGoogle className="mr-2 text-2xl" /> {/* Google Icon */}
           Login with Google
