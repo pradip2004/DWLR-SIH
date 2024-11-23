@@ -187,7 +187,7 @@ const renderDropdownItems = (type) => {
 
   return (
     <>
-      <div className="w-[85vw]  h-[90vh] p-3 px-6 bg-[#DEFFFC] flex flex-wrap justify-evenly gap-2">
+      <div className="w-full  h-[90vh] p-3 px-6 bg-[#DEFFFC] flex flex-wrap justify-evenly gap-2">
       <div className="w-full h-12 flex items-center justify-between px-6">
   {/* State Dropdown */}
   <div className="relative">
