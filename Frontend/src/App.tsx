@@ -1,17 +1,3 @@
-<<<<<<< HEAD
-import { useState } from 'react'
-import './App.css'
-
-function App() {
-  return (
-    <>
-      <p className="read-the-docs">
-        Hello Bonjour 2 
-      </p>
-    </>
-  )
-}
-=======
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import Navbar from './components/Navbar';
@@ -28,6 +14,6 @@ const App: React.FC = () => {
     </div>
   );
 };
->>>>>>> main
+
 
 export default App;

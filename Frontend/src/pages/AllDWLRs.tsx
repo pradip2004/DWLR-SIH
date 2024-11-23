@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import CardComponent from '../components/CardComponent.jsx'; // Import the CardComponent
+import { FaFilter, FaBatteryFull, FaExclamationTriangle, FaRegQuestionCircle, FaRegCircle } from 'react-icons/fa'; // Example icons from react-icons
+
 
 const AllDWLRs = () => {
   // Sample data for cards
@@ -19,42 +21,32 @@ const AllDWLRs = () => {
     selectedFilter === 'All' ? true : card.status === selectedFilter
   );
 
-  return (
-    <div className='w-full p-2 h-full flex flex-col justify-between'>
-      <div className='flex gap-3 pt-5'>
-        <button
-          className={`border border-[#FED766] px-14 text-xl py-3 rounded-full ${selectedFilter === 'All' && 'bg-[#FED766]'}`}
-          onClick={() => setSelectedFilter('All')}
-        >
-          All
-        </button>
-        <button
-          className={`border border-[#FED766] px-14 text-xl py-3 rounded-full ${selectedFilter === 'Active' && 'bg-[#FED766]'}`}
-          onClick={() => setSelectedFilter('Active')}
-        >
-          Active
-        </button>
-        <button
-          className={`border border-[#FED766] px-14 text-xl py-3 rounded-full ${selectedFilter === 'No Data' && 'bg-[#FED766]'}`}
-          onClick={() => setSelectedFilter('No Data')}
-        >
-          No Data
-        </button>
-        <button
-          className={`border border-[#FED766] px-14 text-xl py-3 rounded-full ${selectedFilter === 'Abnormal Data' && 'bg-[#FED766]'}`}
-          onClick={() => setSelectedFilter('Abnormal Data')}
-        >
-          Abnormal Data
-        </button>
-        <button
-          className={`border border-[#FED766] px-14 text-xl py-3 rounded-full ${selectedFilter === 'Low Battery' && 'bg-[#FED766]'}`}
-          onClick={() => setSelectedFilter('Low Battery')}
-        >
-          Low Battery
-        </button>
-      </div>
+  const filterOptions = [
+    { label: 'All', value: 'All', icon: <FaFilter /> },
+    { label: 'Active', value: 'Active', icon: <FaRegCircle /> },
+    { label: 'No Data', value: 'No Data', icon: <FaRegQuestionCircle /> },
+    { label: 'Abnormal Data', value: 'Abnormal Data', icon: <FaExclamationTriangle /> },
+    { label: 'Low Battery', value: 'Low Battery', icon: <FaBatteryFull /> },
+  ];
 
-      <div className='w-full  h-[33rem] rounded-md overflow-y-scroll'>
+
+  return (
+    <div className='w-full p-4 h-full flex flex-col justify-between'>
+      <div className="flex gap-3 pt-5 justify-evenly w-full">
+      {filterOptions.map((filter) => (
+        <button
+          key={filter.value}
+          className={`border border-[#FED766] px-10 py-3 rounded-xl text-xl flex items-center gap-2 transition duration-300 ease-in-out hover:scale-105 ${
+            selectedFilter === filter.value ? 'bg-[#FED766] text-[#274C77]' : 'text-[#274C77] bg-white'
+          }`}
+          onClick={() => setSelectedFilter(filter.value)}
+        >
+          {filter.icon}
+          {filter.label}
+        </button>
+      ))}
+    </div>
+      <div className='w-full mt-10 min-h-[33rem] rounded-md overflow-y-scroll custom-scrollbar'>
         <div className='flex flex-wrap justify-around gap-4 p-4'>
           {filteredCards.map((card) => (
             <div key={card.id} className='w-[30%] '>

@@ -1,6 +1,33 @@
-<<<<<<< HEAD
-=======
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
->>>>>>> main
+
+/* Custom Scrollbar Styling */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 8px; 
+    height: 8px; 
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    border-radius: 10px; 
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent; 
+  }
+  
+  /* Custom scrollbar styling for transparent scrollbar */
+::-webkit-scrollbar {
+  width: 8px; /* Set the width of the scrollbar */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: transparent; /* Make the scrollbar thumb transparent */
+  border-radius: 10px; /* Optional: For rounded edges on the scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent; /* Make the track transparent */
+}
