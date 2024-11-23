@@ -1,5 +1,7 @@
 import React, { useState } from 'react'; 
 import { FaHome, FaTasks, FaExclamationTriangle, FaBatteryFull } from 'react-icons/fa';
+import { MdLocationOn, MdLocationCity, MdPinDrop, MdArrowDropDown } from 'react-icons/md';
+
 import { MdPieChart, MdBarChart } from 'react-icons/md';
 import { Pie, Bar, Line } from 'react-chartjs-2';
 import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement, LineElement, BarElement, CategoryScale, LinearScale, PointElement } from 'chart.js';
@@ -132,100 +134,284 @@ function Dashboard() {
   const options = {
     maintainAspectRatio: false, // Ensures the chart fits in the div
     cutout: '70%', // Creates the donut hole
-    responsive: true, // Ensures the chart is responsive to container size
+    responsive: true, 
   };
+
+  
+const dropdownData = {
+  state: [
+    { name: 'Maharashtra', id: 1 },
+    { name: 'Delhi', id: 2 },
+    { name: 'Karnataka', id: 3 },
+    { name: 'Tamil Nadu', id: 4 },
+    { name: 'Uttar Pradesh', id: 5 },
+  ],
+  city: [
+    { name: 'Mumbai', stateId: 1, id: 1 },
+    { name: 'Pune', stateId: 1, id: 2 },
+    { name: 'New Delhi', stateId: 2, id: 3 },
+    { name: 'Bengaluru', stateId: 3, id: 4 },
+    { name: 'Chennai', stateId: 4, id: 5 },
+    { name: 'Lucknow', stateId: 5, id: 6 },
+  ],
+  pincode: [
+    { code: '400001', cityId: 1, id: 1 },
+    { code: '411001', cityId: 2, id: 2 },
+    { code: '110001', cityId: 3, id: 3 },
+    { code: '560001', cityId: 4, id: 4 },
+    { code: '600001', cityId: 5, id: 5 },
+    { code: '226001', cityId: 6, id: 6 },
+  ]
+};
+
+const [activeDropdown, setActiveDropdown] = React.useState(null);
+const [selectedState, setSelectedState] = React.useState(null);
+const [selectedCity, setSelectedCity] = React.useState(null);
+
+const renderDropdownItems = (type) => {
+  let data = dropdownData[type];
+  if (type === 'city' && selectedState !== null) {
+    data = data.filter(city => city.stateId === selectedState); // Filter cities by selected state
+  }
+
+  return data.map((item) => (
+    <li
+      key={item.id}
+      className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+      onClick={() => handleItemClick(item, type)}
+    >
+      {type === 'pincode' ? item.code : item.name}
+    </li>
+  ));
+};
 
   return (
     <>
-      <div className="w-[85vw]  h-[90vh] p-5 bg-[#DEFFFC] flex flex-wrap justify-evenly gap-2">
-        {/* Stats section */}
-        <div className="w-[30vw] h-[42vh] bg-white rounded-md py-2 shadow-xl">
-        <div className="flex flex-col gap-2 h-full">
-  {categories.map((category, index) => (
-    <div key={index} className="flex w-full justify-between items-baseline mb-2 px-10">
-      <h1 className="text-2xl flex items-center gap-6 font-semibold uppercase tracking-wider">
-        {category.label}
-      </h1>
-      <p className="text-[3vw] text-[#274C77] font-extrabold">{category.value}</p>
+      <div className="w-[85vw]  h-[90vh] p-3 px-6 bg-[#DEFFFC] flex flex-wrap justify-evenly gap-2">
+      <div className="w-full h-12 flex items-center justify-between px-6">
+  {/* State Dropdown */}
+  <div className="relative">
+    <button
+      onClick={() => setActiveDropdown(activeDropdown === 'state' ? null : 'state')}
+      className="text-white flex items-center gap-2 px-4 py-2 rounded-md bg-[#274C77] hover:bg-gray-800"
+    >
+      <MdLocationOn className="text-white" />
+      <span>{selectedState ? dropdownData.state.find(state => state.id === selectedState)?.name : 'State'}</span>
+      <MdArrowDropDown
+        className={`text-white transition-transform duration-200 ${activeDropdown === 'state' ? 'rotate-180' : ''}`}
+      />
+    </button>
+    <div
+      className={`absolute left-0 w-full mt-1 bg-white rounded-md shadow-lg opacity-0 transform translate-y-4 ${activeDropdown === 'state' ? 'opacity-100 translate-y-0' : ''} transition-all duration-300`}
+    >
+      <ul className="text-black">
+        {renderDropdownItems('state')}
+      </ul>
     </div>
-  ))}
+  </div>
+
+  {/* City Dropdown */}
+  <div className="relative">
+    <button
+      onClick={() => setActiveDropdown(activeDropdown === 'city' ? null : 'city')}
+      className="text-white flex items-center gap-2 px-4 py-2 rounded-md hover:bg-gray-800 bg-[#274C77]"
+    >
+      <MdLocationCity className="text-white" />
+      <span>{selectedCity ? dropdownData.city.find(city => city.id === selectedCity)?.name : 'City'}</span>
+      <MdArrowDropDown
+        className={`text-white transition-transform duration-200 ${activeDropdown === 'city' ? 'rotate-180' : ''}`}
+      />
+    </button>
+    <div
+      className={`absolute left-0 w-full mt-1 bg-white rounded-md shadow-lg opacity-0 transform translate-y-4 ${activeDropdown === 'city' ? 'opacity-100 translate-y-0' : ''} transition-all duration-300`}
+    >
+      <ul className="text-black">
+        {renderDropdownItems('city')}
+      </ul>
+    </div>
+  </div>
+
+  {/* Pincode Dropdown */}
+  <div className="relative">
+    <button
+      onClick={() => setActiveDropdown(activeDropdown === 'pincode' ? null : 'pincode')}
+      className="text-white flex items-center gap-2 px-4 py-2 rounded-md bg-[#274C77] hover:bg-gray-800"
+    >
+      <MdPinDrop className="text-white" />
+      <span>{selectedCity ? dropdownData.pincode.find(pincode => pincode.cityId === selectedCity)?.code : 'Pincode'}</span>
+      <MdArrowDropDown
+        className={`text-white transition-transform duration-200 ${activeDropdown === 'pincode' ? 'rotate-180' : ''}`}
+      />
+    </button>
+    <div
+      className={`absolute left-0 w-full mt-1 bg-white rounded-md shadow-lg opacity-0 transform translate-y-4 ${activeDropdown === 'pincode' ? 'opacity-100 translate-y-0' : ''} transition-all duration-300`}
+    >
+      <ul className="text-black">
+        {renderDropdownItems('pincode')}
+      </ul>
+    </div>
+  </div>
 </div>
+
+
+        {/* Stats section */}
+        <div className="w-[30vw] h-[36vh] bg-white rounded-md py-2 shadow-xl">
+  <div className="flex flex-col gap-2 h-full">
+    {categories.map((category, index) => (
+      <div key={index} className="flex w-full justify-between items-baseline mb-2 px-10">
+        <h1 className="text-2xl flex items-center gap-6 font-semibold uppercase tracking-wider">
+          {category.label}
+        </h1>
+        <p className="text-[2.5vw] text-[#274C77] font-extrabold">{category.value}</p> {/* Reduced text size */}
+      </div>
+    ))}
+  </div>
 
         </div>
 
         {/* First Chart container */}
-        <div className="w-[25vw] h-[42vh] bg-white rounded-md flex flex-col justify-between">
-          {/* State and City Name */}
-          <div className="px-4 py-2">
-            <h3 className="text-md font-semibold text-[#274C77]">State Name</h3>
-            <h3 className="text-md text-zinc-800">City Name</h3>
-          </div>
+<div className="w-[25vw] h-[36vh] bg-white rounded-md shadow-md flex flex-col justify-between">
+  {/* State and City Name */}
+  <div className="px-4 py-2">
+    <h3 className="text-md font-semibold text-[#274C77]">State Name</h3>
+    <h3 className="text-md text-zinc-800">City Name</h3>
+  </div>
 
-          {/* Buttons to switch between Pie and Bar chart for first section */}
-          
-<div className="flex justify-between px-4 py-2">
-  <button
-    onClick={() => setChartType1('pie')}
-    className="text-[#274C77] border border-[#274C77] py-1 px-4 rounded-md text-sm font-kameron flex items-center gap-2 group hover:bg-[#274C77] hover:text-white"
-  >
-    <MdPieChart className="text-[#274C77] group-hover:text-white" />
-    Pie Chart
-  </button>
-  
-  <button
-    onClick={() => setChartType1('bar')}
-    className="text-[#274C77] border border-[#274C77] py-1 px-4 rounded-md text-sm font-kameron flex items-center gap-2 group hover:bg-[#274C77] hover:text-white"
-  >
-    <MdBarChart className="text-[#274C77] group-hover:text-white" />
-    Bar Chart
-  </button>
+  {/* Buttons to switch between Pie and Bar chart for first section */}
+  <div className="flex justify-between px-4 py-2">
+    <button
+      onClick={() => setChartType1('pie')}
+      className="text-[#274C77] border border-[#274C77] py-1 px-4 rounded-md text-sm font-kameron flex items-center gap-2 group hover:bg-[#274C77] hover:text-white"
+    >
+      <MdPieChart className="text-[#274C77] group-hover:text-white" />
+      Pie Chart
+    </button>
+    
+    <button
+      onClick={() => setChartType1('bar')}
+      className="text-[#274C77] border border-[#274C77] py-1 px-4 rounded-md text-sm font-kameron flex items-center gap-2 group hover:bg-[#274C77] hover:text-white"
+    >
+      <MdBarChart className="text-[#274C77] group-hover:text-white" />
+      Bar Chart
+    </button>
+  </div>
+
+  {/* Display the corresponding chart based on chartType1 */}
+  <div className="flex justify-center items-center h-[60%] "> {/* Increased height to 60% */}
+    {chartType1 === 'pie' ? (
+      <Pie
+        data={pieData}
+        options={{
+          ...options,
+          responsive: true,  // Ensures chart responsiveness
+          maintainAspectRatio: false, // Allows the chart to adapt to its container size
+          plugins: {
+            legend: {
+              position: 'bottom', // Adjust legend positioning if necessary
+            }
+          },
+          elements: {
+            arc: {
+              borderWidth: 1, // Optional: Reduce border width of pie chart elements
+            }
+          }
+        }}
+      />
+    ) : (
+      <Bar
+        data={barData}
+        options={{
+          ...options,
+          responsive: true,  // Ensures chart responsiveness
+          maintainAspectRatio: false, // Allows the chart to adapt to its container size
+          scales: {
+            x: { ticks: { font: { size: 8 } } },  // Adjust tick font size
+            y: { ticks: { font: { size: 8 } } }
+          },
+          elements: {
+            bar: {
+              borderWidth: 1,  // Optional: Reduce the bar's border width
+              borderColor: 'rgba(0,0,0,0.1)'  // Slightly adjust border color
+            }
+          }
+        }}
+      />
+    )}
+  </div>
 </div>
-          {/* Display the corresponding chart based on chartType1 */}
-          <div className="flex justify-center items-center h-[70%]">
-            {chartType1 === 'pie' ? (
-              <Pie data={pieData} options={options} />
-            ) : (
-              <Bar data={barData} options={{ maintainAspectRatio: false, responsive: true }} />
-            )}
-          </div>
-        </div>
+
 
         {/* Second Chart container */}
-        <div className="w-[25vw] h-[42vh] bg-white rounded-md flex flex-col justify-between">
-          {/* State and City Name */}
-          <div className="px-4 py-2">
-            <h3 className="text-md font-semibold text-[#274C77]">State Name</h3>
-            <h3 className="text-md text-zinc-800">City Name</h3>
-          </div>
+        <div className="w-[25vw] h-[36vh] bg-white rounded-md flex flex-col justify-between shadow-md">
+  {/* State and City Name */}
+  <div className="px-4 py-2">
+    <h3 className="text-md font-semibold text-[#274C77]">State Name</h3>
+    <h3 className="text-md text-zinc-800">City Name</h3>
+  </div>
 
-          {/* Buttons to switch between Pie and Bar chart for second section */}
-          <div className="flex justify-between px-4 py-2">
-  <button
-    onClick={() => setChartType2('pie')}
-    className="text-[#274C77] border border-[#274C77] py-1 px-4 rounded-md text-sm font-kameron flex items-center gap-2 group hover:bg-[#274C77] hover:text-white"
-  >
-    <MdPieChart className="text-[#274C77] group-hover:text-white" />
-    Pie Chart
-  </button>
+  {/* Buttons to switch between Pie and Bar chart for second section */}
+  <div className="flex justify-between px-4 py-2">
+    <button
+      onClick={() => setChartType2('pie')}
+      className="text-[#274C77] border border-[#274C77] py-1 px-4 rounded-md text-sm font-kameron flex items-center gap-2 group hover:bg-[#274C77] hover:text-white"
+    >
+      <MdPieChart className="text-[#274C77] group-hover:text-white" />
+      Pie Chart
+    </button>
 
-  <button
-    onClick={() => setChartType2('bar')}
-    className="text-[#274C77] border border-[#274C77] py-1 px-4 rounded-md text-sm font-kameron flex items-center gap-2 group hover:bg-[#274C77] hover:text-white"
-  >
-    <MdBarChart className="text-[#274C77] group-hover:text-white" />
-    Bar Chart
-  </button>
+    <button
+      onClick={() => setChartType2('bar')}
+      className="text-[#274C77] border border-[#274C77] py-1 px-4 rounded-md text-sm font-kameron flex items-center gap-2 group hover:bg-[#274C77] hover:text-white"
+    >
+      <MdBarChart className="text-[#274C77] group-hover:text-white" />
+      Bar Chart
+    </button>
+  </div>
+
+  {/* Display the corresponding chart based on chartType2 */}
+  <div className="flex justify-center items-center h-[60%] shadow-md"> {/* Adjusted height to 60% for chart */}
+    {chartType2 === 'pie' ? (
+      <Pie
+        data={pieData}
+        options={{
+          ...options,
+          responsive: true,  // Ensures chart responsiveness
+          maintainAspectRatio: false, // Allows the chart to adapt to its container size
+          plugins: {
+            legend: {
+              position: 'bottom', // Adjust legend positioning if necessary
+            }
+          },
+          elements: {
+            arc: {
+              borderWidth: 1, // Optional: Reduce border width of pie chart elements
+            }
+          }
+        }}
+      />
+    ) : (
+      <Bar
+        data={barData}
+        options={{
+          ...options,
+          responsive: true,  // Ensures chart responsiveness
+          maintainAspectRatio: false, // Allows the chart to adapt to its container size
+          scales: {
+            x: { ticks: { font: { size: 8 } } },  // Adjust tick font size
+            y: { ticks: { font: { size: 8 } } }
+          },
+          elements: {
+            bar: {
+              borderWidth: 1,  // Optional: Reduce the bar's border width
+              borderColor: 'rgba(0,0,0,0.1)'  // Slightly adjust border color
+            }
+          }
+        }}
+      />
+    )}
+  </div>
 </div>
 
-          {/* Display the corresponding chart based on chartType2 */}
-          <div className="flex justify-center items-center h-[70%]">
-            {chartType2 === 'pie' ? (
-              <Pie data={pieData} options={options} />
-            ) : (
-              <Bar data={barData} options={{ maintainAspectRatio: false, responsive: true }} />
-            )}
-          </div>
-        </div>
 
         {/* Line chart container */}
         <div className="w-[30vw] h-[42vh] bg-white rounded-md">
@@ -246,6 +432,7 @@ function Dashboard() {
             <Line data={chartData} options={{ responsive: true, maintainAspectRatio: false }} />
           </div>
         </div>
+                  
                   {/*  this is your code 
                   <div className='w-[40%] h-[33rem] bg-white'>
                               <div>
