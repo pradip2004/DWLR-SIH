@@ -4,9 +4,7 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { LinearGradient } from 'expo-linear-gradient';
 import RNPickerSelect from 'react-native-picker-select';
-import Icon from 'react-native-vector-icons/Ionicons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
-import AntDesign from '@expo/vector-icons/AntDesign';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -217,12 +215,12 @@ export default function Report() {
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
       }}>
-        <TouchableOpacity style={{alignItems: 'center', marginTop: 15 }}  onPress={() => router.push("dashboard")}>
+        <TouchableOpacity style={{alignItems: 'center', marginTop: 15 }}  onPress={() => router.push("/dashboard")}>
           <MaterialCommunityIcons name="view-dashboard-outline" size={26} color="#0077cc" />
           <Text style={{fontSize: 12, color: '#0077cc' }}>Dashboard</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={{alignItems: 'center', marginTop: 15 }} onPress={() => router.push("dwlrs")}>
+        <TouchableOpacity style={{alignItems: 'center', marginTop: 15 }} onPress={() => router.push("/dwlrs")}>
           <FontAwesome6 name="anchor-circle-check" size={24} color="#0077cc" />
           <Text style={{fontSize: 12, color: '#0077cc' }}>DWLR</Text>
         </TouchableOpacity>
@@ -232,11 +230,11 @@ export default function Report() {
           <Text style={{fontSize: 12, color: '#0077cc' }}>Report</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={{alignItems: 'center', marginTop: 15 }} onPress={() => router.push("alert")}>
+        <TouchableOpacity style={{alignItems: 'center', marginTop: 15 }} onPress={() => router.push("/alert")}>
           <FontAwesome5 name="bell" size={24} color="#0077cc" />
           <Text style={{fontSize: 12, color: '#0077cc' }}>Alert</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={{alignItems: 'center', marginTop: 15 }} onPress={() => router.push("analytic")}>
+        <TouchableOpacity style={{alignItems: 'center', marginTop: 15 }} onPress={() => router.push("/analytic")}>
           <Ionicons name="analytics" size={26} color="#0077cc" />
           <Text style={{fontSize: 12, color: '#0077cc' }}>Analytics</Text>
         </TouchableOpacity>
