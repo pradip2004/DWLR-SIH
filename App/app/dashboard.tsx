@@ -33,6 +33,7 @@ export default function Dashboard() {
             style={{ flex: 1 }} // Ensure gradient covers the whole screen
         >
 
+
             <View
                 style={{
                     height: 60,
@@ -50,14 +51,16 @@ export default function Dashboard() {
                 <Image
                     source={require("../assets/images/image2.png")}
                     style={{ height: 27, width: 45, marginLeft: 110 }}
+
                 />
                 <Image
                     source={require("../assets/images/image3.png")}
                     style={{ height: 30, width: 55, }}
+
                 />
             </View>
 
-            <ScrollView>
+            <ScrollView style={{ marginBottom: 71 }}>
 
                 <View style={{ flexDirection: 'row', marginVertical: 20, marginHorizontal: 15, justifyContent: 'space-around' }}>
                     <View
@@ -152,8 +155,8 @@ export default function Dashboard() {
                     shadowOffset: { width: 1, height: 1 },
                     shadowOpacity: 0.3,
                     shadowRadius: 2.41,
-                    paddingLeft: 40,
-                    paddingTop: 25
+                    // paddingLeft: 12,
+                    // paddingTop: 25
                 }}>
                     <View style={{ flexDirection: 'row', alignContent: 'space-between' }}>
                         <View style={{ flexDirection: 'column', marginRight: 110 }}>
@@ -173,7 +176,7 @@ export default function Dashboard() {
                                 borderColor: 'gray',
                                 borderWidth: 0.2,
 
-                               
+
                             }}>
                                 <Text style={{ color: '#5A6ACF' }}>View Report</Text>
                             </View>
@@ -181,7 +184,7 @@ export default function Dashboard() {
                     </View>
                     {/* Pie chart section */}
                     <PieChart
-                        style={{ height: 170, width: 250 }}
+                        style={{ height: 170, width: 250, }}
                         data={[
                             { key: 1, value: 45, svg: { fill: '#5A6ACF' } },
                             { key: 2, value: 30, svg: { fill: '#8593ED' } },
@@ -204,7 +207,7 @@ export default function Dashboard() {
                         </View>
                         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 5 }}>
                             <View style={{ width: 15, height: 15, backgroundColor: '#FF81C5', marginRight: 10, borderRadius: 50 }} />
-                            <Text style={{ fontSize: 14, color: '#000' }}>Other</Text>
+                            <Text style={{ fontSize: 14, marginRight: 10, color: '#000' }}>Other</Text>
                         </View>
                     </View>
                 </View>
@@ -232,7 +235,7 @@ export default function Dashboard() {
                 shadowOpacity: 0.25,
                 shadowRadius: 3.84,
             }}>
-                <TouchableOpacity style={{ alignItems: 'center', marginTop: 15 }} onPress={() => router.push("/dashboard")}>
+                <TouchableOpacity style={{ alignItems: 'center', marginTop: 15 }} >
                     <MaterialCommunityIcons name="view-dashboard-outline" size={26} color="#0077cc" />
                     <Text style={{ fontSize: 12, color: '#0077cc' }}>Dashboard</Text>
                 </TouchableOpacity>
