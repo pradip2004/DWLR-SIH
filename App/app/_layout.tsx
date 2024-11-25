@@ -10,6 +10,7 @@ export default function RootLayout() {
       <Stack.Screen name="alert" options={{ headerShown: false }} />
       <Stack.Screen name="report" options={{ headerShown: false }} />
       <Stack.Screen name="analytic" options={{ headerShown: false }} />
+      <Stack.Screen name="signin" options={{ headerShown: false }} />
      
     </Stack>
   );

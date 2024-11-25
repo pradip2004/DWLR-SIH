@@ -33,41 +33,73 @@ export default function Dashboard() {
             style={{ flex: 1 }} // Ensure gradient covers the whole screen
         >
 
-            <View style={{ height: 60, width: '100%', paddingLeft: 15, flexDirection: "row", backgroundColor: 'white' }}>
+            <View
+                style={{
+                    height: 60,
+                    width: '100%',
+
+                    flexDirection: "row",
+                    backgroundColor: 'white',
+                    justifyContent: 'space-around',
+                    alignItems: 'center'
+                }}>
                 <Image
                     source={require("../assets/images/image1.png")}
                     style={{ height: 46, width: 99 }}
                 />
                 <Image
                     source={require("../assets/images/image2.png")}
-                    style={{ height: 27, width: 45, left: 140, top: 8 }}
+                    style={{ height: 27, width: 45, marginLeft: 110 }}
                 />
                 <Image
                     source={require("../assets/images/image3.png")}
-                    style={{ height: 30, width: 55, left: 160, top: 8 }}
+                    style={{ height: 30, width: 55, }}
                 />
             </View>
 
             <ScrollView>
 
-                {/* State  */}
-                <View style={{ flexDirection: 'row', marginVertical: 20 }}>
-                    <View style={{ height: 40, width: 115, backgroundColor: 'white', marginLeft: 10, flexDirection: 'row' }}>
+                <View style={{ flexDirection: 'row', marginVertical: 20, marginHorizontal: 15, justifyContent: 'space-around' }}>
+                    <View
+                        style={{
+                            height: 40,
+                            width: 115,
+                            backgroundColor: 'white',
+                            paddingLeft: 10,
+                            flexDirection: 'row', alignItems: 'center'
+                        }}>
 
-                        <Text style={{ fontSize: 12, fontFamily: 'Kameron-SemiBold', paddingVertical: 12, paddingLeft: 9 }}>SELECT STATE</Text>
-                        <MaterialIcons name="arrow-drop-down" size={28} color="black" style={{ paddingVertical: 6 }} />
+                        <Text style={{ fontSize: 12, fontFamily: 'Kameron-SemiBold', }}>Select State</Text>
+                        <MaterialIcons name="arrow-drop-down" size={28} color="black" />
                     </View>
 
-                    <View style={{ height: 40, width: 120, backgroundColor: 'white', marginLeft: 10, flexDirection: 'row' }}>
 
-                        <Text style={{ fontSize: 10.5, fontFamily: 'Kameron-SemiBold', paddingVertical: 12, paddingLeft: 9 }}>SELECT DISTRICT</Text>
-                        <MaterialIcons name="arrow-drop-down" size={28} color="black" style={{ paddingVertical: 6 }} />
+                    <View
+                        style={{
+                            height: 40,
+                            width: 115,
+                            backgroundColor: 'white',
+                            marginLeft: 10,
+                            //   paddingLeft: 10, 
+                            flexDirection: 'row', alignItems: 'center'
+                        }}>
+
+                        <Text style={{ fontSize: 12, fontFamily: 'Kameron-SemiBold', }}>Select District</Text>
+                        <MaterialIcons name="arrow-drop-down" size={28} color="black" />
                     </View>
 
-                    <View style={{ height: 40, width: 115, backgroundColor: 'white', marginLeft: 10, flexDirection: 'row' }}>
+                    <View
+                        style={{
+                            height: 40,
+                            width: 117,
+                            backgroundColor: 'white',
+                            marginLeft: 10,
+                            paddingLeft: 10,
+                            flexDirection: 'row', alignItems: 'center',
+                        }}>
 
-                        <Text style={{ fontSize: 12, fontFamily: 'Kameron-SemiBold', paddingVertical: 12, paddingLeft: 9 }}>SELECT CITY</Text>
-                        <MaterialIcons name="arrow-drop-down" size={28} color="black" style={{ paddingVertical: 6 }} />
+                        <Text style={{ fontSize: 12, fontFamily: 'Kameron-SemiBold', }}>Select City</Text>
+                        <MaterialIcons name="arrow-drop-down" size={28} color="black" />
                     </View>
                 </View>
 
@@ -76,15 +108,17 @@ export default function Dashboard() {
                     backgroundColor: '#fff',
                     height: 309,
                     width: 356,
-                    marginLeft: 20,
 
+                    alignSelf: 'center',
+                    justifyContent: 'center',
+                    // alignItems: 'center',
+                    paddingLeft: 30,
                     borderRadius: 15,
                     elevation: 4,
                     shadowOffset: { width: 1, height: 1 },
                     shadowOpacity: 0.3,
                     shadowRadius: 2.41,
-                    paddingLeft: 45,
-                    paddingTop: 60
+
                 }}>
                     <View style={{ flexDirection: 'row' }}>
                         <Text style={{ fontSize: 20, fontFamily: 'Kameron-SemiBold', color: '#000' }}>TOTAL DWLRs</Text>
@@ -109,9 +143,11 @@ export default function Dashboard() {
                     backgroundColor: '#fff',
                     height: 309,
                     width: 356,
-                    marginLeft: 20,
                     marginTop: 10,
                     borderRadius: 15,
+                    alignSelf: 'center',
+                    justifyContent: 'center',
+                    alignItems: 'center',
                     elevation: 4,
                     shadowOffset: { width: 1, height: 1 },
                     shadowOpacity: 0.3,
@@ -119,25 +155,30 @@ export default function Dashboard() {
                     paddingLeft: 40,
                     paddingTop: 25
                 }}>
-                    <Text style={{ fontSize: 14 }}>State Name</Text>
-                    <Text style={{ fontSize: 14, color: 'gray', marginTop: 20 }}>City Name</Text>
-
-                    <TouchableOpacity>
-                        <View style={{
-                            height: 35,
-                            width: 106,
-                            justifyContent: 'center',
-                            paddingLeft: 12,
-                            borderRadius: 10,
-                            borderColor: 'gray',
-                            borderWidth: 0.2,
-                            left: 180,
-                            top: -45
-                        }}>
-                            <Text style={{ color: '#5A6ACF' }}>View Report</Text>
+                    <View style={{ flexDirection: 'row', alignContent: 'space-between' }}>
+                        <View style={{ flexDirection: 'column', marginRight: 110 }}>
+                            <Text style={{ fontSize: 14 }}>State Name</Text>
+                            <Text style={{ fontSize: 14, color: 'gray', marginTop: 20 }}>City Name</Text>
                         </View>
-                    </TouchableOpacity>
 
+
+                        <TouchableOpacity>
+                            <View style={{
+                                height: 35,
+                                width: 106,
+                                justifyContent: 'center',
+
+                                paddingLeft: 12,
+                                borderRadius: 10,
+                                borderColor: 'gray',
+                                borderWidth: 0.2,
+
+                               
+                            }}>
+                                <Text style={{ color: '#5A6ACF' }}>View Report</Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
                     {/* Pie chart section */}
                     <PieChart
                         style={{ height: 170, width: 250 }}
@@ -155,11 +196,11 @@ export default function Dashboard() {
                     <View style={{ marginTop: 10, flexDirection: 'row' }}>
                         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 5 }}>
                             <View style={{ width: 15, height: 15, backgroundColor: '#5A6ACF', marginRight: 10, borderRadius: 50 }} />
-                            <Text style={{ fontSize: 14, color: '#000' }}>Active</Text>
+                            <Text style={{ fontSize: 14, color: '#000', marginRight: 10, }}>Active</Text>
                         </View>
                         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 5 }}>
                             <View style={{ width: 15, height: 15, backgroundColor: '#8593ED', marginRight: 10, borderRadius: 50 }} />
-                            <Text style={{ fontSize: 14, color: '#000' }}>Problematic</Text>
+                            <Text style={{ fontSize: 14, color: '#000', marginRight: 10, }}>Problematic</Text>
                         </View>
                         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 5 }}>
                             <View style={{ width: 15, height: 15, backgroundColor: '#FF81C5', marginRight: 10, borderRadius: 50 }} />

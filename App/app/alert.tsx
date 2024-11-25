@@ -90,17 +90,17 @@ export default function Alert() {
 
       {/* Footer Navigation */}
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.footerIcon} onPress={() => router.push("dashboard")}>
+        <TouchableOpacity style={styles.footerIcon} onPress={() => router.push("/dashboard")}>
           <MaterialCommunityIcons name="view-dashboard-outline" size={26} color="#0077cc" />
           <Text style={styles.iconLabel}>Dashboard</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.footerIcon} onPress={() => router.push("dwlrs")}>
+        <TouchableOpacity style={styles.footerIcon} onPress={() => router.push("/dwlrs")}>
           <FontAwesome6 name="anchor-circle-check" size={24} color="#0077cc" />
           <Text style={styles.iconLabel}>DWLR</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.footerIcon} onPress={() => router.push("report")}>
+        <TouchableOpacity style={styles.footerIcon} onPress={() => router.push("/report")}>
           <MaterialIcons name="report-problem" size={26} color="#0077cc" />
           <Text style={styles.iconLabel}>Report</Text>
         </TouchableOpacity>
@@ -109,7 +109,7 @@ export default function Alert() {
           <FontAwesome5 name="bell" size={24} color="#0077cc" />
           <Text style={styles.iconLabel}>Alert</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.footerIcon} onPress={() => router.push("analytic")}>
+        <TouchableOpacity style={styles.footerIcon} onPress={() => router.push("/analytic")}>
           <Ionicons name="analytics" size={26} color="#0077cc" />
           <Text style={styles.iconLabel}>Analytics</Text>
         </TouchableOpacity>
@@ -294,5 +294,4 @@ const styles = StyleSheet.create({
 
 
 });
-
 

@@ -1,19 +1,21 @@
 import { Text, View, Image, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import MaskedView from "@react-native-masked-view/masked-view";
+import MaskedView from '@react-native-masked-view/masked-view';
 import { useRouter } from "expo-router";
 import { useFonts } from 'expo-font';
-
+import { useWindowDimensions } from 'react-native';
 
 export default function Index() {
   const router = useRouter();
+  const { width, height } = useWindowDimensions();
+
 
   const [fontsLoaded] = useFonts({
     'Kameron-SemiBold': require('../assets/fonts/Kameron/Kameron-SemiBold.ttf'),
     'Poppins-Regular': require('../assets/fonts/Poppins/Poppins-Regular.ttf'),
     'Poppins-Medium': require('../assets/fonts/Poppins/Poppins-Medium.ttf'),
 
-});
+  });
 
 
   return (
@@ -24,75 +26,126 @@ export default function Index() {
       end={{ x: 1, y: 1 }}
       style={{ flex: 1 }} // Ensure gradient covers the whole screen
     >
-      <View style={{ height: 60, width: '100%', paddingLeft: 15, flexDirection: "row", backgroundColor: 'white' }}>
+      <View
+        style={{
+          height: 60,
+          width: '100%',
+
+          flexDirection: "row",
+          backgroundColor: 'white',
+          justifyContent: 'space-around',
+          alignItems: 'center'
+        }}>
         <Image
           source={require("../assets/images/image1.png")}
           style={{ height: 46, width: 99 }}
         />
         <Image
           source={require("../assets/images/image2.png")}
-          style={{ height: 27, width: 45, left: 140, top: 8 }}
+          style={{ height: 27, width: 45, marginLeft: 110 }}
         />
         <Image
           source={require("../assets/images/image3.png")}
-          style={{ height: 30, width: 55, left: 160, top: 8 }}
+          style={{ height: 30, width: 55, }}
         />
       </View>
-      <View>
 
-        {/* name section  */}
-        <Text style={{ fontSize: 55, marginLeft: 60, marginTop: 75 }}>APP NAME</Text>
+      <View style={{  marginTop: 80, }}>
+        {/* Name Section */}
+        <MaskedView
+          maskElement={
+            <Text style={{ fontFamily: 'Kameron-SemiBold', fontSize: 35 ,textAlign:'center'}}>
+              DWLRS MONITOR
+            </Text>
+          }
+        >
+          <LinearGradient
+            colors={['#274C77', '#488DDD']}
+            locations={[0.08, 0.45]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={{ width: 375, height: 150 }}
+          />
+        </MaskedView>
 
-        <Text style={{ fontSize: 12, fontFamily: 'Kameron-SemiBold', color: '#274C77', textAlign: 'center', marginVertical: 5, marginHorizontal: 60 }}>
-          A software application for analysis of {'\n'} DWLR data and raise alarms in respect of {'\n'}anomalous values, faulty DWLRs etc
+        {/* Description Section */}
+        <Text
+          style={{
+            marginTop: -85, // Reduce margin to minimize space
+            fontSize: 12,
+            fontFamily: 'Kameron-SemiBold',
+            color: '#274C77',
+            textAlign: 'center',
+            lineHeight: 18,
+          }}
+        >
+          A software application for analysis of {'\n'}
+          DWLR data and raise alarms in respect of {'\n'}
+          anomalous values, faulty DWLRs etc.
         </Text>
+      </View>
 
-        {/* box section  */}
-        <View style={{ marginTop: 20, left: 45, }}>
-          <Image source={require('../assets/images/image4.png')} />
-          <View style={{ flexDirection: 'row', position: 'absolute', marginTop: 15, marginLeft: 20 }}>
-            <View style={{ alignItems: 'center', }}>
-              <Text style={{ fontSize: 24, color: '#fff', }}>14000</Text>
-              <Text style={{ fontSize: 12, fontFamily: 'Kameron-SemiBold', color: '#fff', marginTop: 15, }}>Total DWLRS</Text>
-            </View>
+      {/* box section  */}
+      <View style={{ marginVertical: 15, justifyContent: 'center' }}>
+        <Image source={require('../assets/images/image4.png')} style={{
+          width: '100%',
+          resizeMode: 'contain',
+        }} />
 
-            <Image source={require('../assets/images/image5.png')} style={{ top: -13, marginHorizontal: 15 }} />
-            <View style={{ alignItems: 'center', }}>
-              <Text style={{ fontSize: 24, color: '#fff', }}>14000</Text>
-              <Text style={{ fontSize: 12, fontFamily: 'Kameron-SemiBold', color: '#fff', marginTop: 15, }}>Active</Text>
-            </View>
 
-            <Image source={require('../assets/images/image5.png')} style={{ top: -13, marginHorizontal: 15 }} />
-            <View style={{ alignItems: 'center', }}>
-              <Text style={{ fontSize: 24, color: '#fff', }}>14000</Text>
-              <Text style={{ fontSize: 12, fontFamily: 'Kameron-SemiBold', color: '#fff', marginTop: 15, }}>Problematic</Text>
-            </View>
+        <View style={{ flexDirection: 'row', position: 'absolute', marginLeft: 55, }}>
+          <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+            <Text style={{ fontSize: 24, color: '#fff', }}>14000</Text>
+            <Text style={{ fontSize: 12, fontFamily: 'Kameron-SemiBold', color: '#fff', marginTop: 10, }}>Total DWLRS</Text>
+          </View>
+
+          <Image source={require('../assets/images/image5.png')} style={{ marginHorizontal: 15 }} />
+          <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+            <Text style={{ fontSize: 24, color: '#fff', }}>14000</Text>
+            <Text style={{ fontSize: 12, fontFamily: 'Kameron-SemiBold', color: '#fff', marginTop: 10, }}>Active</Text>
+          </View>
+
+          <Image source={require('../assets/images/image5.png')} style={{ marginHorizontal: 15 }} />
+          <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+            <Text style={{ fontSize: 24, color: '#fff', }}>14000</Text>
+            <Text style={{ fontSize: 12, fontFamily: 'Kameron-SemiBold', color: '#fff', marginTop: 10,textAlign:'center' }}>Problematic</Text>
           </View>
         </View>
-
-        <TouchableOpacity onPress={() => router.push("/dashboard")}>
-          <View
+      </View>
+{/* Login Button */}
+<TouchableOpacity onPress={() => router.push("/signin")}>
+        <View
+          style={{
+            width: 122,
+            height: 42,
+            borderRadius: 22,
+            backgroundColor: '#DEFFFC',
+            justifyContent: 'center',
+            alignItems: 'center',
+            alignSelf: 'center',
+            marginTop: 15,
+          }}
+        >
+          <Text
             style={{
-              width: 122,
-              height: 42,
-              borderRadius: 22,
-              backgroundColor: '#DEFFFC',
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginTop: 15,
-              left: 145
+              color: '#274c77',
+              fontFamily: 'Kameron-SemiBold',
+              fontSize: 15,
+              textAlign: 'center',
             }}
           >
-            <Text style={{ color: '#274c77', fontFamily: 'Kameron-SemiBold', fontSize: 15 }}>LOGIN</Text>
-          </View>
-        </TouchableOpacity>
+            LOGIN
+          </Text>
+        </View>
+      </TouchableOpacity>
 
-        <Image source={require("../assets/images/five.png")}
-          style={{ marginLeft: -55, marginTop: -15, }}
-        />
-      </View>
 
-    
+      <Image source={require("../assets/images/five.png")}
+        style={{ marginLeft: -55, marginTop: -15, }}
+      />
+
+
+
     </LinearGradient>
   );
 }

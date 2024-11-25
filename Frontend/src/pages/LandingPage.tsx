@@ -1,7 +1,19 @@
 import React from 'react'
 import LandingHeader from '../components/LandingHeader'
+import { useNavigate } from "react-router-dom";
 
 function LandingPage() {
+
+  const navigate = useNavigate();
+
+  const goToLogin = () => {
+    navigate("/auth/signin"); // Replace "/login" with your actual login route
+  };
+  const goToSignup = () => {
+    navigate("/auth/signup");
+  };
+
+
   return (
     <div className='relative w-full h-screen' style={{
       backgroundImage: 'url(/bg.png)',
@@ -12,7 +24,8 @@ function LandingPage() {
       <div className='mt-[25vh] absolute px-10 left-section'>
         <h1 className='text-[8rem] text-white w-60 tracking-tight font-kameron leading-none'>DWLRs DETECTION</h1>
         <p className='w-[30rem] text-lg text-white font-kameron mt-4'>A software application for analysis of DWLR data and raise alarms in respect of anomalous values, faulty DWLRs etc</p>
-        <button className='bg-[#DEFFFC] text-[#274C77] font-kameron px-6 py-2 rounded-full  font-normal uppercase hover:bg-[#a4d0cd] mt-3'>Login</button>
+        <button className='bg-[#DEFFFC] text-[#274C77] font-kameron px-6 py-2 rounded-full  font-normal uppercase hover:bg-[#a4d0cd] mt-3' onClick={goToLogin}>Login</button>
+        <button className='bg-[#DEFFFC] text-[#274C77] font-kameron px-6 py-2 rounded-full  font-normal uppercase hover:bg-[#a4d0cd] mt-3 ml-4' onClick={goToSignup}>Sign Up</button>
       </div>
       <style>
         {
@@ -467,4 +480,4 @@ function LandingPage() {
   )
 }
 
-export default LandingPage
+export default LandingPage;

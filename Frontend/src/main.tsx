@@ -9,6 +9,9 @@ import Report from './pages/Report';
 import LandingPage from './pages/LandingPage';
 import Dashboard from './pages/Dashboard';
 import Analytics from './pages/Analytics';
+import AuthForm from './components/LoginForm';
+import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignupPage';
 
 // Create the router without explicitly typing it as RouteObject[]
 const router = createBrowserRouter([
@@ -34,12 +37,20 @@ const router = createBrowserRouter([
       {
         path: '/analytics',
         element:<Analytics />
-      }
+      },
     ],
   },
   {
     path: '/',
     element: <LandingPage />,
+  },
+  {
+    path: '/auth/signin',
+    element: <LoginPage />
+  },
+  {
+    path: '/auth/signup',
+    element: <SignupPage />
   },
 ]);
 
