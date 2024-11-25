@@ -72,7 +72,7 @@ export default function Analytic() {
           <Text style={{ fontSize: 12, color: '#0077cc' }}>DWLR</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={{ alignItems: 'center', marginTop: 15 }} onPress={() => router.push("/report")}>
+        <TouchableOpacity style={{ alignItems: 'center', marginTop: 15 }} onPress={() => router.push("/Report")}>
           <MaterialIcons name="report-problem" size={26} color="#0077cc" />
           <Text style={{ fontSize: 12, color: '#0077cc' }}>Report</Text>
         </TouchableOpacity>

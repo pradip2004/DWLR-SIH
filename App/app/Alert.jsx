@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
-import Feather from '@expo/vector-icons/Feather';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -100,7 +99,7 @@ export default function Alert() {
           <Text style={styles.iconLabel}>DWLR</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.footerIcon} onPress={() => router.push("report")}>
+        <TouchableOpacity style={styles.footerIcon} onPress={() => router.push("Report")}>
           <MaterialIcons name="report-problem" size={26} color="#0077cc" />
           <Text style={styles.iconLabel}>Report</Text>
         </TouchableOpacity>
@@ -127,8 +126,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 70,
     backgroundColor: 'white',
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
+  
     position: 'absolute',
     top: 0,
     left: 0,
@@ -140,7 +138,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
   },
-  headerImage: { width: 80, height: 40, resizeMode: 'contain' },
+  headerImage: {  height: 46, width: 99 , resizeMode: 'contain' },
   header1Image: { height: 27, width: 45, marginLeft: 105 },
   header2Image: { height: 27, width: 45 },
 

@@ -67,7 +67,7 @@ export default function Dashboard() {
                 />
             </View>
 
-            <ScrollView style={{ marginBottom: 98 }}>
+            <ScrollView style={{ marginBottom: 75 }}>
 
                 {/* State  */}
                 <View style={{ flexDirection: 'row', marginVertical: 20 }}>
@@ -100,32 +100,49 @@ export default function Dashboard() {
                 <View style={{
                     backgroundColor: '#fff',
                     height: 363,
-                    width: 360,
-                    marginLeft: 20,
+                    width: 355,
+                    alignSelf: 'center',
+                    justifyContent: 'center',
 
                     borderRadius: 15,
                     elevation: 4,
                     shadowOffset: { width: 1, height: 1 },
                     shadowOpacity: 0.3,
                     shadowRadius: 2.41,
-                    paddingLeft: 35,
+                    
                     paddingTop: 29
                 }}>
-                    <View style={{ height: 32, width: 82, borderRadius: 20, backgroundColor: '#A7F482', justifyContent: 'center', marginLeft: 185, marginBottom: 10 }}>
-                        <Text style={{ paddingLeft: 25 }}>Active</Text>
+                    <View
+                        style={{
+                            height: 32,
+                            width: 82,
+                            display:'flex',
+                            borderRadius: 20,
+                            backgroundColor: '#A7F482',
+                            justifyContent: 'center',
+                            alignItems:'center',
+                            paddingHorizontal:10,
+                            marginLeft: 195, marginBottom: 10
+                        }}>
+                        <Text >Active</Text>
+                    </View>
+                    <View style={{ paddingLeft: 35,}}>
+                        <Text style={{ fontSize: 30, fontFamily: 'Kameron-SemiBold', color: '#000' }}>DWLR ID:222222</Text>
+
+                        <Text style={{ fontSize: 20, fontFamily: 'Kameron-SemiBold', color: '#000', marginTop: 25 }}>Last Reorted</Text>
+
+                        <Text style={{ fontSize: 20, fontFamily: 'Kameron-SemiBold', color: '#000', marginTop: 20 }}>Water Level</Text>
+                        <Text style={{ fontSize: 20, fontFamily: 'Kameron-SemiBold', color: '#000', marginTop: 20, }}>Battery</Text>
+
                     </View>
 
-                    <Text style={{ fontSize: 30, fontFamily: 'Kameron-SemiBold', color: '#000' }}>DWLR ID:222222</Text>
-
-                    <Text style={{ fontSize: 20, fontFamily: 'Kameron-SemiBold', color: '#000', marginTop: 25 }}>Last Reorted</Text>
-
-                    <Text style={{ fontSize: 20, fontFamily: 'Kameron-SemiBold', color: '#000', marginTop: 20 }}>Water Level</Text>
-                    <Text style={{ fontSize: 20, fontFamily: 'Kameron-SemiBold', color: '#000', marginTop: 20 }}>Battery</Text>
-
-                    <View></View>
-
-                    <View style={{ left: -35, top: 18 }}>
-                        <Image source={require('../assets/images/six.png')} style={{ position: 'relative' }} />
+                        {/* Image Section  */}
+                    <View 
+                    style={{
+                         justifyContent: 'flex-end', 
+                         alignItems: 'flex-end',
+                         bottom: -30, }}>
+                        <Image source={require('../assets/images/six.png')} style={{ position: 'relative', }} />
                         <Image source={require('../assets/images/seven.png')} style={{ position: 'absolute', top: 30 }} />
                     </View>
 
@@ -153,34 +170,52 @@ export default function Dashboard() {
                 <View style={{
                     backgroundColor: '#fff',
                     height: 363,
-                    width: 360,
-                    marginLeft: 20,
-                    marginTop: 20,
+                    width: 355,
+                    alignSelf: 'center',
+                    justifyContent: 'center',
+                    marginTop:20,
                     borderRadius: 15,
                     elevation: 4,
                     shadowOffset: { width: 1, height: 1 },
                     shadowOpacity: 0.3,
                     shadowRadius: 2.41,
-                    paddingLeft: 35,
+                    
                     paddingTop: 29
                 }}>
-                    <View style={{ height: 32, width: 92, borderRadius: 20, backgroundColor: '#FED766', justifyContent: 'center', marginLeft: 185, marginBottom: 10 }}>
-                        <Text style={{ paddingLeft: 25 }}>No Data</Text>
+                    <View
+                        style={{
+                            height: 32,
+                            width: 90,
+                            display:'flex',
+                            borderRadius: 20,
+                            backgroundColor: '#FED766',
+                            justifyContent: 'center',
+                            alignItems:'center',
+                            paddingHorizontal:10,
+                            marginLeft: 195, marginBottom: 10
+                        }}>
+                        <Text style={{fontFamily:'Kameron-Regular'}}>No Data</Text>
+                    </View>
+                    <View style={{ paddingLeft: 35,}}>
+                        <Text style={{ fontSize: 30, fontFamily: 'Kameron-SemiBold', color: '#000' }}>DWLR ID:222222</Text>
+
+                        <Text style={{ fontSize: 20, fontFamily: 'Kameron-SemiBold', color: '#000', marginTop: 25 }}>Last Reorted</Text>
+
+                        <Text style={{ fontSize: 20, fontFamily: 'Kameron-SemiBold', color: '#000', marginTop: 20 }}>Water Level</Text>
+                        <Text style={{ fontSize: 20, fontFamily: 'Kameron-SemiBold', color: '#000', marginTop: 20, }}>Battery</Text>
+
                     </View>
 
-                    <Text style={{ fontSize: 30, fontFamily: 'Kameron-SemiBold', color: '#000' }}>DWLR ID:222222</Text>
-
-                    <Text style={{ fontSize: 20, fontFamily: 'Kameron-SemiBold', color: '#000', marginTop: 25 }}>Last Reorted</Text>
-
-                    <Text style={{ fontSize: 20, fontFamily: 'Kameron-SemiBold', color: '#000', marginTop: 20 }}>Water Level</Text>
-                    <Text style={{ fontSize: 20, fontFamily: 'Kameron-SemiBold', color: '#000', marginTop: 20 }}>Battery</Text>
-
-
-
-                    <View style={{ left: -35, top: 18 }}>
-                        <Image source={require('../assets/images/six.png')} style={{ position: 'relative' }} />
+                        {/* Image Section  */}
+                    <View 
+                    style={{
+                         justifyContent: 'flex-end', 
+                         alignItems: 'flex-end',
+                         bottom: -130, }}>
+                        <Image source={require('../assets/images/six.png')} style={{ position: 'relative', }} />
                         <Image source={require('../assets/images/seven.png')} style={{ position: 'absolute', top: 30 }} />
                     </View>
+
                 </View>
             </ScrollView>
 
@@ -214,7 +249,7 @@ export default function Dashboard() {
                     <Text style={{ fontSize: 12, color: '#0077cc' }}>DWLR</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={{ alignItems: 'center', marginTop: 15 }} onPress={() => router.push("/report")}>
+                <TouchableOpacity style={{ alignItems: 'center', marginTop: 15 }} onPress={() => router.push("/Report")}>
                     <MaterialIcons name="report-problem" size={26} color="#0077cc" />
                     <Text style={{ fontSize: 12, color: '#0077cc' }}>Report</Text>
                 </TouchableOpacity>

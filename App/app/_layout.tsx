@@ -8,7 +8,7 @@ export default function RootLayout() {
       <Stack.Screen name="dashboard" options={{ headerShown: false }} />
       <Stack.Screen name="dwlrs" options={{ headerShown: false }} />
       <Stack.Screen name="alert" options={{ headerShown: false }} />
-      <Stack.Screen name="report" options={{ headerShown: false }} />
+      <Stack.Screen name="Report" options={{ headerShown: false }} />
       <Stack.Screen name="analytic" options={{ headerShown: false }} />
      
     </Stack>
