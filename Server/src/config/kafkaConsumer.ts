@@ -1,31 +1,27 @@
-import { Kafka } from "kafkajs";
-import { saveToMongoDB } from "../utils/mongoUtils";
+import { Consumer } from "kafka-node";
+import { kafkaClient } from "./kafka";
+import { DWLR } from "../model/dwlr";
 
 
-const kafka = new Kafka({ brokers: ["localhost:9092"] });
-const consumer = kafka.consumer({ groupId: "dwlr-consumer-group" });
+const topic = process.env.KAFKA_TOPIC || "dwlr-test";
 
-export const consumeKafkaMessages = async () => {
+export const kafkaConsumer = new Consumer(kafkaClient, [{ topic, partition: 0 }], {
+  autoCommit: true,
+});
+
+kafkaConsumer.on("message", async (message) => {
   try {
-    await consumer.connect();
-    await consumer.subscribe({ topic: "dwlr-data", fromBeginning: false });
+    const dwlrData = JSON.parse(message.value as string);
+    console.log("Received data from Kafka:", dwlrData);
 
-    console.log("Kafka Consumer connected");
-
-    await consumer.run({
-      eachMessage: async ({ topic, partition, message }) => {
-        try {
-          const data = JSON.parse(message.value?.toString() || "{}");
-          console.log("Consumed message from Kafka:", data);
-
-          // Store the message in MongoDB
-          await saveToMongoDB(data);
-        } catch (error) {
-          console.error("Error consuming Kafka message:", error);
-        }
-      },
-    });
-  } catch (error) {
-    console.error("Error connecting Kafka Consumer:", error);
+    const dwlr = new DWLR(dwlrData);
+    await dwlr.save();
+    console.log("Data saved to MongoDB:", dwlrData);
+  } catch (err) {
+    console.error("Error saving data to MongoDB:", err);
   }
-};
+});
+
+kafkaConsumer.on("error", (err) => {
+  console.error("Kafka Consumer error:", err);
+});

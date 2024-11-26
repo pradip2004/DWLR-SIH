@@ -4,9 +4,10 @@ import authRoutes from "./routes/auth";
 import connectDB from "./config/db";
 import passport from "./config/passportConfig";
 import session from "express-session";
-import { initializeWebSocket } from "./config/websocket";
-import { initializeKafkaProducer } from "./config/kafkaProducer";
-import { consumeKafkaMessages } from "./config/kafkaConsumer";
+import { sendToKafka } from "./config/kafkaProducer";
+import { setupWebSocket } from "./config/websocket";
+import "./config/kafkaConsumer"; 
+
 
 dotenv.config();
 const app = express();
@@ -36,14 +37,22 @@ app.get("/", (req: Request, res: Response) => {
 app.use("/api/auth", authRoutes);
 
 
-const websocketURL = "ws://localhost:3000";
-initializeWebSocket(websocketURL);
 
-initializeKafkaProducer();
-consumeKafkaMessages();
+setupWebSocket((data: string) => {
+  try {
+    const dwlrArray = JSON.parse(data);
+    if (Array.isArray(dwlrArray)) {
+      dwlrArray.forEach((dwlr) => {
+        sendToKafka(dwlr);
+      });
+    }
+  } catch (err) {
+    console.error("Error processing WebSocket message:", err);
+  }
+});
 
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT ;
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);

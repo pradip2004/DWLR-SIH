@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const dataSchema = new mongoose.Schema({
+const dwlrSchema = new mongoose.Schema({
   id: String,
   latitude: Number,
   longitude: Number,
@@ -11,4 +11,4 @@ const dataSchema = new mongoose.Schema({
   timestamp: String,
 });
 
-export const DataModel = mongoose.model("WaterLevelData", dataSchema);
+export const DWLR = mongoose.model("DWLR", dwlrSchema);

@@ -1,29 +1,20 @@
 import WebSocket from "ws";
-import { sendToKafka } from "./kafkaProducer";
 
+const wsUrl = "ws://localhost:3000";
 
-export const initializeWebSocket = (url: string) => {
-  const ws = new WebSocket(url);
+export const setupWebSocket = (onMessage: (data: string) => void) => {
+  const ws = new WebSocket(wsUrl);
 
   ws.on("open", () => {
-    console.log("Connected to WebSocket server");
+    console.log("WebSocket connection established.");
   });
 
-  ws.on("message", async (data) => {
-    try {
-      const parsedData = JSON.parse(data.toString());
-
-      // Send data to Kafka
-      await sendToKafka(parsedData);
-
-      console.log("Published data to Kafka:", parsedData);
-    } catch (error) {
-      console.error("Error handling WebSocket data:", error);
-    }
+  ws.on("message", (data: string) => {
+    onMessage(data);
   });
 
-  ws.on("close", () => {
-    console.log("WebSocket connection closed");
+  ws.on("error", (err) => {
+    console.error("WebSocket error:", err);
   });
 
   return ws;

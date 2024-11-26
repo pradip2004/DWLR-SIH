@@ -1,24 +1,25 @@
-import { Kafka } from "kafkajs";
+import { Producer } from "kafka-node";
+import { kafkaClient } from "./kafka";
 
-const kafka = new Kafka({ brokers: ["localhost:9092"] });
-const producer = kafka.producer();
+const topic = "dwlr-test";
 
-export const initializeKafkaProducer = async () => {
-  try {
-    await producer.connect();
-    console.log("Kafka Producer connected");
-  } catch (error) {
-    console.error("Error connecting Kafka Producer:", error);
-  }
-};
+export const kafkaProducer = new Producer(kafkaClient);
 
-export const sendToKafka = async (data: any) => {
-  try {
-    await producer.send({
-      topic: "dwlr-data",
-      messages: [{ value: JSON.stringify(data) }],
-    });
-  } catch (error) {
-    console.error("Error sending data to Kafka:", error);
-  }
+kafkaProducer.on("ready", () => {
+  console.log("Kafka Producer is ready.");
+});
+
+kafkaProducer.on("error", (err) => {
+  console.error("Kafka Producer error:", err);
+});
+
+export const sendToKafka = (message: any) => {
+  const payloads = [{ topic, messages: JSON.stringify(message) }];
+  kafkaProducer.send(payloads, (err, data) => {
+    if (err) {
+      console.error("Error sending data to Kafka:", err);
+    } else {
+      console.log("Data sent to Kafka:", data);
+    }
+  });
 };
