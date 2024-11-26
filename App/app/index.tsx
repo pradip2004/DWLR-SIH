@@ -1,3 +1,4 @@
+import React from 'react';
 import { Text, View, Image, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from '@react-native-masked-view/masked-view';
@@ -17,25 +18,29 @@ export default function Index() {
 
   });
 
+  if (!fontsLoaded) {
+    return null; // Prevent rendering before fonts are loaded
+  }
 
   return (
     <LinearGradient
       colors={["#DEFFFC", "#D4F8FA", "#488DDD"]}
-      locations={[0, 0.22, 28.5]} // Define color stops
+      locations={[0, 0.22, 0.85]} // Define color stops correctly
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
       style={{ flex: 1 }} // Ensure gradient covers the whole screen
     >
+      {/* Header Section */}
       <View
         style={{
           height: 60,
           width: '100%',
-
           flexDirection: "row",
           backgroundColor: 'white',
           justifyContent: 'space-around',
-          alignItems: 'center'
-        }}>
+          alignItems: 'center',
+        }}
+      >
         <Image
           source={require("../assets/images/image1.png")}
           style={{ height: 46, width: 99 }}
