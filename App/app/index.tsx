@@ -1,17 +1,13 @@
 import { Text, View, Image, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import MaskedView from '@react-native-masked-view/masked-view';
-
 import { useRouter } from "expo-router";
 import { useFonts } from 'expo-font';
 import { useWindowDimensions } from 'react-native';
 
-
 export default function Index() {
   const router = useRouter();
   const { width, height } = useWindowDimensions();
-
- 
 
 
   const [fontsLoaded] = useFonts({
@@ -20,7 +16,6 @@ export default function Index() {
     'Poppins-Medium': require('../assets/fonts/Poppins/Poppins-Medium.ttf'),
 
   });
-  
 
 
   return (
@@ -41,16 +36,6 @@ export default function Index() {
           justifyContent: 'space-around',
           alignItems: 'center'
         }}>
-      <View
-        style={{
-          height: 60,
-          width: '100%',
-
-          flexDirection: "row",
-          backgroundColor: 'white',
-          justifyContent: 'space-around',
-          alignItems: 'center'
-        }}>
         <Image
           source={require("../assets/images/image1.png")}
           style={{ height: 46, width: 99 }}
@@ -58,12 +43,10 @@ export default function Index() {
         <Image
           source={require("../assets/images/image2.png")}
           style={{ height: 27, width: 45, marginLeft: 110 }}
-          
         />
         <Image
           source={require("../assets/images/image3.png")}
           style={{ height: 30, width: 55, }}
-         
         />
       </View>
 
@@ -100,7 +83,6 @@ export default function Index() {
           DWLR data and raise alarms in respect of {'\n'}
           anomalous values, faulty DWLRs etc.
         </Text>
-      </View>
       </View>
 
       {/* box section  */}
@@ -162,14 +144,8 @@ export default function Index() {
         style={{ marginLeft: -55, marginTop: -15, }}
       />
 
-      <Image source={require("../assets/images/five.png")}
-        style={{ marginLeft: -55, marginTop: -15, }}
-      />
-
-
 
 
     </LinearGradient>
   );
 }
-
