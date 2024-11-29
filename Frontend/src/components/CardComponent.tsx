@@ -22,21 +22,21 @@ const CardComponent: React.FC<CardComponentProps> = ({
   const getStatusBackgroundColor = () => {
     switch (status) {
       case 'Low Battery':
-        return '#F48282'; // Red
+        return '#FF6F61'; // Soft Red
       case 'Abnormal Data':
       case 'No Data':
-        return '#F4B982'; // Orange
+        return '#FFA726'; // Warm Orange
       default:
-        return '#A7F482'; // Green
+        return '#66BB6A'; // Soft Green
     }
   };
 
   return (
-    <div className="w-full sm:w-80 bg-white p-4 relative rounded-md shadow-xl flex flex-col font-kameron justify-between overflow-hidden">
-      {/* Status Badge */}
-      <div className="flex justify-end items-center">
+    <div className="w-full sm:w-72 bg-gradient-to-br h-[40vh] from-[#F8FAFC] to-[#EAF0F7] p-5 relative rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 ease-in-out flex flex-col font-kameron justify-between overflow-hidden">
+      {/* Status Badge with Animation */}
+      <div className="flex justify-end items-center mb-3">
         <span
-          className="text-sm px-3 py-1 rounded-md text-white"
+          className="text-xs px-3 py-1 rounded-full text-white font-semibold tracking-wide shadow-md animate-pulse bg-status-animation"
           style={{ backgroundColor: getStatusBackgroundColor() }}
         >
           {status}
@@ -44,39 +44,41 @@ const CardComponent: React.FC<CardComponentProps> = ({
       </div>
 
       {/* Main Content */}
-      <div className="mt-2 flex flex-col gap-2 px-5 h-[35vh] overflow-hidden">
+      <div className="flex flex-col gap-3 px-4 flex-grow">
         {/* DWLR Details */}
         <div>
-          <h1 className="text-xl font-semibold mt-2">DWLR ID: {id}</h1>
-          <h2 className="text-xs text-[#5B5A5A] font-kameron font-bold">{location}</h2>
+          <h1 className="text-lg font-semibold text-[#1F2937]">DWLR ID: {id}</h1>
+          <h2 className="text-sm text-[#64748B] font-medium flex items-center gap-1">
+            <MdLocationOn className="text-[#3B82F6]" /> {location}
+          </h2>
         </div>
 
         {/* Last Reported */}
         <div>
-          <h1 className="text-lg font-semibold mt-4">Last Reported</h1>
-          <h3 className="text-xs text-[#5B5A5A] font-kameron font-medium">{lastReported} ago</h3>
+          <h1 className="text-base font-semibold text-[#1F2937]">Last Reported</h1>
+          <h3 className="text-sm text-[#64748B] font-medium">{lastReported} ago</h3>
         </div>
 
         {/* Water Level */}
         <div>
-          <h1 className="text-lg font-semibold">Water Level</h1>
-          <h3 className="text-xs text-[#5B5A5A] font-kameron font-medium">{waterLevel} m</h3>
+          <h1 className="text-base font-semibold text-[#1F2937]">Water Level</h1>
+          <h3 className="text-sm text-[#64748B] font-medium">{waterLevel} m</h3>
         </div>
 
         {/* Battery and Button */}
         <div className="flex justify-between items-center">
           {/* Battery */}
           <div>
-            <h1 className="text-lg font-semibold">Battery</h1>
-            <h3 className="text-xs text-[#5B5A5A] font-kameron font-medium">{battery}%</h3>
+            <h1 className="text-base font-semibold text-[#1F2937]">Battery</h1>
+            <h3 className="text-sm text-[#64748B] font-medium">{battery}%</h3>
           </div>
 
           {/* Get Location Button */}
           <button
             onClick={() => console.log(`Fetching location for ID: ${id}`)}
-            className="mt-4 w-fit shadow-xl px-5 py-2 rounded-md border-[#19344e] border-2 font-bold flex items-center gap-2 group hover:bg-[#274C77] hover:text-white"
+            className="mt-2 px-4 py-1 bg-[#3B82F6] text-white text-sm font-semibold rounded-full shadow-md hover:bg-[#2563EB] transition-colors duration-300 ease-in-out flex items-center gap-2"
           >
-            <MdLocationOn className="text-[#274C77] group-hover:text-white" />
+            <MdLocationOn className="text-white" />
             Get Location
           </button>
         </div>
@@ -84,7 +86,7 @@ const CardComponent: React.FC<CardComponentProps> = ({
 
       {/* Decorative Wave Image */}
       <img
-        className="absolute left-0 -bottom-[55%]"
+        className="absolute left-0 -bottom-[60%]"
         src="/src/assets/Wave.png"
         alt="Wave"
       />

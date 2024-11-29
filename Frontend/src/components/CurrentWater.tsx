@@ -18,7 +18,7 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, T
 const dataForDates = {
   "March 2020": {
     lineChartData: {
-      labels: ["1", "5", "10", "15", "20", "25", "30"],
+      labels: ["Week 1", "Week 2", "Week 3", "Week 4"],
       datasets: [
         {
           label: "Water Level",
@@ -39,7 +39,7 @@ const dataForDates = {
   },
   "April 2020": {
     lineChartData: {
-      labels: ["1", "5", "10", "15", "20", "25", "30"],
+      labels: ["Week 1", "Week 2", "Week 3", "Week 4"],
       datasets: [
         {
           label: "Water Level",
@@ -117,15 +117,17 @@ function CurrentWater({ selectedNumber }) {
   };
 
   return (
-    <div className="current w-1/2 h-full bg-white rounded-md shadow-lg">
+    <div className="current overflow-y-scroll w-1/2 h-full bg-white rounded-md shadow-lg">
       {/* Header Section */}
       <div className="w-full max-w-4xl h-full bg-white rounded-md shadow-lg p-10 mx-auto">
-        <div className="flex justify-between items-center mb-5">
-          <h2 className="text-2xl font-bold text-[#274C77]">Recent Water Levels - {selectedDate}</h2>
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-5 gap-3 md:gap-0">
+          <h2 className="text-xl md:text-2xl font-bold text-[#274C77] text-center md:text-left">
+            Recent Water Levels - {selectedDate}
+          </h2>
           <select
             value={selectedDate}
             onChange={handleDateChange}
-            className="bg-[#274C77] p-2 rounded-md outline-none text-white"
+            className="bg-[#274C77] p-2 rounded-md outline-none text-white text-sm md:text-base w-full md:w-auto"
           >
             {Object.keys(dataForDates).map((month) => (
               <option key={month} value={month}>
@@ -136,7 +138,7 @@ function CurrentWater({ selectedNumber }) {
         </div>
 
         {/* Chart Section */}
-        <div className="bg-gray-50 rounded-lg shadow-md p-5">
+        <div className="bg-gray-50 w-full rounded-lg shadow-md p-5">
           <Line
             data={data.lineChartData}
             options={{
@@ -157,7 +159,7 @@ function CurrentWater({ selectedNumber }) {
         {/* Bottom Section */}
         <div className="flex justify-evenly gap-10 items-center mt-10">
           {/* Half-Donut Chart Section */}
-          <div className="relative w-1/4 flex justify-center m-4">
+          <div className="relative w-1/2 flex justify-center m-4">
             <div className="half-donut w-60 h-60">
               <Doughnut data={doughnutData} options={doughnutOptions} />
             </div>

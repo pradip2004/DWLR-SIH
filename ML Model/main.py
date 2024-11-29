@@ -1,7 +1,15 @@
 from flask import Flask, request, jsonify
+from pymongo import MongoClient
 import joblib
 import numpy as np
 from sklearn.preprocessing import StandardScaler
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+MONGO_URI = os.getenv("MONGO_URI")
+client = MongoClient(MONGO_URI)
 
 
 app = Flask(__name__)
