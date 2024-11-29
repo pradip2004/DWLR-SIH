@@ -4,12 +4,9 @@ import authRoutes from "./routes/auth";
 import connectDB from "./config/db";
 import passport from "./config/passportConfig";
 import session from "express-session";
-
 import { setupWebSocket } from "./config/websocket";
-import './config/kafkaConsumer';
 import { sendToKafka } from "./config/kafkaProducer";
-import { runConsumer } from "./config/kafkaConsumer";
-
+import './config/kafkaConsumer';
 
 
 dotenv.config();

@@ -1,71 +1,53 @@
-import { Kafka } from 'kafkajs';
-import { DWLR } from '../model/dwlr';
-import { DailyDWLRData } from '../model/dwlrData';
+import { Consumer } from "kafka-node";
+import { kafkaClient } from "./kafka";
+import { DWLR } from "../model/dwlr"; 
+import { DailyDWLRData } from "../model/dwlrData";
 
-const kafka = new Kafka({
-  clientId: 'my-app',
-  brokers: [process.env.KAFKA_BROKER || 'localhost:9092'],
-  retry: { initialRetryTime: 100, retries: 8 },
+
+const topic = process.env.KAFKA_TOPIC || "dwlr-test";
+
+export const kafkaConsumer = new Consumer(kafkaClient, [{ topic, partition: 1 }], {
+  autoCommit: true,
 });
 
-const consumer = kafka.consumer({
-  groupId: 'dwlr-consumer-group',
-  sessionTimeout: 30000,
-  heartbeatInterval: 3000,
-});
-
-const topic = process.env.KAFKA_TOPIC || 'DWLR-new';
-
-export const runConsumer = async () => {
+kafkaConsumer.on("message", async (message) => {
   try {
-    await consumer.connect();
-    console.log('Kafka Consumer connected successfully');
-    await consumer.subscribe({ topic, fromBeginning: false });
+    const dwlrData = JSON.parse(message.value as string);
+    console.log("Received data from Kafka:", dwlrData);
 
-    await consumer.run({
-      eachMessage: async ({ message }) => {
-        try {
-          const dwlrData = JSON.parse(message.value?.toString() || '{}');
-          console.log('Received Kafka message:', dwlrData);
+    // Step 1: Find the corresponding DWLR document
+    const dwlr = await DWLR.findOne({ id: dwlrData.id }).select("_id");
+    if (!dwlr) {
+      console.error(`DWLR with id ${dwlrData.id} not found.`);
+      return;
+    }
 
-          const dwlr = await DWLR.findOne({ id: dwlrData.id }).select('_id');
-          if (!dwlr) {
-            console.error(`DWLR with id ${dwlrData.id} not found.`);
-            return;
-          }
+    // Step 2: Determine today's date
+    const today = new Date();
+    const dateString = new Date(today.getFullYear(), today.getMonth(), today.getDate());
 
-          const today = new Date();
-          const dateString = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-
-          const dailyData = await DailyDWLRData.findOneAndUpdate(
-            { dwlrId: dwlr._id, date: dateString },
-            {
-              $push: {
-                dailyData: {
-                  waterLevel: parseFloat(dwlrData.waterLevel),
-                  batteryPercentage: parseFloat(dwlrData.batteryPercentage),
-                  timestamp: new Date(dwlrData.timestamp),
-                  temperature: parseFloat(dwlrData.temperature),
-                },
-              },
-            },
-            { upsert: true, new: true }
-          );
-
-          console.log('Saved/updated daily data:', dailyData);
-        } catch (err) {
-          console.error('Error processing Kafka message:', err);
-        }
+    // Step 3: Find or create the daily data document
+    const dailyData = await DailyDWLRData.findOneAndUpdate(
+      { dwlrId: dwlr._id, date: dateString },
+      {
+        $push: {
+          dailyData: {
+            waterLevel: parseFloat(dwlrData.waterLevel),
+            batteryPercentage: parseFloat(dwlrData.batteryPercentage),
+            timestamp: new Date(dwlrData.timestamp),
+            temperature: parseFloat(dwlrData.temperature),
+          },
+        },
       },
-    });
-  } catch (error) {
-    console.error('Failed to start Kafka consumer:', error);
-    process.exit(1);
-  }
-};
+      { upsert: true, new: true }
+    );
 
-process.on('SIGINT', async () => {
-  console.log('Shutting down Kafka consumer...');
-  await consumer.disconnect();
-  process.exit(0);
+    console.log("Data saved or updated in DailyDWLRData:", dailyData);
+  } catch (err) {
+    console.error("Error saving data to MongoDB:", err);
+  }
+});
+
+kafkaConsumer.on("error", (err) => {
+  console.error("Kafka Consumer error:", err);
 });

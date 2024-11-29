@@ -15,17 +15,13 @@ export const setupWebSocket = (onMessage: (data: string) => void) => {
       onMessage(data);
     });
 
-    ws.on("close", () => {
-      console.log("WebSocket connection closed. Reconnecting...");
-      // Retry connection after 5 seconds if the connection is closed
-      setTimeout(connectWebSocket, 5000);
-    });
+    
 
     ws.on("error", (err) => {
       console.error("WebSocket error:", err);
     });
 
-    // Ensure we only attempt reconnection after closure or error
+    
   };
 
   // Initial connection
