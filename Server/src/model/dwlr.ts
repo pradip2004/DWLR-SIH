@@ -6,9 +6,18 @@ const dwlrSchema = new mongoose.Schema({
   longitude: Number,
   state: String,
   district: String,
-  waterLevel: Number,
-  batteryPercentage: Number,
-  timestamp: String,
+  lowBattery: {
+    type: Boolean,
+    default: false,
+  },
+  active: {
+    type: Boolean,
+    default: true,
+  },
+  anomalyDwlr: {
+    type: Boolean,
+    default: false,
+  }
 });
 
 export const DWLR = mongoose.model("DWLR", dwlrSchema);

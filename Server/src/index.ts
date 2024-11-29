@@ -4,9 +4,12 @@ import authRoutes from "./routes/auth";
 import connectDB from "./config/db";
 import passport from "./config/passportConfig";
 import session from "express-session";
-import { sendToKafka } from "./config/kafkaProducer";
+
 import { setupWebSocket } from "./config/websocket";
-import "./config/kafkaConsumer"; 
+import './config/kafkaConsumer';
+import { sendToKafka } from "./config/kafkaProducer";
+import { runConsumer } from "./config/kafkaConsumer";
+
 
 
 dotenv.config();
@@ -21,7 +24,7 @@ app.use(
     saveUninitialized: false,
     cookie: {
       secure: process.env.NODE_ENV === "production",
-      maxAge: 24 * 60 * 60 * 1000, // 1 day
+      maxAge: 24 * 60 * 60 * 1000, 
     },
   })
 );
@@ -50,6 +53,10 @@ setupWebSocket((data: string) => {
     console.error("Error processing WebSocket message:", err);
   }
 });
+
+
+
+
 
 
 const PORT = process.env.PORT ;

@@ -1,27 +1,71 @@
-import { Consumer } from "kafka-node";
-import { kafkaClient } from "./kafka";
-import { DWLR } from "../model/dwlr";
+import { Kafka } from 'kafkajs';
+import { DWLR } from '../model/dwlr';
+import { DailyDWLRData } from '../model/dwlrData';
 
-
-const topic = process.env.KAFKA_TOPIC || "dwlr-test";
-
-export const kafkaConsumer = new Consumer(kafkaClient, [{ topic, partition: 0 }], {
-  autoCommit: true,
+const kafka = new Kafka({
+  clientId: 'my-app',
+  brokers: [process.env.KAFKA_BROKER || 'localhost:9092'],
+  retry: { initialRetryTime: 100, retries: 8 },
 });
 
-kafkaConsumer.on("message", async (message) => {
+const consumer = kafka.consumer({
+  groupId: 'dwlr-consumer-group',
+  sessionTimeout: 30000,
+  heartbeatInterval: 3000,
+});
+
+const topic = process.env.KAFKA_TOPIC || 'DWLR-new';
+
+export const runConsumer = async () => {
   try {
-    const dwlrData = JSON.parse(message.value as string);
-    console.log("Received data from Kafka:", dwlrData);
+    await consumer.connect();
+    console.log('Kafka Consumer connected successfully');
+    await consumer.subscribe({ topic, fromBeginning: false });
 
-    const dwlr = new DWLR(dwlrData);
-    await dwlr.save();
-    console.log("Data saved to MongoDB:", dwlrData);
-  } catch (err) {
-    console.error("Error saving data to MongoDB:", err);
+    await consumer.run({
+      eachMessage: async ({ message }) => {
+        try {
+          const dwlrData = JSON.parse(message.value?.toString() || '{}');
+          console.log('Received Kafka message:', dwlrData);
+
+          const dwlr = await DWLR.findOne({ id: dwlrData.id }).select('_id');
+          if (!dwlr) {
+            console.error(`DWLR with id ${dwlrData.id} not found.`);
+            return;
+          }
+
+          const today = new Date();
+          const dateString = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+          const dailyData = await DailyDWLRData.findOneAndUpdate(
+            { dwlrId: dwlr._id, date: dateString },
+            {
+              $push: {
+                dailyData: {
+                  waterLevel: parseFloat(dwlrData.waterLevel),
+                  batteryPercentage: parseFloat(dwlrData.batteryPercentage),
+                  timestamp: new Date(dwlrData.timestamp),
+                  temperature: parseFloat(dwlrData.temperature),
+                },
+              },
+            },
+            { upsert: true, new: true }
+          );
+
+          console.log('Saved/updated daily data:', dailyData);
+        } catch (err) {
+          console.error('Error processing Kafka message:', err);
+        }
+      },
+    });
+  } catch (error) {
+    console.error('Failed to start Kafka consumer:', error);
+    process.exit(1);
   }
-});
+};
 
-kafkaConsumer.on("error", (err) => {
-  console.error("Kafka Consumer error:", err);
+process.on('SIGINT', async () => {
+  console.log('Shutting down Kafka consumer...');
+  await consumer.disconnect();
+  process.exit(0);
 });
