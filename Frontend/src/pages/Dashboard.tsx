@@ -69,7 +69,7 @@ const Dashboard = () => {
 
   return (
     <div>
-      <div className="w-[86.69vw] h-[90vh] p-5 bg-[#DEFFFC] flex flex-wrap justify-evenly gap-2">
+      <div className="w-[86.69vw] h-[90vh]  p-5 bg-[#DEFFFC] flex flex-wrap justify-evenly gap-2">
         <div className="w-full h-[5vh]  flex items-center justify-between px-4">
           {/* State Dropdown */}
           <div className="relative">

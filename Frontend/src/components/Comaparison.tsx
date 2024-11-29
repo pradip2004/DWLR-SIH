@@ -155,12 +155,14 @@ const Comparison = () => {
         />
       </div>
 
-      {/* Info about the selected month */}
+      {/* Info about the selected month
       <div className="px-4 py-2 mt-2">
         <p className="text-sm text-gray-600">
           Visual comparison of {selectedMonth} with the previous month's data.
         </p>
-      </div>
+      </div> */}
+
+
     </div>
   );
 };

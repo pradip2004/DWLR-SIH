@@ -119,7 +119,7 @@ function CurrentWater({ selectedNumber }) {
   return (
     <div className="current overflow-y-scroll w-1/2 h-full bg-white rounded-md shadow-lg">
       {/* Header Section */}
-      <div className="w-full max-w-4xl h-full bg-white rounded-md shadow-lg p-10 mx-auto">
+      <div className="w-full max-w-4xl h-full  p-10 mx-auto   ">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-5 gap-3 md:gap-0">
           <h2 className="text-xl md:text-2xl font-bold text-[#274C77] text-center md:text-left">
             Recent Water Levels - {selectedDate}
@@ -166,7 +166,7 @@ function CurrentWater({ selectedNumber }) {
           </div>
 
           {/* Right Side Data Section */}
-          <div className="w-[15vw] bg-gray-50 rounded-lg shadow-md p-4">
+          <div className="w-[15vw] bg-gray-50 rounded-lg shadow-md p-4 ">
             <h3 className="text-sm font-semibold text-[#274C77] mb-3">Present Month Data</h3>
             <div className="flex justify-between items-center mb-4">
               <div className="text-center">

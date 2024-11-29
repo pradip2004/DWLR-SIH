@@ -12,6 +12,8 @@ import Analytics from './pages/Analytics';
 import AuthForm from './components/LoginForm';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
+import TrainingModel from './pages/TrainingModel';
+
 
 // Create the router without explicitly typing it as RouteObject[]
 const router = createBrowserRouter([
@@ -51,6 +53,10 @@ const router = createBrowserRouter([
   {
     path: '/auth/signup',
     element: <SignupPage />
+  },
+  {
+    path: "/analytics/training_model",
+    element: <TrainingModel />
   },
 ]);
 

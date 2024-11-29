@@ -3,7 +3,7 @@ import React from 'react'
 function DashIndia() {
   return (
     <>
-      <div className="w-[25vw] h-[38vh] bg-white rounded-md shadow-lg">
+      <div className="w-[25vw] h-[38vh] bg-white rounded-md shadow-lg ">
       <div className="w-[25vw] flex justify-center items-center h-[38vh] bg-white rounded-md relative">
         <svg width="155" height="311" viewBox="0 0 155 311" fill="none" xmlns="http://www.w3.org/2000/svg">
 <mask id="path-1-inside-1_253_415" fill="white">

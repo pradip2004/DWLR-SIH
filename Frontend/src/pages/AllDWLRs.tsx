@@ -35,7 +35,7 @@ const AllDWLRs = () => {
   ];
 
   return (
-    <div className="w-full p-4 h-full flex flex-col justify-between">
+    <div className="w-full p-4 h-full flex flex-col justify-between ">
       <div className="flex gap-4 pt-5 justify-evenly w-full">
         {/* Filter Buttons Styled */}
         {filterOptions.map((filter) => (

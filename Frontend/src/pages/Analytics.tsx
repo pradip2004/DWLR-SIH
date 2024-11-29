@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { MdLocationOn, MdArrowDropDown } from "react-icons/md";
+import { useNavigate, useLocation } from "react-router-dom";
 import CurrentWater from "../components/CurrentWater";
 import FutureWater from "../components/FutureWater";
 import CurrentBatteryLevel from "../components/CurrentBatteryLevel";
@@ -11,6 +12,9 @@ const Analytics: React.FC = () => {
   const [selectedState, setSelectedState] = useState<string | null>(null);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [selectedNumber, setSelectedNumber] = useState<number | null>(null);
+
+  const navigate = useNavigate();
+  const location = useLocation();
 
   // List of valid DWLR IDs
   const validDWLRIds = [1, 2]; // Add more IDs if necessary
@@ -54,16 +58,33 @@ const Analytics: React.FC = () => {
     ));
   };
 
+  // Determine if the tab is active
+  const isActiveTab = (path: string) => location.pathname === path;
+
   return (
     <div className="main w-full min-h-screen mb-12 overflow-scroll bg-[#DEFFFC] p-5">
       {/* Search, Dropdown, and Buttons Section */}
       <div className="flex space-x-4 mt-8 gap-5 items-center">
         {/* Action Buttons */}
-        <div className="flex space-x-4 ">
-          <button className="bg-[#274C77] text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300">
+        <div className="flex space-x-4">
+          <button
+            className={`py-2 px-4 rounded-lg transition duration-300 ${
+              isActiveTab("/analytics/ai_sahayak")
+                ? "bg-yellow-500 text-black"
+                : "bg-[#274C77] text-white hover:bg-blue-700"
+            }`}
+            onClick={() => navigate("/analytics")}
+          >
             AI Sahayak
           </button>
-          <button className="bg-[#274C77] text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300">
+          <button
+            className={`py-2 px-4 rounded-lg transition duration-300 ${
+              isActiveTab("/analytics/training_model")
+                ? "bg-yellow-500 text-black"
+                : "bg-[#274C77] text-white hover:bg-blue-700"
+            }`}
+            onClick={() => navigate("/analytics/training_model")}
+          >
             Training Model
           </button>
         </div>
@@ -88,22 +109,22 @@ const Analytics: React.FC = () => {
             onClick={() =>
               setActiveDropdown(activeDropdown === "state" ? null : "state")
             }
-            className="text-white  flex items-center gap-2 px-4 py-2 rounded-md bg-[#274C77] hover:bg-gray-800"
+            className="text-white flex items-center gap-2 px-4 py-2 rounded-md bg-[#274C77] hover:bg-gray-800"
           >
-            <MdLocationOn className="text-white " />
-            <span >
+            <MdLocationOn className="text-white" />
+            <span>
               {selectedState
                 ? indianStates.find((state) => state.id === selectedState)?.name
                 : "State"}
             </span>
             <MdArrowDropDown
-              className={`text-white  transition-transform duration-200 ${
+              className={`text-white transition-transform duration-200 ${
                 activeDropdown === "state" ? "rotate-180" : ""
               }`}
             />
           </button>
           <div
-            className={`absolute  left-0 w-full mt-1 bg-white rounded-md shadow-lg opacity-0 transform translate-y-4 ${
+            className={`absolute left-0 w-full mt-1 bg-white rounded-md shadow-lg opacity-0 transform translate-y-4 ${
               activeDropdown === "state" ? "opacity-100 translate-y-0" : ""
             } transition-all duration-300`}
           >

@@ -3,7 +3,7 @@ import ReportCard from '../components/ReportCard';
 
 function Report() {
   return (
-    <div className='w-full p-2 flex justify-around items-center'>
+    <div className='w-full p-2 flex justify-around items-center'> 
       <div className='w-[40%] h-[90%] bg-white rounded-lg flex flex-col gap-3 overflow-y-scroll items-center p-3'>
       <h2 className='text-lg pb-3 font-kameron font-bold'>DWLRs Reports</h2>
         <ReportCard />
