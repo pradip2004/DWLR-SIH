@@ -15,7 +15,7 @@ kafkaConsumer.on("message", async (message) => {
     const dwlrData = JSON.parse(message.value as string);
     console.log("Received data from Kafka:", dwlrData);
 
-    // Step 1: Find the corresponding DWLR document
+    
     const dwlr = await DWLR.findOne({ id: dwlrData.id }).select("_id");
     if (!dwlr) {
       console.error(`DWLR with id ${dwlrData.id} not found.`);
