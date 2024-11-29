@@ -4,9 +4,9 @@ import authRoutes from "./routes/auth";
 import connectDB from "./config/db";
 import passport from "./config/passportConfig";
 import session from "express-session";
-import { sendToKafka } from "./config/kafkaProducer";
 import { setupWebSocket } from "./config/websocket";
-import "./config/kafkaConsumer"; 
+import { sendToKafka } from "./config/kafkaProducer";
+import './config/kafkaConsumer';
 
 
 dotenv.config();
@@ -21,7 +21,7 @@ app.use(
     saveUninitialized: false,
     cookie: {
       secure: process.env.NODE_ENV === "production",
-      maxAge: 24 * 60 * 60 * 1000, // 1 day
+      maxAge: 24 * 60 * 60 * 1000, 
     },
   })
 );
@@ -39,6 +39,8 @@ app.use("/api/auth", authRoutes);
 
 
 setupWebSocket((data: string) => {
+  console.log("WebSocket received new data at:", new Date().toISOString());
+  console.log("Raw data received:", data);
   try {
     const dwlrArray = JSON.parse(data);
     if (Array.isArray(dwlrArray)) {
