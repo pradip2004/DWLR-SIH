@@ -39,6 +39,8 @@ app.use("/api/auth", authRoutes);
 
 
 setupWebSocket((data: string) => {
+  console.log("WebSocket received new data at:", new Date().toISOString());
+  console.log("Raw data received:", data);
   try {
     const dwlrArray = JSON.parse(data);
     if (Array.isArray(dwlrArray)) {
@@ -50,10 +52,6 @@ setupWebSocket((data: string) => {
     console.error("Error processing WebSocket message:", err);
   }
 });
-
-
-
-
 
 
 const PORT = process.env.PORT ;
