@@ -88,9 +88,9 @@ function FutureWater() {
   };
 
   return (
-    <div className="w-full max-w-4xl h-full bg-white rounded-md shadow-lg p-10 mx-auto">
+    <div className="w-1/2 overflow-y-scroll max-w-4xl h-full bg-white rounded-md shadow-lg p-10 mx-auto">
       {/* Header Section */}
-      <div className="flex justify-between items-center mb-5">
+      <div className="flex gap-10 items-center mb-5">
         <h2 className="text-2xl font-bold text-[#274C77]">Projected Water Levels - {selectedDate}</h2>
         {/* Month Selector Dropdown */}
         <select
@@ -134,7 +134,7 @@ function FutureWater() {
       {/* Bottom Section */}
       <div className="flex justify-evenly gap-10 items-center">
         {/* Half-Donut Chart Section */}
-        <div className="relative w-1/4 flex justify-center m-4">
+        <div className="relative w-1/2 flex justify-center m-4">
           <div className="half-donut w-60 h-60">
             <Doughnut data={doughnutData} options={doughnutOptions} />
           </div>

@@ -1,520 +1,144 @@
-import React, { useState } from 'react'; 
-import { FaHome, FaTasks, FaExclamationTriangle, FaBatteryFull } from 'react-icons/fa';
+import React, { useState } from 'react';
 import { MdLocationOn, MdLocationCity, MdPinDrop, MdArrowDropDown } from 'react-icons/md';
 
-import { MdPieChart, MdBarChart } from 'react-icons/md';
-import { Pie, Bar, Line } from 'react-chartjs-2';
-import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement, LineElement, BarElement, CategoryScale, LinearScale, PointElement } from 'chart.js';
+import DashFchart from '../components/DashFchart';
+import DasbSchart from '../components/DasbSchart';
+import Comaparison from '../components/Comaparison';
+import DashIndia from '../components/DashIndia';
+import DashLast from '../components/DashLast';
+import DwlrCouting from '../components/DwlrCouting';
 
-// Register necessary Chart.js components
-ChartJS.register(Title, Tooltip, Legend, LineElement, CategoryScale, LinearScale, PointElement);
-ChartJS.register(ArcElement, BarElement);
+const Dashboard = () => {
+  const [activeDropdown, setActiveDropdown] = useState(null);
+  const [selectedState, setSelectedState] = useState(null);
+  const [selectedCity, setSelectedCity] = useState(null);
 
-function Dashboard() {
-  const [selectedMonth, setSelectedMonth] = useState('January'); // Default selected month
-
-  // Data for different months
-  const dataForMonths = {
-    January: {
-      labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-      datasets: [
-        {
-          label: 'January Data',
-          data: [30, 50, 40, 60],
-          borderColor: '#FF6347',  // Blurred yellow color
-          backgroundColor: 'rgba(255, 99, 71, 0.3)',  // Light yellow gradient
-          tension: 0.4, // Curved line
-          fill: true,
-          borderWidth: 3,
-          pointBackgroundColor: '#FF6347',
-          pointBorderColor: 'rgba(255, 99, 71, 0.5)',
-          pointRadius: 6, // Larger points for emphasis
-          pointHoverRadius: 8,
-        },
-        {
-          label: 'February Data',
-          data: [40, 60, 55, 70],
-          borderColor: '#FFEB3B', // Blurred yellow
-          backgroundColor: 'rgba(255, 235, 59, 0.2)', // Soft yellow gradient
-          tension: 0.4, 
-          fill: true,
-          borderWidth: 3,
-          pointBackgroundColor: '#FFEB3B',
-          pointBorderColor: 'rgba(255, 235, 59, 0.5)',
-          pointRadius: 6,
-          pointHoverRadius: 8,
-        }
-      ],
-    },
-    February: {
-      labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-      datasets: [
-        {
-          label: 'January Data',
-          data: [32, 48, 46, 61],
-          borderColor: '#FF6347',
-          backgroundColor: 'rgba(255, 99, 71, 0.3)',  // Light yellow gradient
-          tension: 0.4, // Curved line
-          fill: true,
-          borderWidth: 3,
-          pointBackgroundColor: '#FF6347',
-          pointBorderColor: 'rgba(255, 99, 71, 0.5)',
-          pointRadius: 6, // Larger points for emphasis
-          pointHoverRadius: 8,
-        },
-        {
-          label: 'February Data',
-          data: [42, 62, 58, 72],
-          borderColor: '#FFEB3B', // Blurred yellow
-          backgroundColor: 'rgba(255, 235, 59, 0.2)', // Soft yellow gradient
-          tension: 0.4, 
-          fill: true,
-          borderWidth: 3,
-          pointBackgroundColor: '#FFEB3B',
-          pointBorderColor: 'rgba(255, 235, 59, 0.5)',
-          pointRadius: 6,
-          pointHoverRadius: 8,
-        }
-      ],
-    },
+  // Sample data
+  const dropdownData = {
+    state: [
+      { id: 1, name: 'Maharashtra' },
+      { id: 2, name: 'Gujarat' },
+      { id: 3, name: 'Karnataka' },
+    ],
+    city: [
+      { id: 1, name: 'Mumbai', stateId: 1 },
+      { id: 2, name: 'Pune', stateId: 1 },
+      { id: 3, name: 'Ahmedabad', stateId: 2 },
+      { id: 4, name: 'Bangalore', stateId: 3 },
+    ],
+    pincode: [
+      { code: '400001', cityId: 1 },
+      { code: '411001', cityId: 2 },
+      { code: '380001', cityId: 3 },
+      { code: '560001', cityId: 4 },
+    ],
   };
 
-  // Update the chart when the month is changed
-  const handleMonthChange = (event) => {
-    setSelectedMonth(event.target.value);
+  // Render dropdown items based on type
+  const renderDropdownItems = (type) => {
+    let data = [];
+    if (type === 'state') {
+      data = dropdownData.state;
+    } else if (type === 'city') {
+      data = dropdownData.city.filter((city) => city.stateId === selectedState);
+    } else if (type === 'pincode') {
+      data = dropdownData.pincode.filter((pincode) => pincode.cityId === selectedCity);
+    }
+
+    return data.map((item) => (
+      <li
+        key={item.id}
+        className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+        onClick={() => handleSelectItem(type, item)}
+      >
+        {item.name || item.code}
+      </li>
+    ));
   };
 
-  // Chart data based on selected month
-  const chartData = dataForMonths[selectedMonth];
-
-  // Stats section data
-  const dwlrsData = {
-    total: 100,
-    active: 75,
-    problematic: 15,
-    lowBattery: 10
+  // Handle item selection
+  const handleSelectItem = (type, item) => {
+    if (type === 'state') {
+      setSelectedState(item.id);
+      setSelectedCity(null); // Reset city selection when state changes
+    } else if (type === 'city') {
+      setSelectedCity(item.id);
+    }
+    setActiveDropdown(null); // Close dropdown after selection
   };
-
-  const categories = [
-    { label: "Total DWLRs", value: dwlrsData.total,  },
-    { label: "ACTIVE DWLRs", value: dwlrsData.active,  },
-    { label: "Problematic DWLRs", value: dwlrsData.problematic,  },
-    { label: "Low Battery", value: dwlrsData.lowBattery,  }
-  ];
-
-  // States to manage chart type for both sections
-  const [chartType1, setChartType1] = useState('pie'); // state for first chart section
-  const [chartType2, setChartType2] = useState('pie'); // state for second chart section
-
-  // Pie chart data
-  const pieData = {
-    labels: ['Category 1', 'Category 2', 'Category 3'],
-    datasets: [{
-      label: 'Dataset 1',
-      data: [30, 60, 10],
-      backgroundColor: ['#FED766', '#DEFFFC', '#1089ff'],
-      borderColor: ['#ffffff'],
-      borderWidth: 1,
-    }],
-  };
-
-  // Bar chart data
-  const barData = {
-    labels: ['Category 1', 'Category 2', 'Category 3'],
-    datasets: [{
-      label: 'Dataset 1',
-      data: [30, 60, 10],
-      backgroundColor: ['#FED766', '#DEFFFC', '#1089ff'],
-      borderColor: ['#ffffff'],
-      borderWidth: 1,
-    }],
-  };
-
-  // Chart options for donut chart (pie)
-  const options = {
-    maintainAspectRatio: false, // Ensures the chart fits in the div
-    cutout: '70%', // Creates the donut hole
-    responsive: true, 
-  };
-
-  
-const dropdownData = {
-  state: [
-    { name: 'Maharashtra', id: 1 },
-    { name: 'Delhi', id: 2 },
-    { name: 'Karnataka', id: 3 },
-    { name: 'Tamil Nadu', id: 4 },
-    { name: 'Uttar Pradesh', id: 5 },
-  ],
-  city: [
-    { name: 'Mumbai', stateId: 1, id: 1 },
-    { name: 'Pune', stateId: 1, id: 2 },
-    { name: 'New Delhi', stateId: 2, id: 3 },
-    { name: 'Bengaluru', stateId: 3, id: 4 },
-    { name: 'Chennai', stateId: 4, id: 5 },
-    { name: 'Lucknow', stateId: 5, id: 6 },
-  ],
-  pincode: [
-    { code: '400001', cityId: 1, id: 1 },
-    { code: '411001', cityId: 2, id: 2 },
-    { code: '110001', cityId: 3, id: 3 },
-    { code: '560001', cityId: 4, id: 4 },
-    { code: '600001', cityId: 5, id: 5 },
-    { code: '226001', cityId: 6, id: 6 },
-  ]
-};
-
-const [activeDropdown, setActiveDropdown] = React.useState(null);
-const [selectedState, setSelectedState] = React.useState(null);
-const [selectedCity, setSelectedCity] = React.useState(null);
-
-const renderDropdownItems = (type) => {
-  let data = dropdownData[type];
-  if (type === 'city' && selectedState !== null) {
-    data = data.filter(city => city.stateId === selectedState); // Filter cities by selected state
-  }
-
-  return data.map((item) => (
-    <li
-      key={item.id}
-      className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-      onClick={() => handleItemClick(item, type)}
-    >
-      {type === 'pincode' ? item.code : item.name}
-    </li>
-  ));
-};
 
   return (
-    <>
-      <div className="w-full  h-[90vh] p-3 px-6 bg-[#DEFFFC] flex flex-wrap justify-evenly gap-2">
-      <div className="w-full h-12 flex items-center justify-between px-6">
-  {/* State Dropdown */}
-  <div className="relative">
-    <button
-      onClick={() => setActiveDropdown(activeDropdown === 'state' ? null : 'state')}
-      className="text-white flex items-center gap-2 px-4 py-2 rounded-md bg-[#274C77] hover:bg-gray-800"
-    >
-      <MdLocationOn className="text-white" />
-      <span>{selectedState ? dropdownData.state.find(state => state.id === selectedState)?.name : 'State'}</span>
-      <MdArrowDropDown
-        className={`text-white transition-transform duration-200 ${activeDropdown === 'state' ? 'rotate-180' : ''}`}
-      />
-    </button>
-    <div
-      className={`absolute left-0 w-full mt-1 bg-white rounded-md shadow-lg opacity-0 transform translate-y-4 ${activeDropdown === 'state' ? 'opacity-100 translate-y-0' : ''} transition-all duration-300`}
-    >
-      <ul className="text-black">
-        {renderDropdownItems('state')}
-      </ul>
-    </div>
-  </div>
-
-  {/* City Dropdown */}
-  <div className="relative">
-    <button
-      onClick={() => setActiveDropdown(activeDropdown === 'city' ? null : 'city')}
-      className="text-white flex items-center gap-2 px-4 py-2 rounded-md hover:bg-gray-800 bg-[#274C77]"
-    >
-      <MdLocationCity className="text-white" />
-      <span>{selectedCity ? dropdownData.city.find(city => city.id === selectedCity)?.name : 'City'}</span>
-      <MdArrowDropDown
-        className={`text-white transition-transform duration-200 ${activeDropdown === 'city' ? 'rotate-180' : ''}`}
-      />
-    </button>
-    <div
-      className={`absolute left-0 w-full mt-1 bg-white rounded-md shadow-lg opacity-0 transform translate-y-4 ${activeDropdown === 'city' ? 'opacity-100 translate-y-0' : ''} transition-all duration-300`}
-    >
-      <ul className="text-black">
-        {renderDropdownItems('city')}
-      </ul>
-    </div>
-  </div>
-
-  {/* Pincode Dropdown */}
-  <div className="relative">
-    <button
-      onClick={() => setActiveDropdown(activeDropdown === 'pincode' ? null : 'pincode')}
-      className="text-white flex items-center gap-2 px-4 py-2 rounded-md bg-[#274C77] hover:bg-gray-800"
-    >
-      <MdPinDrop className="text-white" />
-      <span>{selectedCity ? dropdownData.pincode.find(pincode => pincode.cityId === selectedCity)?.code : 'Pincode'}</span>
-      <MdArrowDropDown
-        className={`text-white transition-transform duration-200 ${activeDropdown === 'pincode' ? 'rotate-180' : ''}`}
-      />
-    </button>
-    <div
-      className={`absolute left-0 w-full mt-1 bg-white rounded-md shadow-lg opacity-0 transform translate-y-4 ${activeDropdown === 'pincode' ? 'opacity-100 translate-y-0' : ''} transition-all duration-300`}
-    >
-      <ul className="text-black">
-        {renderDropdownItems('pincode')}
-      </ul>
-    </div>
-  </div>
-</div>
-
-
-        {/* Stats section */}
-        <div className="w-[30vw] h-[36vh] bg-white rounded-md py-2 shadow-xl">
-  <div className="flex flex-col gap-2 h-full">
-    {categories.map((category, index) => (
-      <div key={index} className="flex w-full justify-between items-baseline mb-2 px-10">
-        <h1 className="text-2xl flex items-center gap-6 font-semibold uppercase tracking-wider">
-          {category.label}
-        </h1>
-        <p className="text-[2.5vw] text-[#274C77] font-extrabold">{category.value}</p> {/* Reduced text size */}
-      </div>
-    ))}
-  </div>
-
-        </div>
-
-        {/* First Chart container */}
-<div className="w-[25vw] h-[36vh] bg-white rounded-md shadow-md flex flex-col justify-between">
-  {/* State and City Name */}
-  <div className="px-4 py-2">
-    <h3 className="text-md font-semibold text-[#274C77]">State Name</h3>
-    <h3 className="text-md text-zinc-800">City Name</h3>
-  </div>
-
-  {/* Buttons to switch between Pie and Bar chart for first section */}
-  <div className="flex justify-between px-4 py-2">
-    <button
-      onClick={() => setChartType1('pie')}
-      className="text-[#274C77] border border-[#274C77] py-1 px-4 rounded-md text-sm font-kameron flex items-center gap-2 group hover:bg-[#274C77] hover:text-white"
-    >
-      <MdPieChart className="text-[#274C77] group-hover:text-white" />
-      Pie Chart
-    </button>
-    
-    <button
-      onClick={() => setChartType1('bar')}
-      className="text-[#274C77] border border-[#274C77] py-1 px-4 rounded-md text-sm font-kameron flex items-center gap-2 group hover:bg-[#274C77] hover:text-white"
-    >
-      <MdBarChart className="text-[#274C77] group-hover:text-white" />
-      Bar Chart
-    </button>
-  </div>
-
-  {/* Display the corresponding chart based on chartType1 */}
-  <div className="flex justify-center items-center h-[60%] "> {/* Increased height to 60% */}
-    {chartType1 === 'pie' ? (
-      <Pie
-        data={pieData}
-        options={{
-          ...options,
-          responsive: true,  // Ensures chart responsiveness
-          maintainAspectRatio: false, // Allows the chart to adapt to its container size
-          plugins: {
-            legend: {
-              position: 'bottom', // Adjust legend positioning if necessary
-            }
-          },
-          elements: {
-            arc: {
-              borderWidth: 1, // Optional: Reduce border width of pie chart elements
-            }
-          }
-        }}
-      />
-    ) : (
-      <Bar
-        data={barData}
-        options={{
-          ...options,
-          responsive: true,  // Ensures chart responsiveness
-          maintainAspectRatio: false, // Allows the chart to adapt to its container size
-          scales: {
-            x: { ticks: { font: { size: 8 } } },  // Adjust tick font size
-            y: { ticks: { font: { size: 8 } } }
-          },
-          elements: {
-            bar: {
-              borderWidth: 1,  // Optional: Reduce the bar's border width
-              borderColor: 'rgba(0,0,0,0.1)'  // Slightly adjust border color
-            }
-          }
-        }}
-      />
-    )}
-  </div>
-</div>
-
-
-        {/* Second Chart container */}
-        <div className="w-[25vw] h-[36vh] bg-white rounded-md flex flex-col justify-between shadow-md">
-  {/* State and City Name */}
-  <div className="px-4 py-2">
-    <h3 className="text-md font-semibold text-[#274C77]">State Name</h3>
-    <h3 className="text-md text-zinc-800">City Name</h3>
-  </div>
-
-  {/* Buttons to switch between Pie and Bar chart for second section */}
-  <div className="flex justify-between px-4 py-2">
-    <button
-      onClick={() => setChartType2('pie')}
-      className="text-[#274C77] border border-[#274C77] py-1 px-4 rounded-md text-sm font-kameron flex items-center gap-2 group hover:bg-[#274C77] hover:text-white"
-    >
-      <MdPieChart className="text-[#274C77] group-hover:text-white" />
-      Pie Chart
-    </button>
-
-    <button
-      onClick={() => setChartType2('bar')}
-      className="text-[#274C77] border border-[#274C77] py-1 px-4 rounded-md text-sm font-kameron flex items-center gap-2 group hover:bg-[#274C77] hover:text-white"
-    >
-      <MdBarChart className="text-[#274C77] group-hover:text-white" />
-      Bar Chart
-    </button>
-  </div>
-
-  {/* Display the corresponding chart based on chartType2 */}
-  <div className="flex justify-center items-center h-[60%] shadow-md"> {/* Adjusted height to 60% for chart */}
-    {chartType2 === 'pie' ? (
-      <Pie
-        data={pieData}
-        options={{
-          ...options,
-          responsive: true,  // Ensures chart responsiveness
-          maintainAspectRatio: false, // Allows the chart to adapt to its container size
-          plugins: {
-            legend: {
-              position: 'bottom', // Adjust legend positioning if necessary
-            }
-          },
-          elements: {
-            arc: {
-              borderWidth: 1, // Optional: Reduce border width of pie chart elements
-            }
-          }
-        }}
-      />
-    ) : (
-      <Bar
-        data={barData}
-        options={{
-          ...options,
-          responsive: true,  // Ensures chart responsiveness
-          maintainAspectRatio: false, // Allows the chart to adapt to its container size
-          scales: {
-            x: { ticks: { font: { size: 8 } } },  // Adjust tick font size
-            y: { ticks: { font: { size: 8 } } }
-          },
-          elements: {
-            bar: {
-              borderWidth: 1,  // Optional: Reduce the bar's border width
-              borderColor: 'rgba(0,0,0,0.1)'  // Slightly adjust border color
-            }
-          }
-        }}
-      />
-    )}
-  </div>
-</div>
-
-
-        {/* Line chart container */}
-        <div className="w-[30vw] h-[42vh] bg-white rounded-md">
-          <div className="px-4 py-2">
-            {/* Dropdown menu to select months */}
-            <select
-              value={selectedMonth}
-              onChange={handleMonthChange}
-              className="mb-4 px-4 py-2 border border-[#274C77] rounded-md"
+    <div>
+      <div className="w-[86.69vw] h-[90vh] p-5 bg-[#DEFFFC] flex flex-wrap justify-evenly gap-2">
+        <div className="w-full h-[5vh]  flex items-center justify-between px-4">
+          {/* State Dropdown */}
+          <div className="relative">
+            <button
+              onClick={() => setActiveDropdown(activeDropdown === 'state' ? null : 'state')}
+              className="text-white flex items-center gap-2 px-4 py-2 rounded-md bg-[#274C77] hover:bg-gray-800 w-full sm:w-auto"
             >
-              <option value="January">January</option>
-              <option value="February">February</option>
-            </select>
+              <MdLocationOn className="text-white" />
+              <span>{selectedState ? dropdownData.state.find((state) => state.id === selectedState)?.name : 'State'}</span>
+              <MdArrowDropDown
+                className={`text-white transition-transform duration-200 ${activeDropdown === 'state' ? 'rotate-180' : ''}`}
+              />
+            </button>
+            <div
+              className={`absolute left-0 w-full mt-1 bg-white rounded-md shadow-lg opacity-0 transform translate-y-4 ${activeDropdown === 'state' ? 'opacity-100 translate-y-0' : ''} transition-all duration-300`}
+            >
+              <ul className="text-black">{renderDropdownItems('state')}</ul>
+            </div>
           </div>
 
-          {/* Line chart component */}
-          <div className="flex justify-center items-center h-[70%]">
-            <Line data={chartData} options={{ responsive: true, maintainAspectRatio: false }} />
+          {/* City Dropdown */}
+          <div className="relative">
+            <button
+              onClick={() => setActiveDropdown(activeDropdown === 'city' ? null : 'city')}
+              className="text-white flex items-center gap-2 px-4 py-2 rounded-md hover:bg-gray-800 bg-[#274C77] w-full sm:w-auto"
+            >
+              <MdLocationCity className="text-white" />
+              <span>{selectedCity ? dropdownData.city.find((city) => city.id === selectedCity)?.name : 'City'}</span>
+              <MdArrowDropDown
+                className={`text-white transition-transform duration-200 ${activeDropdown === 'city' ? 'rotate-180' : ''}`}
+              />
+            </button>
+            <div
+              className={`absolute left-0 w-full mt-1 bg-white rounded-md shadow-lg opacity-0 transform translate-y-4 ${activeDropdown === 'city' ? 'opacity-100 translate-y-0' : ''} transition-all duration-300`}
+            >
+              <ul className="text-black">{renderDropdownItems('city')}</ul>
+            </div>
+          </div>
+
+          {/* Pincode Dropdown */}
+          <div className="relative">
+            <button
+              onClick={() => setActiveDropdown(activeDropdown === 'pincode' ? null : 'pincode')}
+              className="text-white flex items-center gap-2 px-4 py-2 rounded-md bg-[#274C77] hover:bg-gray-800 w-full sm:w-auto"
+            >
+              <MdPinDrop className="text-white" />
+              <span>{selectedCity ? dropdownData.pincode.find((pincode) => pincode.cityId === selectedCity)?.code : 'Pincode'}</span>
+              <MdArrowDropDown
+                className={`text-white transition-transform duration-200 ${activeDropdown === 'pincode' ? 'rotate-180' : ''}`}
+              />
+            </button>
+            <div
+              className={`absolute left-0 w-full mt-1 bg-white rounded-md shadow-lg opacity-0 transform translate-y-4 ${activeDropdown === 'pincode' ? 'opacity-100 translate-y-0' : ''} transition-all duration-300`}
+            >
+              <ul className="text-black">{renderDropdownItems('pincode')}</ul>
+            </div>
           </div>
         </div>
-                  
-                  {/*  this is your code 
-                  <div className='w-[40%] h-[33rem] bg-white'>
-                              <div>
-                                    <style>
-                                          {
-                                                `#west{
-            width: 100%;
-            height: 100%;
-            display: block;
-            scale: 0.8;
-            
-            position: relative;
-          } 
-            path{
-            fill: #FED766;
-            }
-          `
-                                          }
-                                    </style>
-                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                          xmlnsXlink="http://www.w3.org/1999/xlink"
-                                          id="Layer_1"
-                                          version="1.1"
-                                          x="0px"
-                                          y="0px"
-                                          viewBox="0 0 100 100"
-                                          enableBackground="new 0 0 100 100"
-                                          xmlSpace="preserve">
-                                          <path d="M52.761,7.021l-0.139,0.019c-0.191,0.027-0.396,0.039-0.643,0.039c-0.199,0-0.399-0.008-0.6-0.016  c-0.204-0.008-0.407-0.017-0.611-0.017c-0.373,0-0.676,0.029-0.953,0.09c-0.042,0.009-0.09,0.014-0.145,0.014  c-0.494,0-1.365-0.377-2.134-0.709c-0.496-0.215-0.965-0.417-1.278-0.495c-0.133-0.033-0.264-0.049-0.401-0.049  c-0.285,0-0.543,0.07-0.792,0.138c-0.241,0.065-0.469,0.127-0.713,0.127c-0.109,0-0.213-0.013-0.317-0.038  c-0.445-0.109-0.75-0.412-1.072-0.732c-0.259-0.257-0.526-0.522-0.877-0.691c-0.778-0.374-0.91-0.673-1.093-1.087  c-0.105-0.241-0.226-0.513-0.486-0.854c-0.148-0.196-0.204-0.353-0.167-0.481l0.03-0.102h-0.106c-0.159,0-0.356-0.013-0.566-0.026  c-0.246-0.016-0.525-0.034-0.79-0.034c-0.454,0-0.769,0.051-0.989,0.163c-0.235,0.118-0.403,0.288-0.566,0.453  C37.109,2.978,36.9,3.189,36.52,3.189l-0.032,0C36.236,3.181,36.034,3.093,35.82,3c-0.127-0.055-0.258-0.112-0.401-0.152  c-0.105-0.029-0.206-0.043-0.308-0.043c-0.181,0-0.327,0.045-0.469,0.089c-0.258,0.079-0.5,0.115-0.797-0.051l-1.148-1.23  l-0.034,0.146c-0.295,1.253,0.118,1.938,0.596,2.73c0.249,0.415,0.508,0.844,0.696,1.403c0.355,1.051,0.372,1.262,0.131,1.741  l-0.045,0.089l0.097,0.024c0.374,0.093,1.104,0.743,1.104,1.141c0,0.133-0.019,0.265-0.037,0.393  c-0.033,0.227-0.066,0.461,0.002,0.717c0.067,0.253,0.118,0.517,0.039,0.735c-0.171,0.474-0.444,0.693-0.858,0.912  c-0.119,0.063-0.219,0.144-0.313,0.221c-0.091,0.074-0.176,0.144-0.278,0.2l-0.021,0.016c-0.107,0.117-0.254,0.298-0.422,0.508  c-0.482,0.597-1.209,1.5-1.594,1.569c-0.948,0.171-0.99,0.9-1.039,1.756c-0.063,1.103,0.513,1.563,1.07,2.009  c0.444,0.355,0.904,0.723,1.049,1.432c0.224,1.092-0.897,1.613-1.797,2.032l-0.123,0.057c-0.516,0.241-0.73,0.632-0.958,1.045  c-0.089,0.162-0.182,0.33-0.295,0.491l-0.023,0.033l0.013,0.039c0.046,0.138,0.094,0.258,0.138,0.371  c0.136,0.345,0.235,0.594,0.164,1.023c-0.085,0.511,0.117,0.812,0.445,1.104c0.176,0.157,0.424,0.252,0.665,0.345  c0.491,0.188,0.915,0.352,0.817,0.958c-0.051,0.315-0.257,0.615-0.439,0.878c-0.15,0.218-0.28,0.406-0.287,0.563  c-0.015,0.324,0.055,0.698,0.129,1.093c0.068,0.362,0.138,0.736,0.138,1.07c0,0.417-0.16,0.427-0.426,0.443  c-0.192,0.012-0.409,0.024-0.582,0.209c-0.25,0.266-0.178,0.68-0.114,1.045c0.028,0.16,0.055,0.312,0.055,0.442  c0,0.671-0.299,0.871-0.751,1.174c-0.114,0.076-0.236,0.157-0.362,0.253c-0.432,0.326-0.928,1.334-1.01,1.507  c-0.188,0.192-0.337,0.478-0.481,0.753c-0.22,0.422-0.428,0.82-0.726,0.82c-0.12,0-0.258-0.066-0.411-0.193  c-0.45-0.375-0.909-0.607-1.199-0.607c-0.175,0-0.254,0.08-0.29,0.148c-0.11,0.209,0.031,0.6,0.417,1.158  c0.073,0.107,0.098,0.193,0.075,0.266c-0.049,0.158-0.324,0.262-0.566,0.354c-0.156,0.061-0.303,0.115-0.405,0.188  c-0.322,0.229-0.598,0.334-0.869,0.334c-0.364,0-0.702-0.193-1.13-0.439c-0.072-0.041-0.147-0.084-0.225-0.129  c-0.193-0.107-0.361-0.16-0.515-0.16c-0.52,0-0.701,0.607-0.861,1.145c-0.13,0.438-0.252,0.848-0.51,0.9  c-0.133,0.025-0.27,0.051-0.409,0.078c-1.373,0.256-3.081,0.576-3.394,2.355c-0.08,0.453-0.291,0.684-0.626,0.684  c-0.427,0-0.957-0.361-1.281-0.67c-0.482-0.463-0.675-0.596-0.86-0.596c-0.125,0-0.226,0.068-0.353,0.154  c-0.165,0.113-0.389,0.266-0.811,0.383c-0.006,0.002-0.027,0.006-0.099,0.006c-0.034,0-0.073,0-0.115-0.002  c-0.049,0-0.102-0.002-0.155-0.002c-0.292,0-0.44,0.035-0.511,0.117c-0.034,0.041-0.046,0.09-0.037,0.145s0.021,0.109,0.032,0.164  c0.074,0.357,0.137,0.666-0.206,0.881c-0.444,0.279-0.604,0.842-0.373,1.309c0.5,1,0.855,1.354,1.813,1.793  c0.187,0.086,0.427,0.092,0.659,0.098c0.299,0.006,0.608,0.014,0.787,0.193c0.589,0.59,1.214,0.67,1.748,0.67  c0.234,0,0.471-0.018,0.722-0.035c0.262-0.02,0.532-0.039,0.812-0.039c0.253,0,0.301,0.041,0.31,0.037  c-0.023,0.109-0.648,0.432-0.969,0.473l-0.07,0.01v0.07c0,0.443,0.23,1.33,0.785,1.473c0.542,0.139,0.769,0.537,1.009,0.959  c0.158,0.279,0.321,0.566,0.582,0.783c0.234,0.193,0.469,0.326,0.697,0.453c0.142,0.078,0.289,0.16,0.436,0.258  c0.097,0.064,0.149,0.127,0.161,0.191c0.018,0.105-0.072,0.225-0.167,0.354c-0.16,0.215-0.379,0.51,0.001,0.809l0.118,0.092  c0.36,0.277,0.807,0.623,0.816,0.977c0.004,0.156-0.078,0.303-0.25,0.451c-0.204,0.174-1.326,0.855-1.585,0.98l-0.094,0.047  l0.069,0.078c0.335,0.385,0.808,0.484,1.264,0.58c0.502,0.107,0.977,0.207,1.287,0.656c0.123,0.178,0.195,0.428,0.271,0.693  c0.139,0.482,0.296,1.031,0.832,1.117c0.225,0.035,0.458-0.141,0.73-0.348c0.292-0.223,0.622-0.475,0.98-0.475  c0.089,0,0.149,0.02,0.179,0.055c0.061,0.072,0.03,0.24-0.001,0.42c-0.065,0.367-0.153,0.869,0.468,1.051  c0.992,0.293,1.152,0.9,1.373,1.742c0.048,0.182,0.098,0.373,0.159,0.572l0.023,0.076l0.075-0.021  c0.319-0.092,0.601-0.201,0.86-0.332c0.301-0.154,0.672-0.246,1.031-0.336c0.272-0.068,0.554-0.141,0.808-0.236  c0.445-0.17,0.788-0.537,1.12-0.891c0.248-0.264,0.504-0.537,0.813-0.736l1.449-1.428c0.041-0.041,0.08-0.061,0.119-0.061  c0.171,0,0.554,0.316,1.199,2.428l0.019,0.061c0.01,0.031,0.021,0.102,0.037,0.193c0.096,0.564,0.215,1.117,0.512,1.117  c0.08,0,0.161-0.043,0.241-0.129c0.571-0.611,0.93-0.984,1.097-0.984c0.075,0,0.143,0.082,0.264,0.236  c0.134,0.168,0.316,0.4,0.638,0.639c0.204,0.152,0.607,0.174,1.074,0.201c0.392,0.021,0.798,0.043,1.09,0.148  c0.116,0.041,0.224,0.063,0.318,0.063c0.492,0,0.592-0.539,0.671-0.971c0.071-0.389,0.132-0.645,0.313-0.645  c0.046,0,0.1,0.016,0.161,0.041l0.145,0.064c0.51,0.229,1.458,0.652,2.229,0.721l0.167,0.014l-0.943-1.4  c0.019-0.002,0.039-0.004,0.059-0.008l0.065-0.014v-0.064c0-0.182-0.062-0.355-0.126-0.537c-0.058-0.164-0.117-0.334-0.13-0.51  c0.255-0.055,0.431-0.172,0.524-0.344c0.132-0.246,0.094-0.596-0.117-1.064c-0.144-0.32-0.094-0.432-0.024-0.588  c0.05-0.109,0.111-0.246,0.111-0.473c0-0.561-0.277-1.072-0.545-1.566c-0.135-0.25-0.263-0.486-0.354-0.725  c-0.073-0.189-0.085-0.408-0.099-0.643c-0.014-0.246-0.027-0.502-0.12-0.729c-0.116-0.285-0.185-0.598-0.25-0.9  c-0.045-0.209-0.092-0.424-0.154-0.629c0.451-0.867,0.442-2.881-0.373-3.563c-0.48-0.402-0.15-0.848,0.199-1.32  c0.169-0.227,0.328-0.441,0.401-0.658c0.078-0.232,0.077-0.416-0.003-0.564c-0.137-0.252-0.465-0.334-0.812-0.424  c-0.144-0.035-0.292-0.074-0.424-0.125c-0.068-0.025-0.18-0.049-0.32-0.078c-0.318-0.068-0.85-0.18-0.919-0.375  c-0.008-0.021-0.029-0.082,0.062-0.195c0.439-0.549,0.629-1.018,0.581-1.434c-0.037-0.326-0.224-0.623-0.554-0.883  c-0.132-0.104-0.262-0.158-0.387-0.211c-0.191-0.08-0.357-0.15-0.509-0.385c-0.389-0.605-0.493-1.686-0.521-2.154  c0.047-0.059,0.092-0.117,0.136-0.176c0.192-0.254,0.359-0.473,0.665-0.59c1.101-0.42,0.946-1.311,0.798-2.17  c-0.063-0.363-0.128-0.741-0.092-1.072c0.041-0.378,0.066-1.063-0.229-1.393c-0.11-0.123-0.254-0.185-0.426-0.185  c-0.524,0-0.977-0.043-1.478-0.252l-0.016-0.007l-0.88,0.01c-0.129-0.223-0.247-0.456-0.353-0.696  c-0.248-0.56-0.852-0.796-1.435-1.025c-0.188-0.073-0.381-0.149-0.557-0.234c-0.314-0.152-0.522-0.312-0.657-0.502  c-0.201-0.286-0.286-0.663-0.367-1.027c-0.048-0.215-0.094-0.419-0.162-0.603l0.744-0.873c0.168-0.204,0.573-1.047,0.676-1.368  c0.07-0.009,0.132-0.013,0.188-0.013c0.231,0,0.458,0.06,0.545,0.492l0.011,0.056l0.057,0.008c0.011,0.002,0.022,0.002,0.034,0.002  c0.463,0,1.417-1.353,1.537-1.594c0.143-0.285,0.149-0.577,0.155-0.834c0.01-0.407,0.017-0.728,0.467-0.977  c0.132-0.073,0.531-0.116,1.068-0.116c0.823,0,1.719,0.099,1.954,0.217c0.107,0.054,0.192,0.125,0.267,0.187  c0.098,0.082,0.182,0.152,0.283,0.152c0.123,0,0.225-0.097,0.351-0.333c0.05-0.094,0.208-0.249,0.361-0.398  c0.273-0.268,0.442-0.439,0.442-0.572v-0.08h-0.08c-0.496,0-0.827-0.091-1.014-0.278c-0.229-0.23-0.227-0.6-0.226-0.992  c0.001-0.278,0.003-0.565-0.073-0.836c-0.078-0.274-0.332-0.306-0.516-0.306c-0.123,0-0.258,0.016-0.401,0.032  c-0.154,0.018-0.313,0.036-0.468,0.036c-0.292,0-0.496-0.067-0.641-0.213c-0.067-0.067-0.129-0.167-0.195-0.272  c-0.124-0.199-0.252-0.404-0.455-0.463c-0.181-0.052-0.319-0.082-0.432-0.106c-0.356-0.076-0.421-0.09-0.752-0.633  c-0.278-0.455-1.307-1.567-1.954-1.567l-0.024,0c-0.106,0.005-0.219,0.024-0.329,0.042c-0.126,0.021-0.256,0.043-0.376,0.043  c-0.159,0-0.276-0.04-0.368-0.124c-0.295-0.272-0.306-0.521-0.319-0.808c-0.008-0.177-0.016-0.358-0.092-0.552  c0.55-0.374,0.683-0.838,0.813-1.289c0.14-0.485,0.271-0.944,0.947-1.249c0.214-0.096,1.747-1.483,1.884-1.743  c0.375-0.713-0.062-1-0.412-1.231c-0.207-0.136-0.402-0.265-0.43-0.458c-0.024-0.176,0.085-0.404,0.335-0.698  c0.095-0.11,0.175-0.167,0.238-0.167c0.104,0,0.21,0.16,0.323,0.33c0.108,0.163,0.23,0.348,0.4,0.482  c0.091,0.072,0.205,0.149,0.327,0.231c0.338,0.228,0.76,0.512,0.836,0.817l0.012,0.046l0.047,0.012  c0.104,0.026,0.11,0.065,0.124,0.161c0.038,0.25,0.141,0.456,1.026,0.456c0.087,0,0.381,0.173,0.664,0.339  c0.509,0.299,1.142,0.671,1.547,0.671c0.16,0,0.43-0.064,0.43-0.495c0-0.348-0.252-0.69-0.454-0.964  c-0.135-0.184-0.288-0.392-0.248-0.471c0.014-0.029,0.087-0.095,0.45-0.095c0.04,0,0.083,0,0.13,0.002  c0.194,0.007,0.319,0.049,0.384,0.129c0.1,0.125,0.054,0.361,0.006,0.611c-0.053,0.275-0.113,0.586-0.005,0.856  c0.483,1.209,3.294,3.259,4.806,3.259c0.071,0,0.14-0.004,0.203-0.014l0.068-0.01v-0.069c0-0.438,0.694-2.335,0.908-2.343  c0,0,0.021,0.015,0.039,0.102l0.013,0.066l1.342-0.033c0.643-0.053,1.281-0.325,1.708-0.728c0.518-0.49,0.458-1.125,0.401-1.741  c-0.014-0.148-0.027-0.296-0.033-0.442c-0.048-1.235,0.117-2.432,0.441-3.203L52.761,7.021z" />
-                                          <circle
-                                                cx="30"
-                                                cy="50"
-                                                r="1"
-                                                fill="red"
-                                          />
-                                          <circle
-                                                cx="30"
-                                                cy="50"
-                                                r="2"
-                                                fill="none"
-                                                stroke="red"
-                                                strokeWidth="0.3"
-                                          >
-                                                <animate
-                                                      attributeName="r"
-                                                      from="1"
-                                                      to="5"
-                                                      dur="2s"
-                                                      begin="0s"
-                                                      repeatCount="indefinite"
-                                                />
-                                                <animate
-                                                      attributeName="opacity"
-                                                      from="1"
-                                                      to="0"
-                                                      dur="2s"
-                                                      begin="0s"
-                                                      repeatCount="indefinite"
-                                                />
-                                          </circle>
-                                    </svg>
-                              </div>
-                        </div> */}
-        <div className="w-[25vw] flex justify-center items-center h-[42vh] bg-white rounded-md relative shadow-xl">
-        <svg width="155" height="311" viewBox="0 0 155 311" fill="none" xmlns="http://www.w3.org/2000/svg">
-<mask id="path-1-inside-1_253_415" fill="white">
-<path d="M155 27.674L154.481 27.7712C153.768 27.9094 153.003 27.9708 152.081 27.9708C151.338 27.9708 150.592 27.9299 149.841 27.8889C149.08 27.848 148.322 27.8019 147.56 27.8019C146.168 27.8019 145.037 27.9503 144.003 28.2625C143.846 28.3085 143.667 28.3341 143.462 28.3341C141.618 28.3341 138.366 26.4049 135.496 24.706C133.644 23.6058 131.894 22.5721 130.725 22.173C130.229 22.0041 129.74 21.9222 129.228 21.9222C128.165 21.9222 127.201 22.2804 126.272 22.6284C125.372 22.961 124.521 23.2783 123.611 23.2783C123.204 23.2783 122.815 23.2118 122.427 23.0839C120.766 22.5261 119.628 20.9756 118.426 19.338C117.459 18.0229 116.462 16.6668 115.152 15.802C112.248 13.8882 111.755 12.3581 111.072 10.2396C110.68 9.00633 110.228 7.61445 109.258 5.86947C108.705 4.86649 108.496 4.06309 108.634 3.40808L108.746 2.88612H108.351C107.757 2.88612 107.022 2.8196 106.238 2.75307C105.32 2.6712 104.278 2.57909 103.289 2.57909C101.594 2.57909 100.418 2.84007 99.5971 3.4132C98.7199 4.01703 98.0928 4.88696 97.4843 5.7313C96.5735 6.98503 95.7934 8.06476 94.3749 8.06476H94.2554C93.3147 8.02383 92.5607 7.57351 91.7619 7.09761C91.2878 6.81616 90.7988 6.52448 90.265 6.31979C89.8731 6.17139 89.496 6.09975 89.1153 6.09975C88.4397 6.09975 87.8947 6.33002 87.3646 6.55518C86.4015 6.95944 85.4982 7.14366 84.3895 6.2942L80.1042 0L79.9773 0.747116C78.8761 7.15901 80.4178 10.6643 82.2021 14.7172C83.1315 16.8408 84.0984 19.0361 84.8001 21.8967C86.1253 27.2749 86.1887 28.3546 85.2891 30.8058L85.1212 31.2612L85.4832 31.384C86.8793 31.8599 89.6043 35.1861 89.6043 37.2228C89.6043 37.9034 89.5334 38.5788 89.4662 39.2338C89.343 40.3955 89.2198 41.5929 89.4736 42.9029C89.7237 44.1976 89.9141 45.5485 89.6192 46.6641C88.9809 49.0896 87.9618 50.2103 86.4165 51.331C85.9722 51.6534 85.599 52.0679 85.2481 52.4619C84.9084 52.8406 84.5911 53.1988 84.2103 53.4853L84.132 53.5672C83.7325 54.1659 83.1838 55.0922 82.5567 56.1668C80.7575 59.2218 78.0437 63.8426 76.6065 64.1957C73.0678 65.0708 72.911 68.8012 72.7281 73.1816C72.4929 78.8259 74.6431 81.1798 76.7223 83.4621C78.3796 85.2787 80.0967 87.1619 80.638 90.79C81.4742 96.378 77.2896 99.0441 73.9301 101.188L73.4709 101.48C71.5448 102.713 70.746 104.714 69.8949 106.827C69.5627 107.656 69.2155 108.516 68.7937 109.34L68.7078 109.509L68.7564 109.708C68.9281 110.415 69.1072 111.029 69.2715 111.607C69.7792 113.372 70.1487 114.647 69.8837 116.842C69.5664 119.457 70.3204 120.997 71.5448 122.491C72.2018 123.295 73.1275 123.781 74.0271 124.257C75.86 125.219 77.4427 126.058 77.0769 129.159C76.8865 130.771 76.1175 132.306 75.4382 133.652C74.8782 134.768 74.393 135.73 74.3668 136.533C74.3108 138.191 74.5721 140.105 74.8484 142.126C75.1022 143.979 75.3635 145.892 75.3635 147.602C75.3635 149.735 74.7662 149.787 73.7733 149.868C73.0566 149.93 72.2466 149.991 71.6008 150.938C70.6676 152.299 70.9363 154.418 71.1752 156.285C71.2798 157.104 71.3806 157.882 71.3806 158.547C71.3806 161.981 70.2644 163.004 68.5772 164.555C68.1516 164.944 67.6962 165.358 67.2259 165.85C65.6133 167.518 63.7618 172.676 63.4557 173.561C62.7539 174.544 62.1978 176.007 61.6602 177.415C60.839 179.574 60.0626 181.611 58.9502 181.611C58.5022 181.611 57.9871 181.273 57.416 180.623C55.7362 178.704 54.0228 177.517 52.9403 177.517C52.2871 177.517 51.9922 177.926 51.8578 178.274C51.4472 179.344 51.9735 181.345 53.4144 184.2C53.6869 184.748 53.7802 185.188 53.6943 185.561C53.5114 186.37 52.4849 186.902 51.5815 187.373C50.9992 187.685 50.4505 187.961 50.0697 188.335C48.8678 189.507 47.8375 190.044 46.8259 190.044C45.4671 190.044 44.2054 189.056 42.6078 187.797C42.339 187.588 42.0591 187.368 41.7679 187.137C41.0475 186.59 40.4203 186.319 39.8455 186.319C37.9044 186.319 37.2288 189.425 36.6315 192.178C36.1462 194.419 35.6908 196.517 34.7278 196.783C34.2313 196.911 33.7199 197.044 33.201 197.182C28.0758 198.492 21.7001 200.13 20.5317 209.234C20.2331 211.552 19.4455 212.734 18.195 212.734C16.6011 212.734 14.6227 210.886 13.4132 209.305C11.614 206.936 10.8935 206.255 10.203 206.255C9.73636 206.255 9.35934 206.603 8.88527 207.043C8.26935 207.622 7.43319 208.405 5.85793 209.003C5.83554 209.014 5.75715 209.034 5.48838 209.034C5.36147 209.034 5.21589 209.034 5.05911 209.024C4.8762 209.024 4.67835 209.014 4.48051 209.014C3.39052 209.014 2.83806 209.193 2.57303 209.612C2.44611 209.822 2.40132 210.073 2.43492 210.354C2.46851 210.636 2.5133 210.912 2.55437 211.193C2.8306 213.02 3.06576 214.602 1.7854 215.702C0.128016 217.129 -0.469236 220.01 0.393051 222.4C2.25947 227.517 3.58463 229.329 7.1607 231.575C7.85874 232.015 8.75462 232.046 9.62064 232.077C10.7368 232.108 11.8902 232.149 12.5584 233.065C14.757 236.084 17.0901 236.493 19.0834 236.493C19.9569 236.493 20.8416 236.401 21.7785 236.314C22.7565 236.212 23.7644 236.114 24.8096 236.114C25.754 236.114 25.9332 236.324 25.9668 236.304C25.8809 236.861 23.5479 238.514 22.3496 238.724L22.0883 238.775V239.134C22.0883 241.4 22.9469 245.939 25.0186 246.671C27.0418 247.383 27.8892 249.419 28.7851 251.579C29.3749 253.006 29.9833 254.475 30.9576 255.585C31.8311 256.573 32.7083 257.254 33.5594 257.904C34.0894 258.303 34.6382 258.722 35.1869 259.224C35.549 259.551 35.7431 259.874 35.7879 260.201C35.8551 260.739 35.5191 261.353 35.1645 262.013C34.5672 263.113 33.7497 264.622 35.1682 266.153L35.6087 266.623C36.9525 268.041 38.6211 269.811 38.6547 271.623C38.6696 272.421 38.3635 273.173 37.7215 273.931C36.96 274.821 32.7717 278.306 31.8049 278.946L31.454 279.186L31.7116 279.585C32.9621 281.555 34.7278 282.062 36.4299 282.553C38.3038 283.101 40.0769 283.613 41.2341 285.91C41.6932 286.821 41.962 288.1 42.2457 289.456C42.7646 291.923 43.3506 294.732 45.3514 295.172C46.1913 295.352 47.0611 294.451 48.0764 293.392C49.1664 292.25 50.3982 290.961 51.7346 290.961C52.0668 290.961 52.2908 291.063 52.4028 291.242C52.6305 291.611 52.5148 292.47 52.399 293.392C52.1564 295.27 51.8279 297.838 54.146 298.77C57.849 300.269 58.4462 303.375 59.2712 307.684C59.4504 308.615 59.637 309.593 59.8647 310.611L59.9506 311L60.2305 310.893C61.4213 310.422 62.474 309.864 63.4408 309.194C64.5644 308.406 65.9493 307.935 67.2894 307.474C68.3047 307.126 69.3574 306.753 70.3055 306.267C71.9666 305.397 73.247 303.519 74.4863 301.707C75.412 300.356 76.3676 298.959 77.5211 297.941L82.93 290.633C83.083 290.424 83.2286 290.321 83.3742 290.321C84.0125 290.321 85.4422 291.938 87.8499 302.746L87.9208 303.058C87.9581 303.217 87.9992 303.58 88.0589 304.046C88.4173 306.932 88.8615 309.762 89.9701 309.762C90.2687 309.762 90.5711 309.542 90.8697 309.102C93.0012 305.975 94.3413 304.066 94.9647 304.066C95.2446 304.066 95.4985 304.486 95.9501 305.274C96.4503 306.134 97.1297 307.321 98.3317 308.544C99.0932 309.322 100.598 309.434 102.341 309.572C103.804 309.68 105.32 309.792 106.41 310.33C106.843 310.539 107.246 310.652 107.597 310.652C109.433 310.652 109.806 307.894 110.101 305.683C110.366 303.693 110.594 302.383 111.27 302.383C111.441 302.383 111.643 302.464 111.871 302.592L112.412 302.92C114.316 304.092 117.854 306.256 120.732 306.609L121.356 306.681L117.836 299.517C117.907 299.507 117.981 299.496 118.056 299.476L118.299 299.404V299.077C118.299 298.146 118.067 297.26 117.828 296.329C117.612 295.49 117.392 294.62 117.343 293.719C118.295 293.438 118.952 292.839 119.299 291.959C119.792 290.7 119.65 288.909 118.862 286.514C118.325 284.877 118.511 284.303 118.773 283.505C118.959 282.947 119.187 282.246 119.187 281.085C119.187 278.214 118.153 275.599 117.153 273.071C116.649 271.792 116.171 270.584 115.831 269.361C115.559 268.394 115.514 267.273 115.462 266.071C115.409 264.812 115.361 263.502 115.014 262.34C114.581 260.882 114.323 259.28 114.081 257.735C113.913 256.665 113.737 255.565 113.506 254.516C115.189 250.079 115.156 239.773 112.113 236.283C110.322 234.226 111.553 231.944 112.856 229.528C113.487 228.367 114.081 227.272 114.353 226.161C114.644 224.974 114.64 224.033 114.342 223.275C113.83 221.986 112.606 221.566 111.311 221.106C110.773 220.926 110.221 220.727 109.728 220.466C109.474 220.338 109.056 220.215 108.534 220.067C107.347 219.719 105.361 219.146 105.103 218.148C105.073 218.04 104.995 217.728 105.335 217.15C106.973 214.341 107.682 211.941 107.503 209.812C107.365 208.144 106.667 206.624 105.435 205.293C104.943 204.761 104.457 204.485 103.991 204.214C103.278 203.804 102.658 203.446 102.091 202.243C100.639 199.147 100.25 193.616 100.146 191.221C100.321 190.919 100.489 190.622 100.654 190.32C101.37 189.02 101.994 187.9 103.136 187.301C107.246 185.152 106.667 180.592 106.115 176.197C105.88 174.339 105.637 172.405 105.771 170.711C105.924 168.777 106.018 165.271 104.916 163.583C104.506 162.953 103.968 162.636 103.326 162.636C101.37 162.636 99.6792 162.416 97.8091 161.346L97.7494 161.311L94.4645 161.362C93.9829 160.221 93.5425 159.028 93.1468 157.8C92.221 154.935 89.9664 153.727 87.7901 152.555C87.0884 152.181 86.3679 151.793 85.7109 151.358C84.5388 150.58 83.7624 149.761 83.2585 148.789C82.5082 147.325 82.1909 145.396 81.8885 143.533C81.7093 142.433 81.5376 141.389 81.2838 140.448L84.061 135.98C84.6881 134.936 86.1999 130.623 86.5844 128.98C86.8457 128.934 87.0772 128.913 87.2862 128.913C88.1485 128.913 88.9958 129.22 89.3206 131.431L89.3617 131.718L89.5744 131.759C89.6155 131.769 89.6566 131.769 89.7014 131.769C91.4297 131.769 94.9908 124.845 95.4387 123.612C95.9725 122.154 95.9949 120.659 96.0173 119.344C96.0546 117.261 96.0808 115.619 97.7606 114.345C98.2533 113.971 99.7427 113.751 101.747 113.751C104.819 113.751 108.164 114.258 109.041 114.861C109.441 115.138 109.758 115.501 110.038 115.818C110.404 116.238 110.717 116.596 111.094 116.596C111.553 116.596 111.934 116.1 112.405 114.892C112.591 114.411 113.181 113.618 113.752 112.856C114.771 111.484 115.402 110.609 115.402 109.928V109.519H115.103C113.252 109.519 112.016 109.053 111.318 108.096C110.463 106.92 110.471 105.026 110.475 103.02C110.478 101.598 110.486 100.129 110.202 98.7422C109.911 97.3401 108.963 97.1763 108.276 97.1763C107.817 97.1763 107.313 97.2582 106.779 97.34C106.204 97.4322 105.611 97.5243 105.032 97.5243C103.942 97.5243 103.181 97.1814 102.639 96.4343C102.389 96.0914 102.158 95.5797 101.911 95.0424C101.449 94.0241 100.971 92.9751 100.213 92.6731C99.5374 92.407 99.0223 92.2535 98.6005 92.1307C97.2716 91.7418 97.0289 91.6702 95.7934 88.8915C94.7556 86.5632 90.9145 80.8728 88.4994 80.8728H88.4098C88.0141 80.8984 87.5923 80.9956 87.1817 81.0877C86.7113 81.1952 86.2261 81.3078 85.7781 81.3078C85.1846 81.3078 84.7479 81.1031 84.4044 80.6732C83.3033 79.2813 83.2622 78.0071 83.2137 76.5385C83.1838 75.6327 83.1539 74.7065 82.8702 73.7138C84.9233 71.7999 85.4198 69.4255 85.905 67.1177C86.4276 64.6358 86.9167 62.287 89.4401 60.7262C90.2389 60.235 95.9613 53.1374 96.4727 51.8069C97.8726 48.1583 96.2413 46.6897 94.9348 45.5076C94.1621 44.8116 93.4342 44.1515 93.3297 43.1639C93.2401 42.2632 93.647 41.0965 94.5802 39.5921C94.9348 39.0292 95.2334 38.7375 95.4686 38.7375C95.8568 38.7375 96.2525 39.5562 96.6743 40.4262C97.0775 41.2603 97.5329 42.207 98.1674 42.8927C98.5071 43.2611 98.9327 43.6551 99.3881 44.0747C100.65 45.2415 102.225 46.6948 102.509 48.2555L102.554 48.4909L102.729 48.5523C103.117 48.6854 103.14 48.885 103.192 49.3762C103.334 50.6555 103.718 51.7097 107.022 51.7097C107.347 51.7097 108.444 52.595 109.5 53.4444C111.4 54.9745 113.763 56.8781 115.275 56.8781C115.872 56.8781 116.88 56.5506 116.88 54.345C116.88 52.5642 115.94 50.8142 115.185 49.412C114.682 48.4705 114.11 47.4061 114.26 47.0018C114.312 46.8534 114.584 46.5157 115.94 46.5157C116.089 46.5157 116.249 46.5157 116.425 46.5259C117.149 46.5617 117.616 46.7766 117.858 47.186C118.231 47.8257 118.06 49.0334 117.881 50.3127C117.683 51.7199 117.459 53.3114 117.862 54.693C119.665 60.8797 130.158 71.3701 135.802 71.3701C136.067 71.3701 136.325 71.3496 136.56 71.2984L136.814 71.2473V70.8942C136.814 68.6528 139.404 58.9454 140.203 58.9045C140.203 58.9045 140.281 58.9813 140.349 59.4265L140.397 59.7642L145.407 59.5953C147.807 59.3241 150.188 57.9322 151.782 55.87C153.716 53.3625 153.492 50.1131 153.279 46.9609C153.227 46.2035 153.178 45.4462 153.156 44.6991C152.977 38.3793 153.593 32.2539 154.802 28.3085L155 27.674Z"/>
-</mask>
-<path d="M155 27.674L154.481 27.7712C153.768 27.9094 153.003 27.9708 152.081 27.9708C151.338 27.9708 150.592 27.9299 149.841 27.8889C149.08 27.848 148.322 27.8019 147.56 27.8019C146.168 27.8019 145.037 27.9503 144.003 28.2625C143.846 28.3085 143.667 28.3341 143.462 28.3341C141.618 28.3341 138.366 26.4049 135.496 24.706C133.644 23.6058 131.894 22.5721 130.725 22.173C130.229 22.0041 129.74 21.9222 129.228 21.9222C128.165 21.9222 127.201 22.2804 126.272 22.6284C125.372 22.961 124.521 23.2783 123.611 23.2783C123.204 23.2783 122.815 23.2118 122.427 23.0839C120.766 22.5261 119.628 20.9756 118.426 19.338C117.459 18.0229 116.462 16.6668 115.152 15.802C112.248 13.8882 111.755 12.3581 111.072 10.2396C110.68 9.00633 110.228 7.61445 109.258 5.86947C108.705 4.86649 108.496 4.06309 108.634 3.40808L108.746 2.88612H108.351C107.757 2.88612 107.022 2.8196 106.238 2.75307C105.32 2.6712 104.278 2.57909 103.289 2.57909C101.594 2.57909 100.418 2.84007 99.5971 3.4132C98.7199 4.01703 98.0928 4.88696 97.4843 5.7313C96.5735 6.98503 95.7934 8.06476 94.3749 8.06476H94.2554C93.3147 8.02383 92.5607 7.57351 91.7619 7.09761C91.2878 6.81616 90.7988 6.52448 90.265 6.31979C89.8731 6.17139 89.496 6.09975 89.1153 6.09975C88.4397 6.09975 87.8947 6.33002 87.3646 6.55518C86.4015 6.95944 85.4982 7.14366 84.3895 6.2942L80.1042 0L79.9773 0.747116C78.8761 7.15901 80.4178 10.6643 82.2021 14.7172C83.1315 16.8408 84.0984 19.0361 84.8001 21.8967C86.1253 27.2749 86.1887 28.3546 85.2891 30.8058L85.1212 31.2612L85.4832 31.384C86.8793 31.8599 89.6043 35.1861 89.6043 37.2228C89.6043 37.9034 89.5334 38.5788 89.4662 39.2338C89.343 40.3955 89.2198 41.5929 89.4736 42.9029C89.7237 44.1976 89.9141 45.5485 89.6192 46.6641C88.9809 49.0896 87.9618 50.2103 86.4165 51.331C85.9722 51.6534 85.599 52.0679 85.2481 52.4619C84.9084 52.8406 84.5911 53.1988 84.2103 53.4853L84.132 53.5672C83.7325 54.1659 83.1838 55.0922 82.5567 56.1668C80.7575 59.2218 78.0437 63.8426 76.6065 64.1957C73.0678 65.0708 72.911 68.8012 72.7281 73.1816C72.4929 78.8259 74.6431 81.1798 76.7223 83.4621C78.3796 85.2787 80.0967 87.1619 80.638 90.79C81.4742 96.378 77.2896 99.0441 73.9301 101.188L73.4709 101.48C71.5448 102.713 70.746 104.714 69.8949 106.827C69.5627 107.656 69.2155 108.516 68.7937 109.34L68.7078 109.509L68.7564 109.708C68.9281 110.415 69.1072 111.029 69.2715 111.607C69.7792 113.372 70.1487 114.647 69.8837 116.842C69.5664 119.457 70.3204 120.997 71.5448 122.491C72.2018 123.295 73.1275 123.781 74.0271 124.257C75.86 125.219 77.4427 126.058 77.0769 129.159C76.8865 130.771 76.1175 132.306 75.4382 133.652C74.8782 134.768 74.393 135.73 74.3668 136.533C74.3108 138.191 74.5721 140.105 74.8484 142.126C75.1022 143.979 75.3635 145.892 75.3635 147.602C75.3635 149.735 74.7662 149.787 73.7733 149.868C73.0566 149.93 72.2466 149.991 71.6008 150.938C70.6676 152.299 70.9363 154.418 71.1752 156.285C71.2798 157.104 71.3806 157.882 71.3806 158.547C71.3806 161.981 70.2644 163.004 68.5772 164.555C68.1516 164.944 67.6962 165.358 67.2259 165.85C65.6133 167.518 63.7618 172.676 63.4557 173.561C62.7539 174.544 62.1978 176.007 61.6602 177.415C60.839 179.574 60.0626 181.611 58.9502 181.611C58.5022 181.611 57.9871 181.273 57.416 180.623C55.7362 178.704 54.0228 177.517 52.9403 177.517C52.2871 177.517 51.9922 177.926 51.8578 178.274C51.4472 179.344 51.9735 181.345 53.4144 184.2C53.6869 184.748 53.7802 185.188 53.6943 185.561C53.5114 186.37 52.4849 186.902 51.5815 187.373C50.9992 187.685 50.4505 187.961 50.0697 188.335C48.8678 189.507 47.8375 190.044 46.8259 190.044C45.4671 190.044 44.2054 189.056 42.6078 187.797C42.339 187.588 42.0591 187.368 41.7679 187.137C41.0475 186.59 40.4203 186.319 39.8455 186.319C37.9044 186.319 37.2288 189.425 36.6315 192.178C36.1462 194.419 35.6908 196.517 34.7278 196.783C34.2313 196.911 33.7199 197.044 33.201 197.182C28.0758 198.492 21.7001 200.13 20.5317 209.234C20.2331 211.552 19.4455 212.734 18.195 212.734C16.6011 212.734 14.6227 210.886 13.4132 209.305C11.614 206.936 10.8935 206.255 10.203 206.255C9.73636 206.255 9.35934 206.603 8.88527 207.043C8.26935 207.622 7.43319 208.405 5.85793 209.003C5.83554 209.014 5.75715 209.034 5.48838 209.034C5.36147 209.034 5.21589 209.034 5.05911 209.024C4.8762 209.024 4.67835 209.014 4.48051 209.014C3.39052 209.014 2.83806 209.193 2.57303 209.612C2.44611 209.822 2.40132 210.073 2.43492 210.354C2.46851 210.636 2.5133 210.912 2.55437 211.193C2.8306 213.02 3.06576 214.602 1.7854 215.702C0.128016 217.129 -0.469236 220.01 0.393051 222.4C2.25947 227.517 3.58463 229.329 7.1607 231.575C7.85874 232.015 8.75462 232.046 9.62064 232.077C10.7368 232.108 11.8902 232.149 12.5584 233.065C14.757 236.084 17.0901 236.493 19.0834 236.493C19.9569 236.493 20.8416 236.401 21.7785 236.314C22.7565 236.212 23.7644 236.114 24.8096 236.114C25.754 236.114 25.9332 236.324 25.9668 236.304C25.8809 236.861 23.5479 238.514 22.3496 238.724L22.0883 238.775V239.134C22.0883 241.4 22.9469 245.939 25.0186 246.671C27.0418 247.383 27.8892 249.419 28.7851 251.579C29.3749 253.006 29.9833 254.475 30.9576 255.585C31.8311 256.573 32.7083 257.254 33.5594 257.904C34.0894 258.303 34.6382 258.722 35.1869 259.224C35.549 259.551 35.7431 259.874 35.7879 260.201C35.8551 260.739 35.5191 261.353 35.1645 262.013C34.5672 263.113 33.7497 264.622 35.1682 266.153L35.6087 266.623C36.9525 268.041 38.6211 269.811 38.6547 271.623C38.6696 272.421 38.3635 273.173 37.7215 273.931C36.96 274.821 32.7717 278.306 31.8049 278.946L31.454 279.186L31.7116 279.585C32.9621 281.555 34.7278 282.062 36.4299 282.553C38.3038 283.101 40.0769 283.613 41.2341 285.91C41.6932 286.821 41.962 288.1 42.2457 289.456C42.7646 291.923 43.3506 294.732 45.3514 295.172C46.1913 295.352 47.0611 294.451 48.0764 293.392C49.1664 292.25 50.3982 290.961 51.7346 290.961C52.0668 290.961 52.2908 291.063 52.4028 291.242C52.6305 291.611 52.5148 292.47 52.399 293.392C52.1564 295.27 51.8279 297.838 54.146 298.77C57.849 300.269 58.4462 303.375 59.2712 307.684C59.4504 308.615 59.637 309.593 59.8647 310.611L59.9506 311L60.2305 310.893C61.4213 310.422 62.474 309.864 63.4408 309.194C64.5644 308.406 65.9493 307.935 67.2894 307.474C68.3047 307.126 69.3574 306.753 70.3055 306.267C71.9666 305.397 73.247 303.519 74.4863 301.707C75.412 300.356 76.3676 298.959 77.5211 297.941L82.93 290.633C83.083 290.424 83.2286 290.321 83.3742 290.321C84.0125 290.321 85.4422 291.938 87.8499 302.746L87.9208 303.058C87.9581 303.217 87.9992 303.58 88.0589 304.046C88.4173 306.932 88.8615 309.762 89.9701 309.762C90.2687 309.762 90.5711 309.542 90.8697 309.102C93.0012 305.975 94.3413 304.066 94.9647 304.066C95.2446 304.066 95.4985 304.486 95.9501 305.274C96.4503 306.134 97.1297 307.321 98.3317 308.544C99.0932 309.322 100.598 309.434 102.341 309.572C103.804 309.68 105.32 309.792 106.41 310.33C106.843 310.539 107.246 310.652 107.597 310.652C109.433 310.652 109.806 307.894 110.101 305.683C110.366 303.693 110.594 302.383 111.27 302.383C111.441 302.383 111.643 302.464 111.871 302.592L112.412 302.92C114.316 304.092 117.854 306.256 120.732 306.609L121.356 306.681L117.836 299.517C117.907 299.507 117.981 299.496 118.056 299.476L118.299 299.404V299.077C118.299 298.146 118.067 297.26 117.828 296.329C117.612 295.49 117.392 294.62 117.343 293.719C118.295 293.438 118.952 292.839 119.299 291.959C119.792 290.7 119.65 288.909 118.862 286.514C118.325 284.877 118.511 284.303 118.773 283.505C118.959 282.947 119.187 282.246 119.187 281.085C119.187 278.214 118.153 275.599 117.153 273.071C116.649 271.792 116.171 270.584 115.831 269.361C115.559 268.394 115.514 267.273 115.462 266.071C115.409 264.812 115.361 263.502 115.014 262.34C114.581 260.882 114.323 259.28 114.081 257.735C113.913 256.665 113.737 255.565 113.506 254.516C115.189 250.079 115.156 239.773 112.113 236.283C110.322 234.226 111.553 231.944 112.856 229.528C113.487 228.367 114.081 227.272 114.353 226.161C114.644 224.974 114.64 224.033 114.342 223.275C113.83 221.986 112.606 221.566 111.311 221.106C110.773 220.926 110.221 220.727 109.728 220.466C109.474 220.338 109.056 220.215 108.534 220.067C107.347 219.719 105.361 219.146 105.103 218.148C105.073 218.04 104.995 217.728 105.335 217.15C106.973 214.341 107.682 211.941 107.503 209.812C107.365 208.144 106.667 206.624 105.435 205.293C104.943 204.761 104.457 204.485 103.991 204.214C103.278 203.804 102.658 203.446 102.091 202.243C100.639 199.147 100.25 193.616 100.146 191.221C100.321 190.919 100.489 190.622 100.654 190.32C101.37 189.02 101.994 187.9 103.136 187.301C107.246 185.152 106.667 180.592 106.115 176.197C105.88 174.339 105.637 172.405 105.771 170.711C105.924 168.777 106.018 165.271 104.916 163.583C104.506 162.953 103.968 162.636 103.326 162.636C101.37 162.636 99.6792 162.416 97.8091 161.346L97.7494 161.311L94.4645 161.362C93.9829 160.221 93.5425 159.028 93.1468 157.8C92.221 154.935 89.9664 153.727 87.7901 152.555C87.0884 152.181 86.3679 151.793 85.7109 151.358C84.5388 150.58 83.7624 149.761 83.2585 148.789C82.5082 147.325 82.1909 145.396 81.8885 143.533C81.7093 142.433 81.5376 141.389 81.2838 140.448L84.061 135.98C84.6881 134.936 86.1999 130.623 86.5844 128.98C86.8457 128.934 87.0772 128.913 87.2862 128.913C88.1485 128.913 88.9958 129.22 89.3206 131.431L89.3617 131.718L89.5744 131.759C89.6155 131.769 89.6566 131.769 89.7014 131.769C91.4297 131.769 94.9908 124.845 95.4387 123.612C95.9725 122.154 95.9949 120.659 96.0173 119.344C96.0546 117.261 96.0808 115.619 97.7606 114.345C98.2533 113.971 99.7427 113.751 101.747 113.751C104.819 113.751 108.164 114.258 109.041 114.861C109.441 115.138 109.758 115.501 110.038 115.818C110.404 116.238 110.717 116.596 111.094 116.596C111.553 116.596 111.934 116.1 112.405 114.892C112.591 114.411 113.181 113.618 113.752 112.856C114.771 111.484 115.402 110.609 115.402 109.928V109.519H115.103C113.252 109.519 112.016 109.053 111.318 108.096C110.463 106.92 110.471 105.026 110.475 103.02C110.478 101.598 110.486 100.129 110.202 98.7422C109.911 97.3401 108.963 97.1763 108.276 97.1763C107.817 97.1763 107.313 97.2582 106.779 97.34C106.204 97.4322 105.611 97.5243 105.032 97.5243C103.942 97.5243 103.181 97.1814 102.639 96.4343C102.389 96.0914 102.158 95.5797 101.911 95.0424C101.449 94.0241 100.971 92.9751 100.213 92.6731C99.5374 92.407 99.0223 92.2535 98.6005 92.1307C97.2716 91.7418 97.0289 91.6702 95.7934 88.8915C94.7556 86.5632 90.9145 80.8728 88.4994 80.8728H88.4098C88.0141 80.8984 87.5923 80.9956 87.1817 81.0877C86.7113 81.1952 86.2261 81.3078 85.7781 81.3078C85.1846 81.3078 84.7479 81.1031 84.4044 80.6732C83.3033 79.2813 83.2622 78.0071 83.2137 76.5385C83.1838 75.6327 83.1539 74.7065 82.8702 73.7138C84.9233 71.7999 85.4198 69.4255 85.905 67.1177C86.4276 64.6358 86.9167 62.287 89.4401 60.7262C90.2389 60.235 95.9613 53.1374 96.4727 51.8069C97.8726 48.1583 96.2413 46.6897 94.9348 45.5076C94.1621 44.8116 93.4342 44.1515 93.3297 43.1639C93.2401 42.2632 93.647 41.0965 94.5802 39.5921C94.9348 39.0292 95.2334 38.7375 95.4686 38.7375C95.8568 38.7375 96.2525 39.5562 96.6743 40.4262C97.0775 41.2603 97.5329 42.207 98.1674 42.8927C98.5071 43.2611 98.9327 43.6551 99.3881 44.0747C100.65 45.2415 102.225 46.6948 102.509 48.2555L102.554 48.4909L102.729 48.5523C103.117 48.6854 103.14 48.885 103.192 49.3762C103.334 50.6555 103.718 51.7097 107.022 51.7097C107.347 51.7097 108.444 52.595 109.5 53.4444C111.4 54.9745 113.763 56.8781 115.275 56.8781C115.872 56.8781 116.88 56.5506 116.88 54.345C116.88 52.5642 115.94 50.8142 115.185 49.412C114.682 48.4705 114.11 47.4061 114.26 47.0018C114.312 46.8534 114.584 46.5157 115.94 46.5157C116.089 46.5157 116.249 46.5157 116.425 46.5259C117.149 46.5617 117.616 46.7766 117.858 47.186C118.231 47.8257 118.06 49.0334 117.881 50.3127C117.683 51.7199 117.459 53.3114 117.862 54.693C119.665 60.8797 130.158 71.3701 135.802 71.3701C136.067 71.3701 136.325 71.3496 136.56 71.2984L136.814 71.2473V70.8942C136.814 68.6528 139.404 58.9454 140.203 58.9045C140.203 58.9045 140.281 58.9813 140.349 59.4265L140.397 59.7642L145.407 59.5953C147.807 59.3241 150.188 57.9322 151.782 55.87C153.716 53.3625 153.492 50.1131 153.279 46.9609C153.227 46.2035 153.178 45.4462 153.156 44.6991C152.977 38.3793 153.593 32.2539 154.802 28.3085L155 27.674Z" fill="#FED766" stroke="black" stroke-width="2" mask="url(#path-1-inside-1_253_415)"/>
-</svg>
-
-<button
-  className="absolute mb-4 px-4 py-2 border border-[#274C77] rounded-md text-[#274C77] right-4 top-2 flex items-center gap-2 group hover:bg-[#274C77] hover:text-white"
->
-  <FaExclamationTriangle className="text-[#274C77] group-hover:text-white" />
-  Alert
-</button>
+        <div className="bottom w-full h-[80vh]  flex flex-wrap justify-evenly p-2">
+       <DwlrCouting/>
+       <DashFchart/>     
+          <DasbSchart/>
+          <Comaparison/>
+            <DashIndia/>      
+        <DashLast/>
         </div>
-        <div className="w-[25vw] h-[42vh] bg-white rounded-md shadow-xl"></div>
       </div>
-    </>
+    </div>
   );
-}
+};
 
 export default Dashboard;

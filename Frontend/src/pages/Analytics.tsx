@@ -111,7 +111,7 @@ const Analytics = () => {
       </div>
 
       {/* Battery Level Section */}
-      <div className="battery-level w-full flex gap-10 justify-between h-[70vh] mt-10">
+      <div className="battery-level w-full flex gap-10 justify-between h-[55vh] mt-10">
         {/* Conditionally render battery level data */}
         <CurrentBatteryLevel batteryLevel={selectedNumber === 1 ? 80 : selectedNumber === 2 ? 90 : 0} />
         <FutureBtteryLevel batteryLevel={selectedNumber === 1 ? 75 : selectedNumber === 2 ? 85 : 0} />
