@@ -1,17 +1,16 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
-  ListFilter,
   LayoutDashboard,
   UserRound,
   TriangleAlert,
   BellRing,
   ChartPie,
   Menu,
-} from "lucide-react";
-import Searchbar from "./Searchbar";
+} from "lucide-react"; 
+import Searchbar from "./Searchbar"; 
 
-// Define the type for the menu items to make TypeScript happy
+// Define the type for the menu items
 interface MenuItem {
   name: string;
   path: string;
@@ -19,10 +18,9 @@ interface MenuItem {
 }
 
 function SideBar() {
-  const location = useLocation(); // For determining current location
-  const [isCollapsed, setIsCollapsed] = useState(false); // State to manage sidebar collapse/expand
+  const location = useLocation(); 
+  const [isCollapsed, setIsCollapsed] = useState(false); 
 
-  // Define the menu items with appropriate types
   const menuItems: MenuItem[] = [
     { name: "Dashboard", path: "/dashboard", icon: <LayoutDashboard /> },
     { name: "DWLRs", path: "/all-dwlrs", icon: <UserRound /> },
@@ -31,7 +29,6 @@ function SideBar() {
     { name: "Analytics", path: "/analytics", icon: <ChartPie /> },
   ];
 
-  // Toggle sidebar collapse/expand
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
   };
@@ -40,45 +37,52 @@ function SideBar() {
     <div
       className={`${
         isCollapsed ? "w-16" : "w-60"
-      } h-full bg-[#7A8C84] rounded-tr-2xl flex flex-col gap-4 transition-all duration-300 ease-in-out`}
+      } h-full bg-[#7A8C84] rounded-tr-2xl flex flex-col transition-all duration-300 ease-in-out`}
       id="Sidebar_container"
     >
       {/* Header Section */}
-      <div className="flex items-center justify-between  p-2">
+      <div className="flex items-center justify-between p-6">
+
         <div
-          className="flex items-center cursor-pointer"
+          className="cursor-pointer flex items-center"
           onClick={toggleSidebar}
           id="hamburger_menu_container"
         >
-          <Menu className="text-white" />
-          {!isCollapsed && (
-            <h2 className="ml-2 text-white font-kameron">MENU</h2>
-          )}
+          <Menu className="text-white text-2xl" />
         </div>
+
+
         {!isCollapsed && (
-          <span className="text-white text-lg cursor-pointer">
-            <ListFilter /> {/* Add the icon as a child */}
-          </span>
+          <h2 className="ml-2 text-white font-kameron text-lg">MENU</h2>
         )}
       </div>
-      {/* Search Bar */}
-      {!isCollapsed && <Searchbar />} {/* Hide search bar when collapsed */}
+
+ 
+      {!isCollapsed && (
+        <div className="px-4">
+          <Searchbar />
+        </div>
+      )}
+
       {/* Menu Items */}
-      <div className="mt-4 flex flex-col gap-4">
+      <div className="flex flex-col mt-5 gap-3 px-4">
         {menuItems.map((item) => (
           <Link
             to={item.path}
             key={item.path}
             className={`${
-              isCollapsed ? "justify-center" : "gap-2"
-            } flex items-center py-3 px-4 text-white rounded-lg transition duration-300 ease-in-out ${
+              isCollapsed ? "justify-center px-5" : "gap-3 px-4"
+            } flex items-center py-3 text-white rounded-lg transition duration-300 ease-in-out w-full ${
               location.pathname === item.path
                 ? "bg-[#FFC107]"
                 : "hover:bg-[#FFC107]"
             }`}
           >
-            <span className="text-white text-lg">{item.icon}</span>
-            {!isCollapsed && <span className="text-left">{item.name}</span>}
+            <span className="text-white text-xl">{item.icon}</span>
+            {/* Menu Text: Visible only when expanded */}
+            {!isCollapsed && (
+              <span className="text-left text-sm">{item.name}</span>
+            )}
           </Link>
         ))}
       </div>
