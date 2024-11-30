@@ -85,7 +85,7 @@ function CurrentBatteryLevel() {
     <div className="currentb w-full sm:w-1/2 h-auto sm:h-[50vh] bg-white rounded-lg shadow-md justify-evenly flex flex-wrap gap-4 p-4 sm:p-6">
       {/* Header Section */}
       <div className="flex justify-between items-center w-full mb-4">
-        <h2 className="text-lg font-bold text-[#274C77]">Battery Levels - {selectedDate}</h2>
+        <h2 className="text-xl font-bold text-[#274C77] ">Battery Levels - {selectedDate}</h2>
         <select
           value={selectedDate}
           onChange={handleDateChange}
@@ -109,7 +109,7 @@ function CurrentBatteryLevel() {
 
       {/* Battery Status Section */}
       <div className="Battery-Status w-full sm:w-[45%] h-auto sm:h-[70%] bg-gray-50 rounded-lg shadow-lg p-4 flex flex-col justify-center items-center">
-        <h3 className="text-sm font-medium text-gray-700 mb-3">Battery Status</h3>
+        <h3 className="text-sm font-medium text-gray-700 mb-3 ">Battery Status</h3>
         <div className="relative w-[120px] sm:w-[150px] h-[40px] sm:h-[50px] bg-gray-200 rounded-full overflow-hidden shadow-inner">
           <div
             className={`absolute top-0 left-0 h-full rounded-full transition-all duration-1000 ease-in-out ${currentBatteryLevel > 80 ? "bg-gradient-to-r from-green-500 to-green-300" : currentBatteryLevel > 60 ? "bg-gradient-to-r from-green-400 to-green-200" : currentBatteryLevel > 40 ? "bg-gradient-to-r from-yellow-400 to-yellow-200" : currentBatteryLevel > 20 ? "bg-gradient-to-r from-orange-500 to-orange-300" : "bg-gradient-to-r from-red-500 to-red-300"} pulse`}

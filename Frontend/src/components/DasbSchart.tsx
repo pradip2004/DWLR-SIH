@@ -63,7 +63,7 @@ function DashSchart() {
   return (
     <>
       {/* Wrapper div containing the chart */}
-      <div className="first w-[25vw] h-[38vh] bg-white rounded-md shadow-xl flex flex-col justify-between">
+      <div className="first w-[25vw] h-[38vh] overflow-y-scroll bg-white rounded-md shadow-xl flex flex-col justify-between">
         {/* State and City Name */}
         <div className="px-4 py-2">
           <h3 className="text-md font-semibold text-[#274C77]">State Name</h3>

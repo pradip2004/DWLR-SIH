@@ -14,13 +14,12 @@ function DwlrCouting() {
     { label: "Total DWLRs", value: dwlrsData.total },
     { label: "ACTIVE DWLRs", value: dwlrsData.active },
     { label: "Problematic DWLRs", value: dwlrsData.problematic },
-    { label: "Low Battery", value: dwlrsData.lowBattery }
   ];
 
   return (
     <>
       {/* Wrapper Div with Black Box */}
-      <div className="first w-[30vw]  h-[38vh] bg-white  p-4 sm:p-6 lg:p-8 rounded-md shadow-lg overflow-hidden">
+      <div className="first w-[30vw]  h-[38vh] overflow-y-scroll bg-white  p-4 sm:p-6 lg:p-8 rounded-md shadow-lg overflow-hidden">
         {/* Categories Content Inside the Black Box */}
         <div className="flex flex-col justify-evenly t gap-2 h-full">
           {categories.map((category, index) => (

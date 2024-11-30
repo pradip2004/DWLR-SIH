@@ -24,7 +24,7 @@ function FutureBatteryLevel({
   return (
     <div className="Future w-full lg:w-1/2 h-[50vh] bg-white shadow-lg rounded-md p-8">
       {/* Estimated Charging Date */}
-      <div className="flex justify-between items-center text-gray-600 mb-6">
+      <div className="flex justify-between items-center text-[#274C77] mb-6">
         <span className="font-bold text-3xl">Estimated Charging Date:</span>
         <span className="font-semibold text-green-600">{selectedDate}</span>
       </div>
