@@ -9,8 +9,6 @@ const SignupPage = () => {
       <div className="relative min-h-screen w-full" 
       style={{
         backgroundImage:'url(/bg.png)',
-        // backgroundImage: 'linear-gradient(to bottom, #03045E,#0077B6,#00B4D8,#90E0EF,#CAF0F8)',
-        // backgroundImage: 'linear-gradient(to bottom, #cfad89,#cfc1af,#78b2c4,#1088a0,#818792)',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }

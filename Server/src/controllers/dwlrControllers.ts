@@ -3,47 +3,83 @@ import { DWLR } from "../model/dwlr"
 import { DailyDWLRData } from "../model/dwlrData";
 
 
-export const allDwlrInfo = async (req: Request, res: Response) => {
+export const allDwlrInfo = async (req: Request, res: Response): Promise<any> => {
       try {
-            const total = await DWLR.countDocuments();
-            const active = await DWLR.countDocuments({ active: true });
-            const lowBattery = await DWLR.countDocuments({ lowBattery: true });
-            const anomalyDwlr = await DWLR.countDocuments({ anomalyDwlr: true });
-
-            res.status(200).json({
-                  total,
-                  lowBattery,
-                  active,
-                  anomalyDwlr,
-            });
+        const { state, district } = req.query;
+    
+        const queryConditions: any = {};
+    
+        if (state) {
+          queryConditions.state = state;
+        }
+    
+        if (district) {
+          queryConditions.district = district;
+        }
+    
+        const total = await DWLR.countDocuments(queryConditions);
+        const active = await DWLR.countDocuments({ ...queryConditions, active: true });
+        const lowBattery = await DWLR.countDocuments({ ...queryConditions, lowBattery: true });
+        const anomalyDwlr = await DWLR.countDocuments({ ...queryConditions, anomalyDwlr: true });
+    
+        return res.status(200).json({
+          total,
+          active,
+          lowBattery,
+          anomalyDwlr,
+        });
+    
       } catch (error: any) {
-            console.error("Error fetching DWLR data:", error);
-            res.status(500).json({
-                  message: "Error fetching DWLR data",
-                  error: error.message,
-            });
+        console.error("Error fetching DWLR data:", error);
+        return res.status(500).json({
+          message: "Error fetching DWLR data",
+          error: error.message,
+        });
       }
-}
+    };
 
-export const allDwlrLocations = async (req: Request, res: Response) => {
+export const getAllStates = async (req: Request, res: Response) => {
       try {
-
-            const states = await DWLR.distinct("state");
-            const districts = await DWLR.distinct("district");
-
-
-            res.status(200).json({
-                  states,
-                  districts,
-            });
+          const states = await DWLR.distinct("state");
+  
+          res.status(200).json({
+              states,
+          });
       } catch (error: any) {
-            console.error("Error fetching DWLR locations:", error);
-            res.status(500).json({
-                  message: "Error fetching DWLR locations",
-                  error: error.message,
-            });
+          console.error("Error fetching states:", error);
+          res.status(500).json({
+              message: "Error fetching states",
+              error: error.message,
+          });
       }
-};
+  };
+
+
+  // Controller function to get districts based on the selected state
+export const getDistrictsByState = async (req: Request, res: Response): Promise<any> => {
+      try {
+          const { state } = req.query;
+  
+          if (!state) {
+              return res.status(400).json({
+                  message: "State parameter is required",
+              });
+          }
+  
+          const districts = await DWLR.distinct("district", { state });
+  
+          res.status(200).json({
+              districts,
+          });
+      } catch (error: any) {
+          console.error("Error fetching districts:", error);
+          res.status(500).json({
+              message: "Error fetching districts",
+              error: error.message,
+          });
+      }
+  };
+  
 
 export const allProblematicDwlrCoordinates = async (req: Request, res: Response) => {
       try {

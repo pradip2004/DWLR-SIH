@@ -35,7 +35,7 @@ const Dashboard = () => {
   };
 
   // Render dropdown items based on type
-  const renderDropdownItems = (type) => {
+  const renderDropdownItems = (type: any) => {
     let data = [];
     if (type === 'state') {
       data = dropdownData.state;

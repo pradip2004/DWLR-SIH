@@ -5,6 +5,7 @@ import dwlrRoutes from "./routes/dwlrRoutes"
 import connectDB from "./config/db";
 import passport from "./config/passportConfig";
 import session from "express-session";
+import cors from 'cors';
 import { setupWebSocket } from "./config/websocket";
 import { sendToKafka } from "./config/kafkaProducer";
 import './config/kafkaConsumer';
@@ -13,6 +14,11 @@ import './config/kafkaConsumer';
 dotenv.config();
 const app = express();
 
+app.use(cors({
+  origin: 'http://localhost:5173', 
+  methods: ['GET', 'POST'],
+  credentials: true,  
+}))
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(
