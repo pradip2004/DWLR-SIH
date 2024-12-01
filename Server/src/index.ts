@@ -42,7 +42,8 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use("/api/auth", authRoutes);
-app.use("/api/v1/dwlr", dwlrRoutes)
+app.use("/api/v1/dwlr", dwlrRoutes);
+// app.use("/api/v2/dwlr", )
 
 
 

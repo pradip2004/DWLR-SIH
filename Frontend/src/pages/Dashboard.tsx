@@ -6,7 +6,7 @@ import DasbSchart from '../components/DasbSchart';
 import Comaparison from '../components/Comaparison';
 import DashIndia from '../components/DashIndia';
 import DashLast from '../components/DashLast';
-import DwlrCouting from '../components/DwlrCouting'; // Re-added DwlrCouting
+import DwlrCouting from '../components/DwlrCouting';
 import { useDwlrContext } from '../context/DwlrContext';
 
 const Dashboard = () => {
@@ -14,7 +14,6 @@ const Dashboard = () => {
   const [selectedState, setSelectedState] = useState<string | null>(null);
   const [selectedCity, setSelectedCity] = useState<string | null>(null);
   const [districts, setDistricts] = useState<string[]>([]);
-
   const { data, loading, error, setData } = useDwlrContext();
 
   useEffect(() => {
@@ -25,9 +24,7 @@ const Dashboard = () => {
 
   const fetchDistricts = async (state: string) => {
     try {
-      const response = await axios.get<{ districts: string[] }>(
-        `http://localhost:8000/api/v1/dwlr/districts?state=${state}`
-      );
+      const response = await axios.get<{ districts: string[] }>(`http://localhost:8000/api/v1/dwlr/districts?state=${state}`);
       setDistricts(response.data.districts);
     } catch (error) {
       console.error('Error fetching districts:', error);
@@ -144,9 +141,9 @@ const Dashboard = () => {
 
         {/* Updated section including DwlrCouting */}
         <div className="bottom w-full h-[80vh] flex flex-wrap justify-evenly p-2">
-          <DwlrCouting /> 
+          <DwlrCouting />
           <DashFchart selectedState={selectedState} selectedCity={selectedCity} />
-          <DasbSchart selectedState={selectedState} selectedCity={selectedCity}/>
+          <DasbSchart selectedState={selectedState} selectedCity={selectedCity} />
           <Comaparison />
           <DashIndia />
           <DashLast />
@@ -157,3 +154,4 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+

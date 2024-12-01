@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { DWLR } from "../model/dwlr"
 import { DailyDWLRData } from "../model/dwlrData";
+import mongoose from "mongoose";
 
 
 export const allDwlrInfo = async (req: Request, res: Response): Promise<any> => {
@@ -55,7 +56,6 @@ export const getAllStates = async (req: Request, res: Response) => {
   };
 
 
-  // Controller function to get districts based on the selected state
 export const getDistrictsByState = async (req: Request, res: Response): Promise<any> => {
       try {
           const { state } = req.query;
@@ -81,23 +81,22 @@ export const getDistrictsByState = async (req: Request, res: Response): Promise<
   };
   
 
-export const allProblematicDwlrCoordinates = async (req: Request, res: Response) => {
+  export const allProblematicDwlrCoordinates = async (req: Request, res: Response) => {
       try {
-
-            const problematicDwlr = await DWLR.find({ active: false }).select(
-                  "longitude latitude state district -_id"
-            );
-
-
-            res.status(200).json(problematicDwlr);
+        // Find all problematic DWLR with `active: false`, including the _id field
+        const problematicDwlr = await DWLR.find({ active: false }).select(
+          "longitude latitude state district lowBattery anomalyDwlr id"
+        );
+    
+        res.status(200).json(problematicDwlr);
       } catch (error: any) {
-            console.error("Error fetching problematic DWLR coordinates:", error);
-            res.status(500).json({
-                  message: "Error fetching problematic DWLR coordinates",
-                  error: error.message,
-            });
+        console.error("Error fetching problematic DWLR coordinates:", error);
+        res.status(500).json({
+          message: "Error fetching problematic DWLR coordinates",
+          error: error.message,
+        });
       }
-};
+    };
 
 export const allDwlr = async (req: Request, res: Response) => {
       try {
@@ -133,6 +132,7 @@ export const allDwlr = async (req: Request, res: Response) => {
                               active: dwlr.active,
                               anomalyDwlr: dwlr.anomalyDwlr,
                               _id: dwlr._id,
+                              dwlrId: dwlr.id,
                               latestWaterLevel,
                               latestBatteryPercentage,
                               lastUpdatedInHours,
@@ -181,6 +181,7 @@ export const dwlrDetails = async (req: Request, res: Response) : Promise<any> =>
                   district: dwlr.district,
                   lowBattery: dwlr.lowBattery,
                   active: dwlr.active,
+                  delrId: dwlr.id,
                   anomalyDwlr: dwlr.anomalyDwlr,
                   latestWaterLevel,
                   latestBatteryPercentage,
@@ -196,3 +197,65 @@ export const dwlrDetails = async (req: Request, res: Response) : Promise<any> =>
             });
       }
 };
+
+
+export const previousData = async (req: Request, res: Response): Promise<any> => {
+      try {
+        const { dwlrId, noOfDays } = req.body;
+    
+        if (!dwlrId || !noOfDays) {
+          return res.status(400).json({ error: "dwlrId and noOfDays are required." });
+        }
+    
+        // Calculate the start date for the query
+        const startDate = new Date();
+        startDate.setDate(startDate.getDate() - noOfDays);
+    
+        // Query the DailyDWLRData collection for all matching documents
+        const results = await DailyDWLRData.find({
+          dwlrId: new mongoose.Types.ObjectId(dwlrId),
+          date: { $gte: startDate },
+        })
+          .select("dailyData.timestamp dailyData.waterLevel date")
+          .exec();
+    
+        // Create a map to store the highest water level for each date
+        const dateMap: Map<string, number> = new Map();
+    
+        results.forEach((result) => {
+          result.dailyData.forEach((data) => {
+            if (data.timestamp && data.waterLevel !== undefined) {
+              const dateKey = new Date(result.date).toISOString().split("T")[0]; // Use result.date for the document date
+              const currentLevel = dateMap.get(dateKey) || 0;
+              dateMap.set(dateKey, Math.max(currentLevel, data.waterLevel ?? 0));
+            }
+          });
+        });
+    
+        // Generate a list of all dates in the requested range
+        const currentDate = new Date();
+        const datesInRange: { date: string; waterLevel: number }[] = [];
+    
+        for (let i = 0; i < noOfDays; i++) {
+          const date = new Date();
+          date.setDate(currentDate.getDate() - i);
+          const dateKey = date.toISOString().split("T")[0]; // Format date as YYYY-MM-DD
+          datesInRange.push({
+            date: dateKey,
+            waterLevel: dateMap.get(dateKey) ?? 0, // Use nullish coalescing to provide a fallback of 0
+          });
+        }
+    
+        // Sort dates in ascending order
+        datesInRange.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    
+        return res.status(200).json({
+          dwlrId,
+          data: datesInRange,
+        });
+      } catch (error) {
+        console.error("Error fetching previous trend data:", error);
+        return res.status(500).json({ error: "Internal server error" });
+      }
+    };
+    
