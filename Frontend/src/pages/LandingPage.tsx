@@ -1,13 +1,13 @@
-import React from 'react'
 import LandingHeader from '../components/LandingHeader'
 import { useNavigate } from "react-router-dom";
+import { useDwlrContext } from '../context/DwlrContext';
 
 function LandingPage() {
-
+  const {data, loading, error} = useDwlrContext()
   const navigate = useNavigate();
 
   const goToLogin = () => {
-    navigate("/auth/signin"); // Replace "/login" with your actual login route
+    navigate("/auth/signin"); 
   };
   const goToSignup = () => {
     navigate("/auth/signup");
@@ -463,15 +463,15 @@ function LandingPage() {
         }}
       >
         <div className='flex flex-col font-kameron items-center'>
-          <h1 className='text-white text-4xl'>14000</h1>
+          <h1 className='text-white text-4xl'>{(loading) ? '00' : data.total}</h1>
           <h3 className='text-white'>Total DWLRs</h3>
         </div>
         <div className='flex flex-col font-kameron items-center border-l border-white pl-3'>
-          <h1 className='text-white text-4xl'>13920</h1>
+          <h1 className='text-white text-4xl'>{(loading) ? '00' : data.active}</h1>
           <h3 className='text-white'>Active DWLRs</h3>
         </div>
         <div className='flex flex-col font-kameron items-center border-l border-white pl-3'>
-          <h1 className='text-white text-4xl'>80</h1>
+          <h1 className='text-white text-4xl'>{(loading) ? '00' : (data.anomalyDwlr + data.lowBattery)}</h1>
           <h3 className='text-white'>Problematic</h3>
         </div>
       </div>

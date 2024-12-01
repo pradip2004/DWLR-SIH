@@ -2,30 +2,13 @@ import React, { useState } from 'react';
 import { MdPieChart, MdBarChart } from 'react-icons/md';
 import { Pie, Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement } from 'chart.js';
+import { useDwlrContext } from '../context/DwlrContext';
 
-// Register necessary Chart.js components
+
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement);
 
-// New data for the charts
-const pieData = {
-  labels: ['Red', 'Blue', 'Yellow'],
-  datasets: [{
-    data: [180, 250, 130], // New data values
-    backgroundColor: ['#FF6347', '#4682B4', '#FFD700'], // Different color scheme
-    borderWidth: 0, // Remove border for a smoother look
-  }],
-};
 
-const barData = {
-  labels: ['Red', 'Blue', 'Yellow'],
-  datasets: [{
-    label: 'Another Dataset',
-    data: [180, 250, 130],  // New data values (same as pie chart)
-    borderColor: ['#FF6347', '#4682B4', '#FFD700'], // Same colors as pie chart
-    backgroundColor: ['#FF6347', '#4682B4', '#FFD700'],  // Match pie chart colors
-    borderWidth: 1,
-  }],
-};
+
 
 const options = {
   responsive: true,
@@ -57,17 +40,35 @@ const options = {
   cutout: '70%', // Makes the chart a donut (70% cutout for the center)
 };
 
-function DashSchart() {
+function DashSchart({selectedState, selectedCity}) {
   const [chartType1, setChartType1] = useState('pie');
+  const { data, loading } = useDwlrContext();
+  const pieData = {
+    labels: ['Low Battery', 'Anomaly DWLR'],
+    datasets: [{
+      data: [data?.lowBattery || 0,(data?.anomalyDwlr || 0)],
+      backgroundColor: ['#FF6347', '#4682B4'], 
+      borderWidth: 0, 
+    }],
+  };
+  
+  const barData = {
+    labels: ['Low Battery', 'Anomaly DWLR'],
+    datasets: [{
+      label: 'Low Battery',
+      data: [data?.lowBattery || 0,(data?.anomalyDwlr || 0)],
+      borderColor: ['#FF6347', '#4682B4'], 
+      backgroundColor: ['#FF6347', '#4682B4'], 
+      borderWidth: 1,
+    }],
+  };
 
   return (
     <>
-      {/* Wrapper div containing the chart */}
       <div className="first w-[25vw] h-[38vh] overflow-y-scroll bg-white rounded-md shadow-xl flex flex-col justify-between">
-        {/* State and City Name */}
         <div className="px-4 py-2">
-          <h3 className="text-md font-semibold text-[#274C77]">State Name</h3>
-          <h3 className="text-md text-zinc-800">City Name</h3>
+          <h3 className="text-md font-semibold text-[#274C77]">{selectedState || 'State Name'}</h3>
+          <h3 className="text-md text-zinc-800">{selectedCity || 'City Name'}</h3>
         </div>
 
         {/* Buttons to switch between Pie and Bar chart */}

@@ -12,6 +12,7 @@ import Analytics from './pages/Analytics';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import TrainingModel from './pages/TrainingModel';
+import { DwlrProvider } from './context/DwlrContext';
 
 
 
@@ -64,8 +65,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root') as HTMLElement).render(
   <StrictMode>
-    
+    <DwlrProvider>
     <RouterProvider router={router} />
- 
+  </DwlrProvider>
   </StrictMode>,
 );
