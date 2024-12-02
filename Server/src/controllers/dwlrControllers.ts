@@ -199,67 +199,6 @@ export const dwlrDetails = async (req: Request, res: Response) : Promise<any> =>
 };
 
 
-// export const previousData = async (req: Request, res: Response): Promise<any> => {
-//       try {
-//         const { dwlrId, noOfDays } = req.body;
-    
-//         if (!dwlrId || !noOfDays) {
-//           return res.status(400).json({ error: "dwlrId and noOfDays are required." });
-//         }
-    
-//         // Calculate the start date for the query
-//         const startDate = new Date();
-//         startDate.setDate(startDate.getDate() - noOfDays);
-    
-//         // Query the DailyDWLRData collection for all matching documents
-//         const results = await DailyDWLRData.find({
-//           dwlrId: new mongoose.Types.ObjectId(dwlrId),
-//           date: { $gte: startDate },
-//         })
-//           .select("dailyData.timestamp dailyData.waterLevel date")
-//           .exec();
-    
-//         // Create a map to store the highest water level for each date
-//         const dateMap: Map<string, number> = new Map();
-    
-//         results.forEach((result) => {
-//           result.dailyData.forEach((data) => {
-//             if (data.timestamp && data.waterLevel !== undefined) {
-//               const dateKey = new Date(result.date).toISOString().split("T")[0]; // Use result.date for the document date
-//               const currentLevel = dateMap.get(dateKey) || 0;
-//               dateMap.set(dateKey, Math.max(currentLevel, data.waterLevel ?? 0));
-//             }
-//           });
-//         });
-    
-//         // Generate a list of all dates in the requested range
-//         const currentDate = new Date();
-//         const datesInRange: { date: string; waterLevel: number }[] = [];
-    
-//         for (let i = 0; i < noOfDays; i++) {
-//           const date = new Date();
-//           date.setDate(currentDate.getDate() - i);
-//           const dateKey = date.toISOString().split("T")[0]; // Format date as YYYY-MM-DD
-//           datesInRange.push({
-//             date: dateKey,
-//             waterLevel: dateMap.get(dateKey) ?? 0, // Use nullish coalescing to provide a fallback of 0
-//           });
-//         }
-    
-//         // Sort dates in ascending order
-//         datesInRange.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-    
-//         return res.status(200).json({
-//           dwlrId,
-//           data: datesInRange,
-//         });
-//       } catch (error) {
-//         console.error("Error fetching previous trend data:", error);
-//         return res.status(500).json({ error: "Internal server error" });
-//       }
-//     };
-    
-
 export const previousData = async (req: Request, res: Response): Promise<any> => {
   try {
     const { id, noOfDays } = req.body;
@@ -326,5 +265,76 @@ export const previousData = async (req: Request, res: Response): Promise<any> =>
   } catch (error) {
     console.error("Error fetching previous trend data:", error);
     return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+
+export const dwlrBatteryDetails = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { id } = req.params;
+
+    
+    const dwlr = await DWLR.findOne({ id });
+    if (!dwlr) {
+      return res.status(404).json({ message: "DWLR not found" });
+    }
+
+    // Get the DWLR's ObjectId
+    const dwlrObjectId = dwlr._id;
+
+    // Calculate the start of the current week and the past four weeks
+    const currentDate = new Date();
+    const weeklyTimestamps = Array.from({ length: 4 }, (_, i) => {
+      const weekStart = new Date();
+      weekStart.setDate(currentDate.getDate() - i * 7);
+      weekStart.setHours(0, 0, 0, 0);
+      return weekStart;
+    });
+
+    // Query DailyDWLRData for the past 4 weeks
+    const batteryData = await DailyDWLRData.find({
+      dwlrId: dwlrObjectId,
+      date: { $gte: weeklyTimestamps[3] }, // Only consider the last 4 weeks
+    }).lean();
+
+    // Initialize weekly data structure
+    const weeklyData: { [key: string]: number } = {
+      week1: 0,
+      week2: 0,
+      week3: 0,
+      week4: 0,
+    };
+
+    // Iterate through battery data and calculate weekly max batteryPercentage
+    for (const data of batteryData) {
+      for (const daily of data.dailyData) {
+        const timestamp = new Date(daily.timestamp);
+        for (let i = 0; i < 4; i++) {
+          if (timestamp >= weeklyTimestamps[i]) {
+            const weekKey = `week${4 - i}`;
+            weeklyData[weekKey] = Math.max(weeklyData[weekKey], daily.batteryPercentage || 0);
+            break;
+          }
+        }
+      }
+    }
+
+    // Get the last updated battery level from the most recent timestamp
+    let currentBattery = 0;
+    if (batteryData.length > 0) {
+      const latestData = batteryData[batteryData.length - 1].dailyData;
+      if (latestData && latestData.length > 0) {
+        currentBattery = latestData[latestData.length - 1].batteryPercentage || 0;
+      }
+    }
+
+    // Send the response
+    res.json({
+      weeklyData,
+      currentBattery,
+    });
+  } catch (error) {
+    console.error("Error fetching battery details:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };

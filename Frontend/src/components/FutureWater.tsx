@@ -60,7 +60,7 @@ function FutureWater({ data, loading, id }) {
 
 
   return (
-    <div className="w-1/2 overflow-y-scroll  h-full bg-white rounded-md shadow-lg p-5 mx-auto">
+    <div className="w-1/2 h-full bg-white rounded-md shadow-lg p-5 mx-auto">
       {/* Header Section */}
       <div className="flex gap-10 items-center mb-5">
         <h2 className="text-2xl font-bold text-[#274C77]">Projected Water Levels</h2>
