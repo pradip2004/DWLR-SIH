@@ -199,63 +199,132 @@ export const dwlrDetails = async (req: Request, res: Response) : Promise<any> =>
 };
 
 
+// export const previousData = async (req: Request, res: Response): Promise<any> => {
+//       try {
+//         const { dwlrId, noOfDays } = req.body;
+    
+//         if (!dwlrId || !noOfDays) {
+//           return res.status(400).json({ error: "dwlrId and noOfDays are required." });
+//         }
+    
+//         // Calculate the start date for the query
+//         const startDate = new Date();
+//         startDate.setDate(startDate.getDate() - noOfDays);
+    
+//         // Query the DailyDWLRData collection for all matching documents
+//         const results = await DailyDWLRData.find({
+//           dwlrId: new mongoose.Types.ObjectId(dwlrId),
+//           date: { $gte: startDate },
+//         })
+//           .select("dailyData.timestamp dailyData.waterLevel date")
+//           .exec();
+    
+//         // Create a map to store the highest water level for each date
+//         const dateMap: Map<string, number> = new Map();
+    
+//         results.forEach((result) => {
+//           result.dailyData.forEach((data) => {
+//             if (data.timestamp && data.waterLevel !== undefined) {
+//               const dateKey = new Date(result.date).toISOString().split("T")[0]; // Use result.date for the document date
+//               const currentLevel = dateMap.get(dateKey) || 0;
+//               dateMap.set(dateKey, Math.max(currentLevel, data.waterLevel ?? 0));
+//             }
+//           });
+//         });
+    
+//         // Generate a list of all dates in the requested range
+//         const currentDate = new Date();
+//         const datesInRange: { date: string; waterLevel: number }[] = [];
+    
+//         for (let i = 0; i < noOfDays; i++) {
+//           const date = new Date();
+//           date.setDate(currentDate.getDate() - i);
+//           const dateKey = date.toISOString().split("T")[0]; // Format date as YYYY-MM-DD
+//           datesInRange.push({
+//             date: dateKey,
+//             waterLevel: dateMap.get(dateKey) ?? 0, // Use nullish coalescing to provide a fallback of 0
+//           });
+//         }
+    
+//         // Sort dates in ascending order
+//         datesInRange.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    
+//         return res.status(200).json({
+//           dwlrId,
+//           data: datesInRange,
+//         });
+//       } catch (error) {
+//         console.error("Error fetching previous trend data:", error);
+//         return res.status(500).json({ error: "Internal server error" });
+//       }
+//     };
+    
+
 export const previousData = async (req: Request, res: Response): Promise<any> => {
-      try {
-        const { dwlrId, noOfDays } = req.body;
-    
-        if (!dwlrId || !noOfDays) {
-          return res.status(400).json({ error: "dwlrId and noOfDays are required." });
+  try {
+    const { id, noOfDays } = req.body;
+
+    if (!id || !noOfDays) {
+      return res.status(400).json({ error: "id and noOfDays are required." });
+    }
+
+    // Find the _id of the DWLR document with the given id
+    const dwlr = await DWLR.findOne({ id }).select("_id").exec();
+
+    if (!dwlr) {
+      return res.status(404).json({ error: "DWLR with the specified id not found." });
+    }
+
+    const dwlrId = dwlr._id;
+
+    // Calculate the start date for the query
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - noOfDays);
+
+    // Query the DailyDWLRData collection for all matching documents
+    const results = await DailyDWLRData.find({
+      dwlrId: new mongoose.Types.ObjectId(dwlrId),
+      date: { $gte: startDate },
+    })
+      .select("dailyData.timestamp dailyData.waterLevel date")
+      .exec();
+
+    // Create a map to store the highest water level for each date
+    const dateMap: Map<string, number> = new Map();
+
+    results.forEach((result) => {
+      result.dailyData.forEach((data) => {
+        if (data.timestamp && data.waterLevel !== undefined) {
+          const dateKey = new Date(result.date).toISOString().split("T")[0]; // Use result.date for the document date
+          const currentLevel = dateMap.get(dateKey) || 0;
+          dateMap.set(dateKey, Math.max(currentLevel, data.waterLevel ?? 0));
         }
-    
-        // Calculate the start date for the query
-        const startDate = new Date();
-        startDate.setDate(startDate.getDate() - noOfDays);
-    
-        // Query the DailyDWLRData collection for all matching documents
-        const results = await DailyDWLRData.find({
-          dwlrId: new mongoose.Types.ObjectId(dwlrId),
-          date: { $gte: startDate },
-        })
-          .select("dailyData.timestamp dailyData.waterLevel date")
-          .exec();
-    
-        // Create a map to store the highest water level for each date
-        const dateMap: Map<string, number> = new Map();
-    
-        results.forEach((result) => {
-          result.dailyData.forEach((data) => {
-            if (data.timestamp && data.waterLevel !== undefined) {
-              const dateKey = new Date(result.date).toISOString().split("T")[0]; // Use result.date for the document date
-              const currentLevel = dateMap.get(dateKey) || 0;
-              dateMap.set(dateKey, Math.max(currentLevel, data.waterLevel ?? 0));
-            }
-          });
-        });
-    
-        // Generate a list of all dates in the requested range
-        const currentDate = new Date();
-        const datesInRange: { date: string; waterLevel: number }[] = [];
-    
-        for (let i = 0; i < noOfDays; i++) {
-          const date = new Date();
-          date.setDate(currentDate.getDate() - i);
-          const dateKey = date.toISOString().split("T")[0]; // Format date as YYYY-MM-DD
-          datesInRange.push({
-            date: dateKey,
-            waterLevel: dateMap.get(dateKey) ?? 0, // Use nullish coalescing to provide a fallback of 0
-          });
-        }
-    
-        // Sort dates in ascending order
-        datesInRange.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-    
-        return res.status(200).json({
-          dwlrId,
-          data: datesInRange,
-        });
-      } catch (error) {
-        console.error("Error fetching previous trend data:", error);
-        return res.status(500).json({ error: "Internal server error" });
-      }
-    };
-    
+      });
+    });
+
+    // Generate a list of all dates in the requested range
+    const currentDate = new Date();
+    const datesInRange: { date: string; waterLevel: number }[] = [];
+
+    for (let i = 0; i < noOfDays; i++) {
+      const date = new Date();
+      date.setDate(currentDate.getDate() - i);
+      const dateKey = date.toISOString().split("T")[0]; // Format date as YYYY-MM-DD
+      datesInRange.push({
+        date: dateKey,
+        waterLevel: dateMap.get(dateKey) ?? 0, // Use nullish coalescing to provide a fallback of 0
+      });
+    }
+
+    // Sort dates in ascending order
+    datesInRange.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+    return res.status(200).json({
+      dwlrId,
+      data: datesInRange,
+    });
+  } catch (error) {
+    console.error("Error fetching previous trend data:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
