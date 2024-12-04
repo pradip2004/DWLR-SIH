@@ -10,11 +10,9 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 
-import { PieChart } from "react-native-svg-charts";
-
+// import { PieChart } from "react-native-svg-charts";
 
 export default function Dashboard() {
-
     const router = useRouter();
 
     const [fontsLoaded] = useFonts({
@@ -23,7 +21,6 @@ export default function Dashboard() {
         'Poppins-Medium': require('../assets/fonts/Poppins/Poppins-Medium.ttf'),
 
     });
-
     return (
         <LinearGradient
             colors={["#DEFFFC", "#D4F8FA", "#488DDD"]}
@@ -183,7 +180,7 @@ export default function Dashboard() {
                         </TouchableOpacity>
                     </View>
                     {/* Pie chart section */}
-                    <PieChart
+                    {/* <PieChart
                         style={{ height: 170, width: 250, }}
                         data={[
                             { key: 1, value: 45, svg: { fill: '#5A6ACF' } },
@@ -193,7 +190,7 @@ export default function Dashboard() {
                         innerRadius="70%"
                         outerRadius="100%"
                         padAngle={0} // Removes gaps
-                    />
+                    /> */}
 
 
                     <View style={{ marginTop: 10, flexDirection: 'row' }}>
@@ -263,3 +260,4 @@ export default function Dashboard() {
         </LinearGradient>
     )
 }
+

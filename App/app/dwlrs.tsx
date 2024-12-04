@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, Image, ScrollView, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
@@ -8,49 +8,59 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useFonts } from 'expo-font';
+import axios from 'axios';
 
-export default function Dashboard() {
+export default function DWLR() {
     const router = useRouter();
-
     const [fontsLoaded] = useFonts({
         'Kameron-SemiBold': require('../assets/fonts/Kameron/Kameron-SemiBold.ttf'),
         'Kameron-Medium': require('../assets/fonts/Kameron/Kameron-Medium.ttf'),
         'Poppins-Regular': require('../assets/fonts/Poppins/Poppins-Regular.ttf'),
         'Poppins-Medium': require('../assets/fonts/Poppins/Poppins-Medium.ttf'),
-
     });
 
-
-
     const [selectedOption, setSelectedOption] = useState("All");
+    const [cardData, setCardData] = useState([]);
 
-    // Sample card data
-    const cardData = [
-        { id: 1, status: "Active", color: "#A7F482", },
-        { id: 2, status: "No Data", color: "#FED766" },
-        { id: 3, status: "Low Battery", color: "#FF6262" },
-        { id: 4, status: "Abnormal Data", color: "#FED766" },
-    ];
+    // Fetch data from API on component mount
+    useEffect(() => {
+        axios.get('http://192.168.29.198:8000/api/v1/dwlr/all')
+            .then(response => {
+                setCardData(response.data);
+            })
+            .catch(error => {
+                console.error("Error fetching data:", error);
+            });
+    }, []);
 
-    // Dynamically reorder cards based on selected option
-    const reorderedCards = selectedOption === "All"
-        ? cardData
-        : cardData
-            .filter(card => card.status === selectedOption) // Bring matching cards to the top
-            .concat(cardData.filter(card => card.status !== selectedOption)); // Append other cards
+    // Function to filter cards based on selected option
+    const filterCards = () => {
+        switch (selectedOption) {
+            case "Low Battery":
+                return cardData.filter(card => card.lowBattery === true);
+            case "Active":
+                return cardData.filter(card => card.active === true);
+            case "Abnormal Data":
+                return cardData.filter(card => card.anomalyDwlr === true);
+            case "All":
+            default:
+                return cardData;
+        }
+    };
 
-    const handleOptionPress = (option: React.SetStateAction<string>) => {
+    const reorderedCards = filterCards();
+
+    const handleOptionPress = (option) => {
         setSelectedOption(option);
     };
 
-    const getBoxStyle = (option: string) => ({
+    const getBoxStyle = (option) => ({
         height: 35,
         width: 108,
         borderRadius: 6,
         marginLeft: 18,
         justifyContent: 'center',
         alignItems: 'center',
-
         backgroundColor: selectedOption === option ? '#FED766' : 'white',
     });
 
@@ -69,7 +79,7 @@ export default function Dashboard() {
             </View>
 
             {/* Filter Options */}
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} >
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 <View style={{ flexDirection: 'row', marginVertical: 20 }}>
                     {["All", "No Data", "Low Battery", "Abnormal Data"].map(option => (
                         <TouchableOpacity key={option} onPress={() => handleOptionPress(option)}>
@@ -85,7 +95,7 @@ export default function Dashboard() {
             <ScrollView style={{ marginBottom: 75 }}>
                 {reorderedCards.map((card, index) => (
                     <View
-                        key={card.id}
+                        key={card._id}
                         style={{
                             backgroundColor: '#fff',
                             height: 363,
@@ -97,25 +107,29 @@ export default function Dashboard() {
                             paddingTop: 29,
                         }}
                     >
+                        {/* Status Label */}
                         <View
                             style={{
                                 height: 35,
                                 width: 125,
                                 borderRadius: 20,
-                                backgroundColor: card.color,
+                                backgroundColor: card.lowBattery ? "#FF6262" : card.anomalyDwlr ? "#FFA500" : "#A7F482",
                                 justifyContent: 'center',
                                 alignItems: 'center',
                                 marginLeft: 195,
                                 marginBottom: 10,
                             }}
                         >
-                            <Text style={{ fontFamily: 'Kameron-SemiBold' }}>{card.status}</Text>
+                            <Text style={{ fontFamily: 'Kameron-SemiBold' }}>
+                                {card.lowBattery ? "Low Battery" : card.anomalyDwlr ? "Abnormal" : "Active"}
+                            </Text>
                         </View>
+
                         <View style={{ paddingLeft: 35 }}>
-                            <Text style={{ fontSize: 30, fontFamily: 'Kameron-SemiBold', color: '#000' }}>DWLR ID: 222222</Text>
+                            <Text style={{ fontSize: 30, fontFamily: 'Kameron-SemiBold', color: '#000' }}>DWLR ID: {card._id}</Text>
                             <Text style={{ fontSize: 20, fontFamily: 'Kameron-SemiBold', color: '#000', marginTop: 25 }}>Last Reported</Text>
-                            <Text style={{ fontSize: 20, fontFamily: 'Kameron-SemiBold', color: '#000', marginTop: 20 }}>Water Level</Text>
-                            <Text style={{ fontSize: 20, fontFamily: 'Kameron-SemiBold', color: '#000', marginTop: 20 }}>Battery</Text>
+                            <Text style={{ fontSize: 20, fontFamily: 'Kameron-SemiBold', color: '#000', marginTop: 20 }}>Water Level: {card.latestWaterLevel} m</Text>
+                            <Text style={{ fontSize: 20, fontFamily: 'Kameron-SemiBold', color: '#000', marginTop: 20 }}>Battery: {card.latestBatteryPercentage}%</Text>
                         </View>
                         <View style={{ justifyContent: 'flex-end', alignItems: 'flex-end', bottom: -15 }}>
                             <Image source={require('../assets/images/six.png')} style={{ position: 'relative' }} />
@@ -137,15 +151,14 @@ export default function Dashboard() {
                                 <Text style={{ color: '#274c77', fontSize: 12, fontFamily: 'Poppins-Medium', top: 5 }}>
                                     Get Location
                                 </Text>
-
                             </View>
                         </TouchableOpacity>
                     </View>
                 ))}
             </ScrollView>
 
-             {/* Footer Navigation */}
-             <View style={{
+            {/* Footer Navigation */}
+            <View style={{
                 flexDirection: 'row',
                 justifyContent: 'space-around',
                 alignItems: 'center',
@@ -184,9 +197,9 @@ export default function Dashboard() {
                     <Text style={{ fontSize: 12, color: '#0077cc' }}>Alert</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={{ alignItems: 'center', marginTop: 15 }} onPress={() => router.push("/analytic")}>
-                    <Ionicons name="analytics" size={26} color="#0077cc" />
-                    <Text style={{ fontSize: 12, color: '#0077cc' }}>Analytics</Text>
+                <TouchableOpacity style={{ alignItems: 'center', marginTop: 15 }} onPress={() => router.push("/profile")}>
+                    <Ionicons name="person-outline" size={26} color="#0077cc" />
+                    <Text style={{ fontSize: 12, color: '#0077cc' }}>Profile</Text>
                 </TouchableOpacity>
             </View>
         </LinearGradient>

@@ -55,11 +55,11 @@ export default function Index() {
         />
       </View>
 
-      <View style={{  marginTop: 80, }}>
+      <View style={{ marginTop: 80, }}>
         {/* Name Section */}
         <MaskedView
           maskElement={
-            <Text style={{ fontFamily: 'Kameron-SemiBold', fontSize: 35 ,textAlign:'center'}}>
+            <Text style={{ fontFamily: 'Kameron-SemiBold', fontSize: 35, textAlign: 'center' }}>
               DWLRS MONITOR
             </Text>
           }
@@ -113,40 +113,78 @@ export default function Index() {
           <Image source={require('../assets/images/image5.png')} style={{ marginHorizontal: 15 }} />
           <View style={{ alignItems: 'center', justifyContent: 'center' }}>
             <Text style={{ fontSize: 24, color: '#fff', }}>14000</Text>
-            <Text style={{ fontSize: 12, fontFamily: 'Kameron-SemiBold', color: '#fff', marginTop: 10,textAlign:'center' }}>Problematic</Text>
+            <Text style={{ fontSize: 12, fontFamily: 'Kameron-SemiBold', color: '#fff', marginTop: 10, textAlign: 'center' }}>Problematic</Text>
           </View>
         </View>
       </View>
-{/* Login Button */}
-<TouchableOpacity onPress={() => router.push("/signin")}>
-        <View
-          style={{
-            width: 122,
-            height: 42,
-            borderRadius: 22,
-            backgroundColor: '#DEFFFC',
-            justifyContent: 'center',
-            alignItems: 'center',
-            alignSelf: 'center',
-            marginTop: 15,
-          }}
-        >
-          <Text
+
+          {/* Buttons */}
+
+ 
+      <View
+        style={{
+          flexDirection: 'row',
+          alignSelf: 'center',
+          justifyContent: 'space-between', 
+          width: 270, 
+        }}
+      >
+        {/* Login Button */}
+        <TouchableOpacity onPress={() => router.push("/signin")}>
+          <View
             style={{
-              color: '#274c77',
-              fontFamily: 'Kameron-SemiBold',
-              fontSize: 15,
-              textAlign: 'center',
+              width: 122,
+              height: 42,
+              borderRadius: 22,
+              backgroundColor: '#DEFFFC',
+              justifyContent: 'center',
+              alignItems: 'center',
+              
             }}
           >
-            LOGIN
-          </Text>
-        </View>
-      </TouchableOpacity>
+            <Text
+              style={{
+                color: '#274c77',
+                fontFamily: 'Kameron-SemiBold',
+                fontSize: 15,
+                textAlign: 'center',
+              }}
+            >
+              LOGIN
+            </Text>
+          </View>
+        </TouchableOpacity>
+
+        {/* Signup Button */}
+        <TouchableOpacity onPress={() => router.push("/signup")}>
+          <View
+            style={{
+              width: 122,
+              height: 42,
+              borderRadius: 22,
+              backgroundColor: '#DEFFFC',
+              justifyContent: 'center',
+              alignItems: 'center',
+             
+            }}
+          >
+            <Text
+              style={{
+                color: '#274c77',
+                fontFamily: 'Kameron-SemiBold',
+                fontSize: 15,
+                textAlign: 'center',
+              }}
+            >
+              SIGNUP
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </View>
 
 
       <Image source={require("../assets/images/five.png")}
-        style={{ marginLeft: -55, marginTop: -15, }}
+        style={{ marginLeft: -55, marginTop: 15, }}
       />
 
 
