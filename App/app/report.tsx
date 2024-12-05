@@ -26,7 +26,7 @@ export default function Report() {
     const [selectedState, setSelectedState] = useState('');
     const [selectedCity, setSelectedCity] = useState('');
 
-    const handleStartDateChange = (event, selectedDate) => {
+    const handleStartDateChange = (event: any, selectedDate: { toISOString: () => string; }) => {
         setShowStartPicker(false); // Hide the picker after selecting a date
         if (selectedDate) {
             const formattedDate = selectedDate.toISOString().split('T')[0]; // Format the date (YYYY-MM-DD)
@@ -34,7 +34,7 @@ export default function Report() {
         }
     };
 
-    const handleEndDateChange = (event, selectedDate) => {
+    const handleEndDateChange = (event: any, selectedDate: { toISOString: () => string; }) => {
         setShowEndPicker(false); // Hide the picker after selecting a date
         if (selectedDate) {
             const formattedDate = selectedDate.toISOString().split('T')[0]; // Format the date (YYYY-MM-DD)
@@ -84,7 +84,7 @@ export default function Report() {
             {/* Start Date Input */}
             <View style={styles.inputContainer}>
                 <TextInput
-                    style={styles.input}
+                    style={styles.input1}
                     placeholder="Select Start Date"
                     value={startDate}
                     editable={false}
@@ -105,7 +105,7 @@ export default function Report() {
             {/* End Date Input */}
             <View style={styles.inputContainer}>
                 <TextInput
-                    style={styles.input}
+                    style={styles.input1}
                     placeholder="Select End Date"
                     value={endDate}
                     editable={false}
@@ -333,7 +333,7 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         marginBottom: 14,
     },
-    input: {
+    input1: {
         flex: 1,
         paddingVertical: 10,
         paddingHorizontal: 10,

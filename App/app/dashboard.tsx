@@ -182,6 +182,7 @@ export default function Dashboard() {
                             </View>
                         </TouchableOpacity>
                     </View>
+                    
                     {/* Pie chart section */}
                     <PieChart
                         style={{ height: 170, width: 250, }}

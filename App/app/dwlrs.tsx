@@ -9,7 +9,7 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useFonts } from 'expo-font';
 
-export default function Dashboard() {
+export default function Dwlrs() {
     const router = useRouter();
 
     const [fontsLoaded] = useFonts({
@@ -113,6 +113,11 @@ export default function Dashboard() {
                         </View>
                         <View style={{ paddingLeft: 35 }}>
                             <Text style={{ fontSize: 30, fontFamily: 'Kameron-SemiBold', color: '#000' }}>DWLR ID: 222222</Text>
+                            <View style={{ flexDirection: 'row' }}>
+                                <Ionicons name="location-sharp" size={18} />
+                                <Text>Maharastra-Mumbai</Text>
+                            </View>
+
                             <Text style={{ fontSize: 20, fontFamily: 'Kameron-SemiBold', color: '#000', marginTop: 25 }}>Last Reported</Text>
                             <Text style={{ fontSize: 20, fontFamily: 'Kameron-SemiBold', color: '#000', marginTop: 20 }}>Water Level</Text>
                             <Text style={{ fontSize: 20, fontFamily: 'Kameron-SemiBold', color: '#000', marginTop: 20 }}>Battery</Text>
@@ -144,8 +149,8 @@ export default function Dashboard() {
                 ))}
             </ScrollView>
 
-             {/* Footer Navigation */}
-             <View style={{
+            {/* Footer Navigation */}
+            <View style={{
                 flexDirection: 'row',
                 justifyContent: 'space-around',
                 alignItems: 'center',
