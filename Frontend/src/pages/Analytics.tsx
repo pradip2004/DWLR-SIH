@@ -6,6 +6,8 @@ import FutureWater from "../components/FutureWater";
 import CurrentBatteryLevel from "../components/CurrentBatteryLevel";
 import FutureBatteryLevel from "../components/FutureBatteryLevel";
 import axios from "axios";
+import TrainingModel from "./TrainingModel";
+
 
 const Analytics: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -15,6 +17,7 @@ const Analytics: React.FC = () => {
   const [batteryData, setBatteryData] = useState(null); // State for battery data
   const [loading, setLoading] = useState(false); // Loading state for API requests
   const [error, setError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<"aiSahayak" | "trainingModel">("aiSahayak"); // New state for tab control
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -75,22 +78,25 @@ const Analytics: React.FC = () => {
         {/* Navigation Buttons */}
         <div className="flex space-x-4">
           <button
-            className={`py-2 px-4 rounded-lg transition duration-300 ${
-              isActiveTab("/analytics/ai_sahayak")
+            className={`py-2 px-4 rounded-lg transition duration-300 ${activeTab === "aiSahayak"
                 ? "bg-yellow-500 text-black"
                 : "bg-[#274C77] text-white hover:bg-blue-700"
-            }`}
-            onClick={() => navigate("/analytics")}
+              }`}
+            onClick={() => {
+              setActiveTab("aiSahayak");
+              navigate("/analytics");
+            }}
           >
             AI Sahayak
           </button>
           <button
-            className={`py-2 px-4 rounded-lg transition duration-300 ${
-              isActiveTab("/analytics/training_model")
+            className={`py-2 px-4 rounded-lg transition duration-300 ${activeTab === "trainingModel"
                 ? "bg-yellow-500 text-black"
                 : "bg-[#274C77] text-white hover:bg-blue-700"
-            }`}
-            onClick={() => navigate("/analytics/training_model")}
+              }`}
+            onClick={() => {
+              setActiveTab("trainingModel");
+            }}
           >
             Training Model
           </button>
@@ -120,21 +126,29 @@ const Analytics: React.FC = () => {
       {/* Error Message */}
       {error && <p className="text-red-500 mt-4">{error}</p>}
 
-      {/* Water Level Components */}
-      <div className="water-level w-full h-[100vh] flex gap-10 justify-between mt-10">
-        <CurrentWater id={searchValue} data={currentWaterData} loading={loading} />
-        <FutureWater id={searchValue} data={futureWaterData} loading={loading} />
-      </div>
+      {/* Render the active component */}
+      <div >
+      {activeTab === "aiSahayak" ? (
+        <>
+          <div className="water-level w-full h-[100vh] flex gap-10 justify-between mt-10">
+            <CurrentWater id={searchValue} data={currentWaterData} loading={loading} />
+            <FutureWater id={searchValue} data={futureWaterData} loading={loading} />
+          </div>
 
-      {/* Battery Level Components */}
-      <div className="battery-level w-full flex gap-10 justify-between h-[60vh] mt-10">
-        <CurrentBatteryLevel id={searchValue} data={batteryData} loading={loading} />
-        <FutureBatteryLevel data={batteryData} loading={loading}/>
+        
+          <div className="battery-level w-full flex gap-10 justify-between h-[60vh] mt-10">
+            <CurrentBatteryLevel id={searchValue} data={batteryData} loading={loading} />
+            <FutureBatteryLevel data={batteryData} loading={loading} />
+          </div>
+          </>
+      ) : (
+        <TrainingModel />
+        
+      )}
       </div>
     </div>
   );
 };
 
 export default Analytics;
-
 

@@ -18,7 +18,7 @@ kafkaProducer.on("error", (err) => {
 });
 
 export const sendToKafka = (message: any) => {
-  const payloads = [{ topic, messages: JSON.stringify(message), partition: 1 }];
+  const payloads = [{ topic, messages: JSON.stringify(message), partition: 0 }];
   kafkaProducer.send(payloads, (err, data) => {
     if (err) {
       console.error("Error sending data to Kafka:", err);

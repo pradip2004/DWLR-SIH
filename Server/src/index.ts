@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import dotenv from "dotenv";
 import authRoutes from "./routes/auth";
 import dwlrRoutes from "./routes/dwlrRoutes"
+import authorityRoutes from "./routes/authorityRoutes"
 import connectDB from "./config/db";
 import passport from "./config/passportConfig";
 import session from "express-session";
@@ -43,24 +44,25 @@ app.get("/", (req: Request, res: Response) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/v1/dwlr", dwlrRoutes);
+app.use('/api/v1/authority', authorityRoutes);
 
 
 
 
-// setupWebSocket((data: string) => {
-//   console.log("WebSocket received new data at:", new Date().toISOString());
-//   console.log("Raw data received:", data);
-//   try {
-//     const dwlrArray = JSON.parse(data);
-//     if (Array.isArray(dwlrArray)) {
-//       dwlrArray.forEach((dwlr) => {
-//         sendToKafka(dwlr);
-//       });
-//     }
-//   } catch (err) {
-//     console.error("Error processing WebSocket message:", err);
-//   }
-// });
+setupWebSocket((data: string) => {
+  console.log("WebSocket received new data at:", new Date().toISOString());
+  console.log("Raw data received:", data);
+  try {
+    const dwlrArray = JSON.parse(data);
+    if (Array.isArray(dwlrArray)) {
+      dwlrArray.forEach((dwlr) => {
+        sendToKafka(dwlr);
+      });
+    }
+  } catch (err) {
+    console.error("Error processing WebSocket message:", err);
+  }
+});
 
 
 const PORT = process.env.PORT ;

@@ -139,19 +139,19 @@ const Dashboard = () => {
         </div>
 
           <div className="w-full min-h-screen flex flex-col ">
-            <div className="flex gap-2 w-full mt-4 h-[80vh] ">
-              <div className="w-1/2 flex flex-col h-[80vh] bg-white rounded-md overflow-hidden shadow-lg">
+            <div className="flex gap-2 w-full mt-4 h-auto ">
+              <div className="w-1/2 flex flex-col h-[90vh] bg-white rounded-md overflow-hidden shadow-lg">
                 <DwlrCounting />
                 <LineGraphDwCounting />
               </div>
-              <div className="w-1/2 h-[80vh] p-2 bg-white rounded-md shadow-lg">
+              <div className="w-1/2 h-[90vh] p-2 bg-white rounded-md shadow-lg">
                 <div className="shadow-xl w-full h-full">
-                  <DashFchart />
-                  <DashSchart />
+                  <DashFchart selectedState={selectedState} selectedCity={selectedCity}/>
+                  <DashSchart selectedState={selectedState} selectedCity={selectedCity}/>
                 </div>
               </div>
             </div>
-            <div className="flex gap-2 w-full mt-4 h-[40vh]">
+            <div className="flex gap-2 w-full mt-4 h-auto">
               <div className="w-1/2 h-full bg-white rounded-md shadow-lg">
                 <DashIndia />
               </div>

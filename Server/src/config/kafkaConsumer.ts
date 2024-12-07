@@ -6,7 +6,7 @@ import { DailyDWLRData } from "../model/dwlrData";
 
 const topic = process.env.KAFKA_TOPIC || "dwlr-test";
 
-export const kafkaConsumer = new Consumer(kafkaClient, [{ topic, partition: 1 }], {
+export const kafkaConsumer = new Consumer(kafkaClient, [{ topic, partition: 0 }], {
   autoCommit: true,
 });
 

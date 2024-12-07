@@ -1,14 +1,15 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
+import axios from 'axios';
 
 interface FormData {
   email: string;
-  mobile: string;
+  phone: string;
 }
 
 function DashForm() {
   const [formData, setFormData] = useState<FormData>({
     email: '',
-    mobile: '',
+    phone: '',
   });
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -19,10 +20,19 @@ function DashForm() {
     });
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log('Form submitted:', formData);
+    try {
+      const response = await axios.post('http://localhost:8000/api/v1/authority/add', formData,{
+        headers: {
+          'Content-Type': 'application/json'
+        }});
+      console.log('Form submitted:', response.data);
+      alert('User added successfully');
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      alert('Error adding user');
+    }
   };
 
   return (
@@ -44,13 +54,13 @@ function DashForm() {
           </div>
 
           <div className="mb-4">
-            <label htmlFor="mobile" className="block text-sm font-medium text-gray-600">Mobile Number</label>
+            <label htmlFor="phone" className="block text-sm font-medium text-gray-600">Mobile Number</label>
             <input
               type="tel"
-              id="mobile"
-              name="mobile"
+              id="phone"
+              name="phone"
               placeholder="Enter your mobile number"
-              value={formData.mobile}
+              value={formData.phone}
               onChange={handleChange}
               className="w-full p-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#274C77] text-gray-800"
               required
