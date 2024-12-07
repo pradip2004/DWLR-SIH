@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import { DWLR } from "../model/dwlr"
-import { DailyDWLRData } from "../model/dwlrData";
+import { DailyDWLRData, DailyDWLRDataDocument } from "../model/dwlrData";
 import mongoose from "mongoose";
+import { Parser } from "json2csv"; 
 
 
 export const allDwlrInfo = async (req: Request, res: Response): Promise<any> => {
@@ -338,3 +339,69 @@ export const dwlrBatteryDetails = async (req: Request, res: Response): Promise<a
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+interface DownloadDataQuery {
+  state: string;
+  district: string;
+  startDate: string;
+  endDate: string;
+}
+
+
+export const dwlrDownloadData = async (req: Request<unknown, unknown, unknown, DownloadDataQuery>, res: Response): Promise<any> => {
+  try {
+    const { state, district, startDate, endDate } = req.query;
+
+    if (!state || !district || !startDate || !endDate) {
+      return res.status(400).json({ error: "All parameters are required." });
+    }
+
+    const start = new Date(startDate as string);
+    const end = new Date(endDate as string);
+
+    const dwlrs = await DWLR.find({ state, district });
+    if (!dwlrs.length) {
+      return res.status(404).json({ error: "No DWLRs found for the given location." });
+    }
+
+    const dwlrIds = dwlrs.map((dwlr) => dwlr._id);
+    const dailyData = await DailyDWLRData.find({
+      dwlrId: { $in: dwlrIds },
+      date: { $gte: start, $lte: end },
+    }).populate("dwlrId");
+
+    // Safely handle `dwlrId` population
+    const csvData = dailyData.flatMap((record) => {
+      const dwlr = record.dwlrId;
+
+      // Ensure `dwlrId` is populated
+      if (!(dwlr instanceof Object) || !("state" in dwlr)) {
+        console.error(`DWLR ID not populated for record: ${record._id}`);
+        return [];
+      }
+
+      return record.dailyData.map((entry) => ({
+        DWLR_ID: dwlr._id,
+        State: dwlr.state,
+        District: dwlr.district,
+        Latitude: dwlr.latitude,
+        Longitude: dwlr.longitude,
+        Date: record.date.toISOString().split("T")[0],
+        Time: entry.timestamp.toISOString().split("T")[1],
+        Water_Level: entry.waterLevel ?? "N/A",
+        Battery_Percentage: entry.batteryPercentage ?? "N/A",
+        Temperature: entry.temperature ?? "N/A",
+      }));
+    });
+
+    const parser = new Parser();
+    const csv = parser.parse(csvData);
+
+    res.header("Content-Type", "text/csv");
+    res.attachment("dwlr_data.csv");
+    res.send(csv);
+  } catch (err) {
+    console.error("Error generating CSV:", err);
+    res.status(500).json({ error: "Internal server error." });
+  }
+}

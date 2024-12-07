@@ -1,5 +1,6 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 import { updateDWLRStatusOnSave } from "../middlewares/updateDWLRStatus";
+import { DWLRDocument } from "./dwlr";
 
 // Define the structure of the `dailyData` array
 export interface DailyDataItem {
@@ -11,7 +12,7 @@ export interface DailyDataItem {
 
 // Define the full structure of the `DailyDWLRData` document
 export interface DailyDWLRDataDocument extends Document {
-  dwlrId: mongoose.Types.ObjectId;
+  dwlrId: mongoose.Types.ObjectId | DWLRDocument;
   dailyData: DailyDataItem[];
   date: Date;
 }

@@ -6,7 +6,7 @@ import axios from 'axios';
 
 const Alert: React.FC = () => {
   const { data, loading, error } = useDwlrContext();
-  const [details, setDetails] = useState<any | null>(null); // Holds selected notification details
+  const [details, setDetails] = useState<any | null>(null); 
 
   const fetchDetails = async (id: string) => {
     try {

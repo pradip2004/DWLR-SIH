@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { ObjectId } from "mongoose";
 
 const dwlrSchema = new mongoose.Schema({
   id: String,
@@ -21,3 +21,14 @@ const dwlrSchema = new mongoose.Schema({
 });
 
 export const DWLR = mongoose.model("DWLR", dwlrSchema);
+
+export interface DWLRDocument extends Document {
+  _id: ObjectId;
+  state: string;
+  district: string;
+  latitude: number;
+  longitude: number;
+  lowBattery?: boolean;
+  active?: boolean;
+  anomalyDwlr?: boolean;
+}

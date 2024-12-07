@@ -9,21 +9,26 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { useDwlrContext } from "../context/DwlrContext";
 
 // Register Chart.js components
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 function LineGraphDwCounting() {
-  // Data for the bar graph with type safety
+  const { data, loading, error } = useDwlrContext();
+
+  const totalDwlr = data?.total || 0;
+  const activeDwlr = data?.active || 0;
+  const problematicDwlr = (data?.lowBattery || 0) + (data?.anomalyDwlr || 0);
   const chartData = {
     labels: ["Total DWLRs", "Problematic DWLRs", "Active DWLRs"], // X-axis labels
     datasets: [
       {
         label: "DWLR Data",
-        data: [200, 50, 150], // Y-axis data
-        backgroundColor: ["#36A2EB", "#FF6384", "#FFCD56"], // Updated to Chart.js default colors
-        borderRadius: 10, // Rounded corners for the bars
-        borderColor: "#fff", // White border for each bar
+        data: [totalDwlr, activeDwlr, problematicDwlr], 
+        backgroundColor: ["#36A2EB", "#FF6384", "#FFCD56"], 
+        borderRadius: 10, 
+        borderColor: "#fff", 
         borderWidth: 2,
       },
     ],
