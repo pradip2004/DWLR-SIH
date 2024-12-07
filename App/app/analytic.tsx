@@ -9,8 +9,8 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { LineChart } from "react-native-chart-kit";
-import { PieChart } from "react-native-svg-charts";
-import { BarChart } from "react-native-svg-charts";
+// import { PieChart } from "react-native-svg-charts";
+// import { BarChart } from "react-native-svg-charts";
 import { Dimensions } from "react-native";
 const screenWidth = Dimensions.get("window").width;
 
@@ -191,7 +191,7 @@ export default function Analytic() {
               justifyContent: 'center',
               marginVertical: 30
             }}>
-              <PieChart
+              {/* <PieChart
                 style={{ height: 170, width: 250 }}
                 data={[
                   { key: 1, value: 45, svg: { fill: '#5A6ACF' } },
@@ -200,7 +200,7 @@ export default function Analytic() {
                 ]}
                 innerRadius="80%"
                 outerRadius="100%"
-              />
+              /> */}
             </View>
             <View style={{ paddingHorizontal: 20 }}>
               <Text style={{ fontFamily: 'Poppins-Regular', fontSize: 14, color: '#274c77' }}>Present Month Data</Text>
@@ -302,7 +302,7 @@ export default function Analytic() {
               justifyContent: 'center',
               marginVertical: 30
             }}>
-              <PieChart
+              {/* <PieChart
                 style={{ height: 170, width: 250 }}
                 data={[
                   { key: 1, value: 45, svg: { fill: '#5A6ACF' } },
@@ -311,7 +311,7 @@ export default function Analytic() {
                 ]}
                 innerRadius="80%"
                 outerRadius="100%"
-              />
+              /> */}
             </View>
             <View style={{ paddingHorizontal: 20 }}>
               <Text style={{ fontFamily: 'Poppins-Regular', fontSize: 14, color: '#274c77' }}>Future Month Data</Text>
@@ -352,14 +352,14 @@ export default function Analytic() {
 
 
             {/* Bar chart data */}
-            <BarChart
+            {/* <BarChart
               style={{ height: 180, width: screenWidth - 70 }}
               data={[50, 80, 40, 95, 85, 35, 70]}
               svg={{ fill: '#314CFF' }}
               contentInset={{ bottom: 5 }}
               // spacing={0.2}
               gridMin={0}
-            />
+            /> */}
             {/* Legends */}
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: screenWidth - 85, }}>
               {['  Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day, index) => (

@@ -119,6 +119,7 @@ export default function Index() {
       </View>
 
           {/* Buttons */}
+
  
       <View
         style={{

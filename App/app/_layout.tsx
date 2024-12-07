@@ -1,6 +1,5 @@
 import { Stack } from "expo-router";
 
-
 export default function RootLayout() {
   return (
     <Stack initialRouteName="index">
@@ -11,7 +10,6 @@ export default function RootLayout() {
       <Stack.Screen name="report" options={{ headerShown: false }} />
       <Stack.Screen name="analytic" options={{ headerShown: false }} />
       <Stack.Screen name="signin" options={{ headerShown: false }} />
-     
     </Stack>
   );
 }

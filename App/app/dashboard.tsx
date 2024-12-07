@@ -1,115 +1,210 @@
-import { View, Text, Image, ScrollView, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useState, useEffect } from "react";
+import {
+    View,
+    Text,
+    Image,
+    ScrollView,
+    TouchableOpacity,
+    FlatList,
+    Modal,
+    Pressable,
+    ActivityIndicator,
+} from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-
-import { useRouter } from "expo-router";
-import { useFonts } from 'expo-font';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import axios from "axios";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { useFonts } from "expo-font";
+import { useRouter } from "expo-router";
 
-import { PieChart } from "react-native-svg-charts";
-
+import Piechart from "../component/piechart"
+import SecondBox from "../component/DwlrBox"
 
 export default function Dashboard() {
 
     const router = useRouter();
 
     const [fontsLoaded] = useFonts({
-        'Kameron-SemiBold': require('../assets/fonts/Kameron/Kameron-SemiBold.ttf'),
-        'Poppins-Regular': require('../assets/fonts/Poppins/Poppins-Regular.ttf'),
-        'Poppins-Medium': require('../assets/fonts/Poppins/Poppins-Medium.ttf'),
-
+        "Kameron-SemiBold": require("../assets/fonts/Kameron/Kameron-SemiBold.ttf"),
+        "Poppins-Regular": require("../assets/fonts/Poppins/Poppins-Regular.ttf"),
     });
+
+    const [states, setStates] = useState([]);
+    const [districts, setDistricts] = useState([]);
+    const [selectedState, setSelectedState] = useState(null);
+    const [selectedDistrict, setSelectedDistrict] = useState(null);
+    const [dropdownType, setDropdownType] = useState(null);
+    const [dwlrData, setDwlrData] = useState({});
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        fetchStates();
+    }, []);
+
+    const fetchStates = async () => {
+        try {
+            const response = await axios.get("http://192.168.146.24:8000/api/v1/dwlr/states");
+            setStates(response.data.states);
+        } catch (error) {
+            console.error("Error fetching states:", error);
+        }
+    };
+
+    const fetchDistricts = async (state) => {
+        try {
+            setLoading(true);
+            const response = await axios.get(`http://192.168.146.24:8000/api/v1/dwlr/districts?state=${state}`);
+            setDistricts(response.data.districts);
+            setLoading(false);
+        } catch (error) {
+            console.error("Error fetching districts:", error);
+            setLoading(false);
+        }
+    };
+
+    const fetchDwlrData = async (queryKey, queryValue) => {
+        try {
+            setLoading(true);
+            const response = await axios.get(`http://192.168.146.24:8000/api/v1/dwlr/info?${queryKey}=${queryValue}`);
+            setDwlrData(response.data);
+            setLoading(false);
+        } catch (error) {
+            console.error("Error fetching DWLR data:", error);
+            setLoading(false);
+        }
+    };
+
+    const handleSelect = (type, value) => {
+        if (type === "state") {
+            setSelectedState(value);
+            setSelectedDistrict(null);
+            fetchDistricts(value);
+            fetchDwlrData("state", value);
+        } else if (type === "district") {
+            setSelectedDistrict(value);
+            fetchDwlrData("district", value);
+        }
+        setDropdownType(null);
+    };
+
+    const Dropdown = ({ type, data }) => (
+        <Modal transparent={true} animationType="slide" visible={dropdownType === type}>
+            <View
+                style={{
+                    flex: 1,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    backgroundColor: "rgba(0, 0, 0, 0.5)",
+                }}
+            >
+                <View
+                    style={{
+                        width: "80%",
+                        backgroundColor: "white",
+                        borderRadius: 10,
+                        padding: 20,
+                        maxHeight: "60%",
+                    }}
+                >
+                    <Text style={{ fontSize: 18, fontFamily: "Kameron-SemiBold", marginBottom: 10 }}>
+                        Select {type === "state" ? "State" : "District"}
+                    </Text>
+                    <FlatList
+                        data={data}
+                        keyExtractor={(item, index) => index.toString()}
+                        renderItem={({ item }) => (
+                            <Pressable
+                                style={{
+                                    padding: 10,
+                                    borderBottomWidth: 1,
+                                    borderBottomColor: "#ddd",
+                                }}
+                                onPress={() => handleSelect(type, item)}
+                            >
+                                <Text style={{ fontSize: 16 }}>{item}</Text>
+                            </Pressable>
+                        )}
+                    />
+                    <TouchableOpacity onPress={() => setDropdownType(null)}>
+                        <Text style={{ color: "red", textAlign: "center", marginTop: 10 }}>Cancel</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        </Modal>
+    );
+
+    if (!fontsLoaded) return <ActivityIndicator size="large" color="#0000ff" />;
 
     return (
         <LinearGradient
             colors={["#DEFFFC", "#D4F8FA", "#488DDD"]}
-            locations={[0, 0.22, 28.5]} // Define color stops
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
-            style={{ flex: 1 }} // Ensure gradient covers the whole screen
+            style={{ flex: 1 }}
         >
-
-
+            {/* Header */}
             <View
                 style={{
                     height: 60,
-                    width: '100%',
-
                     flexDirection: "row",
-                    backgroundColor: 'white',
-                    justifyContent: 'space-around',
-                    alignItems: 'center'
-                }}>
-                <Image
-                    source={require("../assets/images/image1.png")}
-                    style={{ height: 46, width: 99 }}
-                />
-                <Image
-                    source={require("../assets/images/image2.png")}
-                    style={{ height: 27, width: 45, marginLeft: 110 }}
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    paddingHorizontal: 20,
+                    backgroundColor: "#fff",
+                }}
+            >
+                <Image source={require("../assets/images/image1.png")} style={{ height: 40, width: 100 }} />
+                <Image source={require("../assets/images/image2.png")} style={{ height: 30, width: 50 }} />
+                <Image source={require("../assets/images/image3.png")} style={{ height: 30, width: 50 }} />
+            </View>
 
-                />
-                <Image
-                    source={require("../assets/images/image3.png")}
-                    style={{ height: 30, width: 55, }}
+            {/* Dropdowns */}
+            <View style={{ flexDirection: "row", justifyContent: "space-evenly", marginVertical: 20 }}>
+                <TouchableOpacity
+                    style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        padding: 10,
+                        backgroundColor: "#274C77",
+                        borderRadius: 8,
+                    }}
+                    onPress={() => setDropdownType("state")}
+                >
+                    <Ionicons name="location" size={20} color="white" />
+                    <Text style={{ color: "white", marginLeft: 10 }}>
+                        {selectedState || "Select State"}
+                    </Text>
+                    <MaterialIcons name="arrow-drop-down" size={24} color="white" />
+                </TouchableOpacity>
 
-                />
+                <TouchableOpacity
+                    style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        padding: 10,
+                        backgroundColor: selectedState ? "#274C77" : "#aaa",
+                        borderRadius: 8,
+                    }}
+                    onPress={() => selectedState && setDropdownType("district")}
+                    disabled={!selectedState}
+                >
+                    <MaterialIcons name="location-city" size={20} color="white" />
+                    <Text style={{ color: "white", marginLeft: 10 }}>
+                        {selectedDistrict || "Select District"}
+                    </Text>
+                    <MaterialIcons name="arrow-drop-down" size={24} color="white" />
+                </TouchableOpacity>
             </View>
 
             <ScrollView style={{ marginBottom: 71 }}>
 
-                <View style={{ flexDirection: 'row', marginVertical: 20, marginHorizontal: 15, justifyContent: 'space-around' }}>
-                    <View
-                        style={{
-                            height: 40,
-                            width: 115,
-                            backgroundColor: 'white',
-                            paddingLeft: 10,
-                            flexDirection: 'row', alignItems: 'center'
-                        }}>
-
-                        <Text style={{ fontSize: 12, fontFamily: 'Kameron-SemiBold', }}>Select State</Text>
-                        <MaterialIcons name="arrow-drop-down" size={28} color="black" />
-                    </View>
-
-
-                    <View
-                        style={{
-                            height: 40,
-                            width: 115,
-                            backgroundColor: 'white',
-                            marginLeft: 10,
-                            //   paddingLeft: 10, 
-                            flexDirection: 'row', alignItems: 'center'
-                        }}>
-
-                        <Text style={{ fontSize: 12, fontFamily: 'Kameron-SemiBold', }}>Select District</Text>
-                        <MaterialIcons name="arrow-drop-down" size={28} color="black" />
-                    </View>
-
-                    <View
-                        style={{
-                            height: 40,
-                            width: 117,
-                            backgroundColor: 'white',
-                            marginLeft: 10,
-                            paddingLeft: 10,
-                            flexDirection: 'row', alignItems: 'center',
-                        }}>
-
-                        <Text style={{ fontSize: 12, fontFamily: 'Kameron-SemiBold', }}>Select City</Text>
-                        <MaterialIcons name="arrow-drop-down" size={28} color="black" />
-                    </View>
-                </View>
-
                 {/* 1dt box  */}
                 <View style={{
                     backgroundColor: '#fff',
-                    height: 309,
+                    height: 280,
                     width: 356,
 
                     alignSelf: 'center',
@@ -123,98 +218,68 @@ export default function Dashboard() {
                     shadowRadius: 2.41,
 
                 }}>
-                    <View style={{ flexDirection: 'row' }}>
-                        <Text style={{ fontSize: 20, fontFamily: 'Kameron-SemiBold', color: '#000' }}>TOTAL DWLRs</Text>
-                        <Text style={{ color: 'black', fontFamily: 'Kameron-SemiBold', fontSize: 42, marginBottom: 15, left: 55, top: -16 }}>200</Text>
-                    </View>
+                    {loading ? (
+                        <ActivityIndicator size="large" color="#0000ff" />
+                    ) : (
+                        <>
+                            <View style={{ flexDirection: 'row' }}>
+                                <Text style={{ fontSize: 22, fontFamily: 'Kameron-SemiBold', color: '#000' }}>TOTAL DWLRs :</Text>
+                                <Text style={{ color: "#274C77", fontFamily: 'Kameron-SemiBold', fontSize: 42, marginBottom: 15, left: 55, top: -16 }}>{dwlrData.total || 0}</Text>
+                            </View>
 
-                    <View style={{ flexDirection: 'row' }}>
-                        <Text style={{ fontSize: 20, fontFamily: 'Kameron-SemiBold', color: '#000' }}>ACTIVE DWLRs</Text>
-                        <Text style={{ color: 'black', fontFamily: 'Kameron-SemiBold', fontSize: 42, marginBottom: 15, left: 55, top: -16 }}>545</Text>
-                    </View>
+                            <View style={{ flexDirection: 'row' }}>
+                                <Text style={{ fontSize: 22, fontFamily: 'Kameron-SemiBold', color: '#000' }}>ACTIVE DWLRs :</Text>
+                                <Text style={{ color: "#274C77", fontFamily: 'Kameron-SemiBold', fontSize: 42, marginBottom: 15, left: 55, top: -16 }}> {dwlrData.active || 0}</Text>
+                            </View>
 
-                    <View style={{ flexDirection: 'row' }}>
-                        <Text style={{ fontSize: 20, fontFamily: 'Kameron-SemiBold', color: '#000' }}>PROBLEMATIC DWLR</Text>
-                        <Text style={{ color: 'black', fontFamily: 'Kameron-SemiBold', fontSize: 42, marginBottom: 15, left: 40, top: -16 }}>5</Text>
-                    </View>
+                            <View style={{ flexDirection: 'row' }}>
+                                <Text style={{ fontSize: 22, fontFamily: 'Kameron-SemiBold', color: '#000' }}>PROBLEMATIC DWLR:</Text>
+                                <Text style={{ color: "#274C77", fontFamily: 'Kameron-SemiBold', fontSize: 42, marginBottom: 15, left: 40, top: -16 }}>{dwlrData.problematic || 0}</Text>
+                            </View>
 
 
+                        </>
+                    )}
                 </View>
 
                 {/* 2nd box */}
-                <View style={{
-                    backgroundColor: '#fff',
-                    height: 309,
-                    width: 356,
-                    marginTop: 10,
-                    borderRadius: 15,
-                    alignSelf: 'center',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    elevation: 4,
-                    shadowOffset: { width: 1, height: 1 },
-                    shadowOpacity: 0.3,
-                    shadowRadius: 2.41,
-                    // paddingLeft: 12,
-                    // paddingTop: 25
-                }}>
-                    <View style={{ flexDirection: 'row', alignContent: 'space-between' }}>
-                        <View style={{ flexDirection: 'column', marginRight: 110 }}>
-                            <Text style={{ fontSize: 14 }}>State Name</Text>
-                            <Text style={{ fontSize: 14, color: 'gray', marginTop: 20 }}>City Name</Text>
-                        </View>
+                {/* Second Box */}
+                <SecondBox>
 
+                    <Text style={{ fontSize: 22, fontFamily: 'Kameron-SemiBold', color: '#274C77', marginBottom: 10 }}>
+                        {selectedState || "State Name"}
+                    </Text>
 
-                        <TouchableOpacity>
-                            <View style={{
-                                height: 35,
-                                width: 106,
-                                justifyContent: 'center',
+                    <Text style={{ fontSize: 22, fontFamily: 'Kameron-SemiBold', color: '#000' }}>
+                        {selectedDistrict || "City Name"}
+                    </Text>
+                    <Piechart/>
+                </SecondBox>
 
-                                paddingLeft: 12,
-                                borderRadius: 10,
-                                borderColor: 'gray',
-                                borderWidth: 0.2,
+                    {/* Third box */}
+                    <SecondBox>
+                    <Text style={{ fontSize: 22, fontFamily: 'Kameron-SemiBold', color: '#274C77', marginBottom: 10 }}>
+                        {selectedState || "State Name"}
+                    </Text>
 
+                    <Text style={{ fontSize: 22, fontFamily: 'Kameron-SemiBold', color: '#000' }}>
+                        {selectedDistrict || "City Name"}
+                    </Text>
 
-                            }}>
-                                <Text style={{ color: '#5A6ACF' }}>View Report</Text>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
-                    
-                    {/* Pie chart section */}
-                    <PieChart
-                        style={{ height: 170, width: 250, }}
-                        data={[
-                            { key: 1, value: 45, svg: { fill: '#5A6ACF' } },
-                            { key: 2, value: 30, svg: { fill: '#8593ED' } },
-                            { key: 3, value: 20, svg: { fill: '#FF81C5' } },
-                        ]}
-                        innerRadius="70%"
-                        outerRadius="100%"
-                        padAngle={0} // Removes gaps
-                    />
-
-
-                    <View style={{ marginTop: 10, flexDirection: 'row' }}>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 5 }}>
-                            <View style={{ width: 15, height: 15, backgroundColor: '#5A6ACF', marginRight: 10, borderRadius: 50 }} />
-                            <Text style={{ fontSize: 14, color: '#000', marginRight: 10, }}>Active</Text>
-                        </View>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 5 }}>
-                            <View style={{ width: 15, height: 15, backgroundColor: '#8593ED', marginRight: 10, borderRadius: 50 }} />
-                            <Text style={{ fontSize: 14, color: '#000', marginRight: 10, }}>Problematic</Text>
-                        </View>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 5 }}>
-                            <View style={{ width: 15, height: 15, backgroundColor: '#FF81C5', marginRight: 10, borderRadius: 50 }} />
-                            <Text style={{ fontSize: 14, marginRight: 10, color: '#000' }}>Other</Text>
-                        </View>
-                    </View>
-                </View>
-
+                    {/* chart section  */}
+                    <Piechart/>
+                    </SecondBox>
 
             </ScrollView>
+
+            {/* Dropdown Modals */}
+            {dropdownType === "state" && <Dropdown type="state" data={states} />}
+            {dropdownType === "district" && <Dropdown type="district" data={districts} />}
+
+
+
+
+
 
             {/* Footer Navigation */}
             <View style={{
@@ -262,5 +327,5 @@ export default function Dashboard() {
                 </TouchableOpacity>
             </View>
         </LinearGradient>
-    )
+    );
 }
