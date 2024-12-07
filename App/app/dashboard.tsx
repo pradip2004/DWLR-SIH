@@ -14,17 +14,16 @@ import { LinearGradient } from "expo-linear-gradient";
 import axios from "axios";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+
 import { useFonts } from "expo-font";
 import { useRouter } from "expo-router";
 
-import Piechart from "../component/piechart"
-import SecondBox from "../component/DwlrBox"
+import Piechart from "../component/piechart";
+import SecondBox from "../component/DashboardBox";
+import Footer from "@/component/Footer";
+import DwlrBarChart from "@/component/DwlrBarChart";
 
 export default function Dashboard() {
-
     const router = useRouter();
 
     const [fontsLoaded] = useFonts({
@@ -37,11 +36,16 @@ export default function Dashboard() {
     const [selectedState, setSelectedState] = useState(null);
     const [selectedDistrict, setSelectedDistrict] = useState(null);
     const [dropdownType, setDropdownType] = useState(null);
-    const [dwlrData, setDwlrData] = useState({});
+    const [dwlrData, setDwlrData] = useState([]); 
+
+
+  
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         fetchStates();
+        // Fetch data for the initial default state
+        fetchDwlrData("default", "default");
     }, []);
 
     const fetchStates = async () => {
@@ -138,6 +142,8 @@ export default function Dashboard() {
 
     if (!fontsLoaded) return <ActivityIndicator size="large" color="#0000ff" />;
 
+    const getBarHeight = (value) => Math.max(value * 5, 20); // Scale the bar height
+
     return (
         <LinearGradient
             colors={["#DEFFFC", "#D4F8FA", "#488DDD"]}
@@ -198,51 +204,51 @@ export default function Dashboard() {
                     <MaterialIcons name="arrow-drop-down" size={24} color="white" />
                 </TouchableOpacity>
             </View>
-
             <ScrollView style={{ marginBottom: 71 }}>
 
-                {/* 1dt box  */}
-                <View style={{
-                    backgroundColor: '#fff',
-                    height: 280,
-                    width: 356,
 
-                    alignSelf: 'center',
-                    justifyContent: 'center',
-                    // alignItems: 'center',
-                    paddingLeft: 30,
-                    borderRadius: 15,
-                    elevation: 4,
-                    shadowOffset: { width: 1, height: 1 },
-                    shadowOpacity: 0.3,
-                    shadowRadius: 2.41,
-
-                }}>
+                {/* 1st box */}
+                <View
+                    style={{
+                        backgroundColor: "#fff",
+                        height: 550,
+                        width: 356,
+                        alignSelf: "center",
+                        justifyContent: "center",
+                        paddingLeft: 30,
+                        borderRadius: 15,
+                        elevation: 4,
+                        shadowOffset: { width: 1, height: 1 },
+                        shadowOpacity: 0.3,
+                        shadowRadius: 2.41,
+                    }}
+                >
                     {loading ? (
                         <ActivityIndicator size="large" color="#0000ff" />
                     ) : (
                         <>
-                            <View style={{ flexDirection: 'row' }}>
-                                <Text style={{ fontSize: 22, fontFamily: 'Kameron-SemiBold', color: '#000' }}>TOTAL DWLRs :</Text>
-                                <Text style={{ color: "#274C77", fontFamily: 'Kameron-SemiBold', fontSize: 42, marginBottom: 15, left: 55, top: -16 }}>{dwlrData.total || 0}</Text>
+                            <View>
+                                <View style={{ flexDirection: 'row' }}>
+                                    <Text style={{ fontSize: 22, fontFamily: 'Kameron-SemiBold', color: '#000' }}>TOTAL DWLRs :</Text>
+                                    <Text style={{ color: "#274C77", fontFamily: 'Kameron-SemiBold', fontSize: 42, marginBottom: 15, left: 55, top: -16 }}>{dwlrData.total || 0}</Text>
+                                </View>
+
+                                <View style={{ flexDirection: 'row' }}>
+                                    <Text style={{ fontSize: 22, fontFamily: 'Kameron-SemiBold', color: '#000' }}>ACTIVE DWLRs :</Text>
+                                    <Text style={{ color: "#274C77", fontFamily: 'Kameron-SemiBold', fontSize: 42, marginBottom: 15, left: 55, top: -16 }}> {dwlrData.active || 0}</Text>
+                                </View>
+
+                                <View style={{ flexDirection: 'row' }}>
+                                    <Text style={{ fontSize: 22, fontFamily: 'Kameron-SemiBold', color: '#000' }}>PROBLEMATIC DWLR:</Text>
+                                    <Text style={{ color: "#274C77", fontFamily: 'Kameron-SemiBold', fontSize: 42, marginBottom: 15, left: 40, top: -16 }}>{dwlrData.problematic || 0}</Text>
+                                </View>
                             </View>
 
-                            <View style={{ flexDirection: 'row' }}>
-                                <Text style={{ fontSize: 22, fontFamily: 'Kameron-SemiBold', color: '#000' }}>ACTIVE DWLRs :</Text>
-                                <Text style={{ color: "#274C77", fontFamily: 'Kameron-SemiBold', fontSize: 42, marginBottom: 15, left: 55, top: -16 }}> {dwlrData.active || 0}</Text>
-                            </View>
-
-                            <View style={{ flexDirection: 'row' }}>
-                                <Text style={{ fontSize: 22, fontFamily: 'Kameron-SemiBold', color: '#000' }}>PROBLEMATIC DWLR:</Text>
-                                <Text style={{ color: "#274C77", fontFamily: 'Kameron-SemiBold', fontSize: 42, marginBottom: 15, left: 40, top: -16 }}>{dwlrData.problematic || 0}</Text>
-                            </View>
-
-
+                            {/* Bar section  */}
+                            <DwlrBarChart data={[dwlrData.total, dwlrData.problematic, dwlrData.active]} />
                         </>
                     )}
                 </View>
-
-                {/* 2nd box */}
                 {/* Second Box */}
                 <SecondBox>
 
@@ -253,11 +259,11 @@ export default function Dashboard() {
                     <Text style={{ fontSize: 22, fontFamily: 'Kameron-SemiBold', color: '#000' }}>
                         {selectedDistrict || "City Name"}
                     </Text>
-                    <Piechart/>
+                    <Piechart />
                 </SecondBox>
 
-                    {/* Third box */}
-                    <SecondBox>
+                {/* Third box */}
+                <SecondBox>
                     <Text style={{ fontSize: 22, fontFamily: 'Kameron-SemiBold', color: '#274C77', marginBottom: 10 }}>
                         {selectedState || "State Name"}
                     </Text>
@@ -267,65 +273,13 @@ export default function Dashboard() {
                     </Text>
 
                     {/* chart section  */}
-                    <Piechart/>
-                    </SecondBox>
-
+                    <Piechart />
+                </SecondBox>
             </ScrollView>
-
             {/* Dropdown Modals */}
             {dropdownType === "state" && <Dropdown type="state" data={states} />}
             {dropdownType === "district" && <Dropdown type="district" data={districts} />}
-
-
-
-
-
-
-            {/* Footer Navigation */}
-            <View style={{
-                flexDirection: 'row',
-                justifyContent: 'space-around',
-                alignItems: 'center',
-                backgroundColor: 'white',
-                borderTopLeftRadius: 20,
-                borderTopRightRadius: 20,
-                height: 70,
-                position: 'absolute',
-                bottom: 0,
-                left: 0,
-                right: 0,
-                zIndex: 10,
-                elevation: 10,
-                shadowColor: '#000',
-                shadowOffset: { width: 0, height: -2 },
-                shadowOpacity: 0.25,
-                shadowRadius: 3.84,
-            }}>
-                <TouchableOpacity style={{ alignItems: 'center', marginTop: 15 }} >
-                    <MaterialCommunityIcons name="view-dashboard-outline" size={26} color="#0077cc" />
-                    <Text style={{ fontSize: 12, color: '#0077cc' }}>Dashboard</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={{ alignItems: 'center', marginTop: 15 }} onPress={() => router.push("/dwlrs")}>
-                    <FontAwesome6 name="anchor-circle-check" size={24} color="#0077cc" />
-                    <Text style={{ fontSize: 12, color: '#0077cc' }}>DWLR</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={{ alignItems: 'center', marginTop: 15 }} onPress={() => router.push("/report")}>
-                    <MaterialIcons name="report-problem" size={26} color="#0077cc" />
-                    <Text style={{ fontSize: 12, color: '#0077cc' }}>Report</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={{ alignItems: 'center', marginTop: 15 }} onPress={() => router.push("/alert")}>
-                    <FontAwesome5 name="bell" size={24} color="#0077cc" />
-                    <Text style={{ fontSize: 12, color: '#0077cc' }}>Alert</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={{ alignItems: 'center', marginTop: 15 }} onPress={() => router.push("/analytic")}>
-                    <Ionicons name="analytics" size={26} color="#0077cc" />
-                    <Text style={{ fontSize: 12, color: '#0077cc' }}>Analytics</Text>
-                </TouchableOpacity>
-            </View>
+            <Footer />
         </LinearGradient>
     );
 }

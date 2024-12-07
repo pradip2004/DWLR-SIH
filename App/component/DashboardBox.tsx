@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 
-const DwlrBox = ({ children }) => {
+const DashboardBox = ({ children }) => {
     return (
         <View
             style={{
@@ -23,4 +23,4 @@ const DwlrBox = ({ children }) => {
     );
 };
 
-export default DwlrBox;
+export default DashboardBox;
