@@ -4,6 +4,7 @@ import { useNavigation } from 'expo-router';
 import { useRouter } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { LinearGradient } from 'expo-linear-gradient';
+import { moderateScale } from 'react-native-size-matters';
 
 export default function Signup() {
   const router = useRouter();
@@ -51,7 +52,7 @@ export default function Signup() {
     >
       <View style={styles.container}>
         <TouchableOpacity onPress={() => router.back()}>
-          <Ionicons name="arrow-back-circle" size={30} color="black" />
+          <Ionicons name="arrow-back-circle" size={moderateScale(30)} color="black" />
         </TouchableOpacity>
         <Text style={styles.title}>Create New Account</Text>
 
@@ -88,7 +89,7 @@ export default function Signup() {
         </View>
 
         {/* Create Account Button */}
-        <TouchableOpacity  style={styles.createAccountButton}  onPress={() => router.push("/dashboard")}>
+        <TouchableOpacity style={styles.createAccountButton} onPress={() => router.push("/dashboard")}>
           <Text style={styles.createAccountButtonText}>Create Account</Text>
         </TouchableOpacity>
 
@@ -103,35 +104,34 @@ export default function Signup() {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 25,
-    paddingTop: 50,
+    padding: moderateScale(25),
+    paddingTop: moderateScale(50),
     flex: 1,
-    
   },
   title: {
-    fontSize: 30,
+    fontSize: moderateScale(30),
     fontWeight: 'bold',
-    marginTop: 30,
+    marginTop: moderateScale(30),
   },
   inputContainer: {
-    marginTop: 20,
+    marginTop: moderateScale(20),
   },
   label: {
-    fontSize: 16,
+    fontSize: moderateScale(16),
     fontWeight: '600',
   },
   input: {
-    padding: 15,
+    padding: moderateScale(15),
     borderWidth: 1,
-    borderRadius: 15,
+    borderRadius: moderateScale(15),
     borderColor: 'grey',
-    marginTop: 5,
+    marginTop: moderateScale(5),
   },
   createAccountButton: {
-    padding: 18,
+    padding: moderateScale(18),
     backgroundColor: '#003f88',
-    borderRadius: 15,
-    marginTop: 50,
+    borderRadius: moderateScale(15),
+    marginTop: moderateScale(50),
   },
   createAccountButtonText: {
     color: 'white',
@@ -139,10 +139,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   signInButton: {
-    padding: 18,
+    padding: moderateScale(18),
     backgroundColor: 'white',
-    borderRadius: 15,
-    marginTop: 20,
+    borderRadius: moderateScale(15),
+    marginTop: moderateScale(20),
     borderWidth: 1,
     borderColor: 'grey',
   },

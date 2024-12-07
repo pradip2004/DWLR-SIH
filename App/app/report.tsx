@@ -3,13 +3,16 @@ import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Image 
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { LinearGradient } from 'expo-linear-gradient';
-import RNPickerSelect from 'react-native-picker-select';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useRouter } from "expo-router";
+import Entypo from '@expo/vector-icons/Entypo';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+
 
 export default function Report() {
 
@@ -19,12 +22,13 @@ export default function Report() {
     const [endDate, setEndDate] = useState('');
     const [showStartPicker, setShowStartPicker] = useState(false);
     const [showEndPicker, setShowEndPicker] = useState(false);
-
-
-
-
     const [selectedState, setSelectedState] = useState('');
     const [selectedCity, setSelectedCity] = useState('');
+    const [isStateDropdownVisible, setStateDropdownVisible] = useState(false);
+    const [isCityDropdownVisible, setCityDropdownVisible] = useState(false);
+
+
+
 
     const handleStartDateChange = (event, selectedDate) => {
         setShowStartPicker(false); // Hide the picker after selecting a date
@@ -41,8 +45,6 @@ export default function Report() {
             setEndDate(formattedDate);
         }
     };
-
-
     const states = [
         { label: 'Maharashtra', value: 'maharashtra' },
         { label: 'Karnataka', value: 'karnataka' },
@@ -59,188 +61,223 @@ export default function Report() {
         { label: 'Lucknow', value: 'lucknow' },
     ];
 
+    const handleDropdownToggle = (section) => {
+        if (section === 'state') {
+            setStateDropdownVisible(!isStateDropdownVisible);
+        } else if (section === 'city') {
+            setCityDropdownVisible(!isCityDropdownVisible);
+        }
+    };
+
+    const handleSelect = (section, value) => {
+        if (section === 'state') {
+            setSelectedState(value);
+            setStateDropdownVisible(false);
+        } else if (section === 'city') {
+            setSelectedCity(value);
+            setCityDropdownVisible(false);
+        }
+    };
+
     return (
         <LinearGradient
-        colors={["#DEFFFC", "#D4F8FA", "#488DDD"]}
-        locations={[0, 0.22, 28.5]} // Define color stops
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={{ flex: 1 }}
+            colors={["#DEFFFC", "#D4F8FA", "#488DDD"]}
+            locations={[0, 0.22, 28.5]} // Define color stops
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={{ flex: 1 }}
         >
-          <View style={styles.container}>
-    {/* Header Section */}
-    <View style={styles.nav}>
-        <Image source={require('./../assets/images/image 7.png')} style={styles.headerImage} />
-        <Image source={require('./../assets/images/image 7 (1).png')} style={styles.header1Image} />
-        <Image source={require('./../assets/images/image 7 (2).png')} style={styles.header2Image} />
-    </View>
-
-    {/* Main Content Section */}
-    <View contentContainerStyle={styles.scrollContent}>
-        {/* Card Section */}
-        <View style={styles.card}>
-            <Text style={styles.heading}>Download Data</Text>
-
-            {/* Start Date Input */}
-            <View style={styles.inputContainer}>
-                <TextInput
-                    style={styles.input}
-                    placeholder="Select Start Date"
-                    value={startDate}
-                    editable={false}
-                />
-                <TouchableOpacity onPress={() => setShowStartPicker(true)}>
-                    <FontAwesome name="calendar" size={24} color="black" style={styles.icon} />
-                </TouchableOpacity>
-            </View>
-            {showStartPicker && (
-                <DateTimePicker
-                    value={new Date()}
-                    mode="date"
-                    display="calendar"
-                    onChange={handleStartDateChange}
-                />
-            )}
-
-            {/* End Date Input */}
-            <View style={styles.inputContainer}>
-                <TextInput
-                    style={styles.input}
-                    placeholder="Select End Date"
-                    value={endDate}
-                    editable={false}
-                />
-                <TouchableOpacity onPress={() => setShowEndPicker(true)}>
-                    <FontAwesome name="calendar" size={24} color="black" style={styles.icon} />
-                </TouchableOpacity>
-            </View>
-            {showEndPicker && (
-                <DateTimePicker
-                    value={new Date()}
-                    mode="date"
-                    display="calendar"
-                    onChange={handleEndDateChange}
-                />
-            )}
-
-            {/* State Picker */}
-            <RNPickerSelect
-                onValueChange={(value) => setSelectedState(value)}
-                items={states}
-                placeholder={{ label: 'Select State', value: null }}
-                style={pickerSelectStyles}
-            />
-
-            {/* City Picker */}
-            <RNPickerSelect
-                onValueChange={(value) => setSelectedCity(value)}
-                items={cities}
-                placeholder={{ label: 'Select City', value: null }}
-                style={pickerSelectStyles}
-            />
-
-            {/* Get Data Button */}
-            <TouchableOpacity style={styles.button}>
-                <Text style={styles.buttonText}>Get Data</Text>
-            </TouchableOpacity>
-        </View>
-
-         {/* ScrollView for Form Content */}
-      <View contentContainerStyle={styles.scrollContent}>
-
-
-        <View style={styles.container2}>
-          {/* Main ScrollView */}
-          <View contentContainerStyle={styles.scrollContainer}>
-
-
-            <ScrollView style={styles.innerScrollContainer}>
-              <Text style={{
-                fontSize: 24,
-                fontWeight: 'bold',
-              }}>Download Data</Text>
-              
-              {[...Array(14)].map((_, index) => (
-                <View key={index} style={styles.notificationCard}>
-                 <FontAwesome6 name="bookmark" size={24} color="black" />
-
-                  <View style={styles.textContainer}>
-                    <Text style={styles.titleText}>DWLRs ID</Text>
-                    <Text style={styles.subtitleText}>Problem</Text>
-                    <Text style={styles.descriptionText}>Explain in one line</Text>
-                  </View>
-                  <View style={{  alignItems: 'center',}}>
-                    <TouchableOpacity style={styles.downloadButton}>
-                      <Text style={styles.downloadButtonText}>Download</Text>
-                    </TouchableOpacity>
-                    
-                  </View>
+            <SafeAreaView style={styles.container}>
+                {/* Header Section */}
+                <View style={styles.nav}>
+                    <Image source={require('./../assets/images/image 7.png')} style={styles.headerImage} />
+                    <Image source={require('./../assets/images/image 7 (1).png')} style={styles.header1Image} />
+                    <Image source={require('./../assets/images/image 7 (2).png')} style={styles.header2Image} />
                 </View>
-              ))}
+
+
+                <View style={styles.card}>
+                    <Text style={styles.heading}>Download Data</Text>
+                    <Text style={styles.dateLabel}>Select Start Date</Text>
+
+                    <View style={styles.inputContainer}>
+                        <View style={styles.inputWrapper}>
+                            <TextInput
+                                style={styles.input}
+                                placeholder="dd-mm-yyyy"
+                                value={startDate}
+                                editable={false}
+                            />
+                            <TouchableOpacity onPress={() => setShowStartPicker(true)}>
+                                <FontAwesome name="calendar" size={24} color="black" style={styles.icon} />
+                            </TouchableOpacity>
+                        </View>
+                        {showStartPicker && (
+                            <DateTimePicker
+                                value={new Date()}
+                                mode="date"
+                                display="calendar"
+                                onChange={handleStartDateChange}
+                            />
+                        )}
+                    </View>
+                    <Text style={styles.dateLabel}>Select End Date</Text>
+
+                    {/* End Date Input */}
+                    <View style={styles.inputContainer}>
+                        <View style={styles.inputWrapper}>
+                            <TextInput
+                                style={styles.input}
+                                placeholder="dd-mm-yyyy"
+                                value={endDate}
+                                editable={false}
+                            />
+                            <TouchableOpacity onPress={() => setShowEndPicker(true)}>
+                                <FontAwesome name="calendar" size={24} color="black" style={styles.icon} />
+                            </TouchableOpacity>
+                        </View>
+                        {showEndPicker && (
+                            <DateTimePicker
+                                value={new Date()}
+                                mode="date"
+                                display="calendar"
+                                onChange={handleEndDateChange}
+                            />
+                        )}
+                    </View>
+
+                    {/* //city */}
+                    <Text style={styles.dateLabel}>Select State</Text>
+
+                    <View style={styles.inputContainer}>
+                        <View style={styles.inputWrapper}>
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Choose a State"
+                                value={selectedState}
+                                editable={false}
+                            />
+                            <TouchableOpacity onPress={() => handleDropdownToggle('state')}>
+                                <Entypo name="chevron-small-down" size={24} color="black" />
+                            </TouchableOpacity>
+                        </View>
+                        {isStateDropdownVisible && (
+                            <View style={styles.dropdownMenu}>
+                                {states.map(state => (
+                                    <TouchableOpacity key={state.value} onPress={() => handleSelect('state', state.value)}>
+                                        <Text style={styles.dropdownItem}>{state.label}</Text>
+                                    </TouchableOpacity>
+                                ))}
+                            </View>
+                        )}
+                    </View>
+                    <Text style={styles.dateLabel}>Select City</Text>
+
+                    {/* End Date Input */}
+                    <View style={styles.inputContainer}>
+                        <View style={styles.inputWrapper}>
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Choose a City"
+                                value={selectedCity}
+                                editable={false}
+                            />
+                            <TouchableOpacity onPress={() => handleDropdownToggle('city')}>
+                                <Entypo name="chevron-small-down" size={24} color="black" />
+                            </TouchableOpacity>
+                        </View>
+                        {isCityDropdownVisible && (
+                            <View style={styles.dropdownMenu}>
+                                {cities.map(city => (
+                                    <TouchableOpacity key={city.value} onPress={() => handleSelect('city', city.value)}>
+                                        <Text style={styles.dropdownItem}>{city.label}</Text>
+                                    </TouchableOpacity>
+                                ))}
+                            </View>
+                        )}
+                    </View>
+
+                    {/* Get Data Button */}
+                    <TouchableOpacity style={styles.button}>
+                        <Text style={styles.buttonText}>Get Data</Text>
+                    </TouchableOpacity>
+                </View>
+
+
+                {/* ScrollView for Form Content */}
+
+
+                <ScrollView style={styles.innerScrollContainer}>
+                    <Text style={{
+                        fontSize: 24,
+
+                        fontFamily: 'Kameron-SemiBold',
+                    }}>DWLRs Reports</Text>
+
+                    {[...Array(14)].map((_, index) => (
+                        <View key={index} style={styles.notificationCard}>
+                            <FontAwesome6 name="bookmark" size={24} color="orange" />
+
+                            <View style={styles.textContainer}>
+                                <Text style={styles.titleText}>DWLRs ID</Text>
+                                <Text style={styles.subtitleText}>Problem</Text>
+                                <Text style={styles.descriptionText}>Explain in one line</Text>
+                            </View>
+                            <View style={{ alignItems: 'center', }}>
+                                <TouchableOpacity style={[styles.downloadButton, { marginBottom: 10 }]}>
+                                    <Text style={styles.downloadButtonText}>Details</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.downloadButton}>
+                                    <Text style={styles.downloadButtonText}>Download</Text>
+                                </TouchableOpacity>
+
+                            </View>
+                        </View>
+                    ))}
 
 
 
-            </ScrollView>
+                </ScrollView>
 
-          </View>
-        </View>
-
+            </SafeAreaView>
 
 
 
 
 
-      </View>
-    </View>
 
-    
 
-    {/* Footer Section */}
-    <View style={{
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        alignItems: 'center',
-        backgroundColor: 'white',
-        borderTopLeftRadius: 20,
-        borderTopRightRadius: 20,
-        height: 70,
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        zIndex: 10,
-        elevation: 10,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: -2 },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-      }}>
-        <TouchableOpacity style={{alignItems: 'center', marginTop: 15 }}  onPress={() => router.push("/dashboard")}>
-          <MaterialCommunityIcons name="view-dashboard-outline" size={26} color="#0077cc" />
-          <Text style={{fontSize: 12, color: '#0077cc' }}>Dashboard</Text>
-        </TouchableOpacity>
 
-        <TouchableOpacity style={{alignItems: 'center', marginTop: 15 }} onPress={() => router.push("/dwlrs")}>
-          <FontAwesome6 name="anchor-circle-check" size={24} color="#0077cc" />
-          <Text style={{fontSize: 12, color: '#0077cc' }}>DWLR</Text>
-        </TouchableOpacity>
+            {/* Footer Section */}
+            <SafeAreaView style={
+                styles.footer
+            }>
+                <TouchableOpacity style={{ alignItems: 'center', marginTop: 15 }} onPress={() => router.push("/dashboard")}>
+                    <MaterialCommunityIcons name="view-dashboard-outline" size={26} color="#0077cc" />
+                    <Text style={{ fontSize: 12, color: '#0077cc' }}>Dashboard</Text>
+                </TouchableOpacity>
 
-        <TouchableOpacity style={{alignItems: 'center', marginTop: 15 }} >
-          <MaterialIcons name="report-problem" size={26} color="#0077cc" />
-          <Text style={{fontSize: 12, color: '#0077cc' }}>Report</Text>
-        </TouchableOpacity>
+                <TouchableOpacity style={{ alignItems: 'center', marginTop: 15 }} onPress={() => router.push("/dwlrs")}>
+                    <FontAwesome6 name="anchor-circle-check" size={24} color="#0077cc" />
+                    <Text style={{ fontSize: 12, color: '#0077cc' }}>DWLR</Text>
+                </TouchableOpacity>
 
-        <TouchableOpacity style={{alignItems: 'center', marginTop: 15 }} onPress={() => router.push("/alert")}>
-          <FontAwesome5 name="bell" size={24} color="#0077cc" />
-          <Text style={{fontSize: 12, color: '#0077cc' }}>Alert</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={{alignItems: 'center', marginTop: 15 }} onPress={() => router.push("/analytic")}>
-          <Ionicons name="analytics" size={26} color="#0077cc" />
-          <Text style={{fontSize: 12, color: '#0077cc' }}>Analytics</Text>
-        </TouchableOpacity>
-      </View>
+                <TouchableOpacity style={{ alignItems: 'center', marginTop: 15 }} >
+                    <MaterialIcons name="report-problem" size={26} color="#0077cc" />
+                    <Text style={{ fontSize: 12, color: '#0077cc' }}>Report</Text>
+                </TouchableOpacity>
 
-</View>
+                <TouchableOpacity style={{ alignItems: 'center', marginTop: 15 }} onPress={() => router.push("/alert")}>
+                    <FontAwesome5 name="bell" size={24} color="#0077cc" />
+                    <Text style={{ fontSize: 12, color: '#0077cc' }}>Alert</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{ alignItems: 'center', marginTop: 15 }} onPress={() => router.push("/analytic")}>
+                    <Ionicons name="analytics" size={26} color="#0077cc" />
+                    <Text style={{ fontSize: 12, color: '#0077cc' }}>Analytics</Text>
+                </TouchableOpacity>
+            </SafeAreaView>
+
+
 
         </LinearGradient>
     );
@@ -257,231 +294,193 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',
-        height: 55,
+        height: verticalScale(55),
         backgroundColor: 'white',
-        borderBottomLeftRadius: 20,
-        borderBottomRightRadius: 20,
+        borderBottomLeftRadius: scale(20),
+        borderBottomRightRadius: scale(20),
         position: 'absolute',
         top: 0,
         left: 0,
         right: 0,
-        zIndex: 10, 
-        elevation: 10, 
-        shadowColor: '#000', 
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-    },
-    headerImage: { width: 80, height: 40, resizeMode: 'contain' },
-    header1Image: { height: 27, width: 45, marginLeft: 105 },
-    header2Image: { height: 27, width: 45 },
-    scrollContent: { paddingHorizontal: 20 },
-
-
-    card: {
-        backgroundColor: '#fff',
-        borderRadius: 20,
-        padding: 20,
-        height: 400, 
-        marginVertical: 70, 
-        alignSelf: 'center',
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: '90%',
-        maxWidth: 400,
-        elevation: 5,
+        zIndex: 10,
+        elevation: 10,
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
-        shadowRadius: 3,
+        shadowOffset: { width: 0, height: verticalScale(2) },
+        shadowOpacity: 0.25,
+        shadowRadius: moderateScale(3.84),
     },
-
-    heading: {
-        fontSize: 23,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        marginBottom: 2,
-    },
-    input: {
-        backgroundColor: '#C6C4C41F',
-        width: 300,
-        height: 52,
-        borderRadius: 10,
-        padding: 10,
-        marginBottom: 10,
-    },
-
-    button: {
+    headerImage: { width: scale(80), height: verticalScale(40), resizeMode: 'contain' },
+    header1Image: { height: verticalScale(27), width: scale(45), marginLeft: scale(105) },
+    header2Image: { height: verticalScale(27), width: scale(45) },
+    scrollContent: { paddingHorizontal: scale(20) },
+    card: {
         backgroundColor: 'white',
-        paddingVertical: 10,
-        paddingHorizontal: 22,
-        borderRadius: 10,
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: 160,
-        height: 49,
-        borderWidth: 3,
-        borderColor: '#274C77',
-        borderStyle: 'solid',
+        padding: scale(20),
+        borderRadius: scale(15),
+        marginTop: verticalScale(65),
+        marginHorizontal: scale(12),
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: verticalScale(2) },
+        shadowOpacity: 0.25,
+        shadowRadius: moderateScale(3.84),
+        elevation: 5,
+    },
+    heading: {
+        fontSize: moderateScale(28),
+        fontFamily: 'Kameron-SemiBold',
+        marginBottom: verticalScale(2),
+        marginTop: verticalScale(-10),
+    },
+    dateLabel: {
+        fontSize: moderateScale(13),
+        fontWeight: '600',
+        color: '#6c757d',
+        marginBottom: verticalScale(5),
     },
     inputContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#f5f5f5',
-        borderRadius: 8,
-        paddingHorizontal: 10,
-        marginVertical: 10,
-        marginBottom: 14,
+        marginBottom: verticalScale(3),
+    },
+    inputWrapper: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        flex: 1,
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: scale(8),
+        paddingHorizontal: scale(10),
+        height: verticalScale(40),
     },
     input: {
         flex: 1,
-        paddingVertical: 10,
-        paddingHorizontal: 10,
-        fontSize: 16,
+        height: verticalScale(40),
+        fontSize: moderateScale(16),
     },
     icon: {
-        marginLeft: 10,
+        marginLeft: scale(10),
+    },
+    button: {
+        backgroundColor: '#274c77',
+        borderRadius: scale(8),
+        paddingVertical: verticalScale(12),
+        paddingHorizontal: scale(20),
+        alignItems: 'center',
+        marginTop: verticalScale(10),
     },
     buttonText: {
-        color: '#5A6ACF',
-        fontSize: 16,
-        textAlign: 'center',
+        color: '#fff',
+        fontSize: moderateScale(16),
+        fontWeight: 'bold',
     },
-
-    
     footer: {
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',
         backgroundColor: 'white',
-        borderTopLeftRadius: 20,
-        borderTopRightRadius: 20,
-        height: 70,
+        borderTopLeftRadius: scale(20),
+        borderTopRightRadius: scale(20),
+        height: verticalScale(60),
         position: 'absolute',
-        bottom: 0, 
+        bottom: 0,
         left: 0,
         right: 0,
         zIndex: 10,
-        elevation: 10, 
+        elevation: 10,
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: -2 },
+        shadowOffset: { width: 0, height: verticalScale(-2) },
         shadowOpacity: 0.25,
-        shadowRadius: 3.84,
+        shadowRadius: moderateScale(3.84),
     },
-
     footerIcon: {
         alignItems: 'center',
     },
     iconLabel: {
-        fontSize: 12,
+        fontSize: moderateScale(12),
         color: '#0077cc',
-        marginTop: 4,
+        marginTop: verticalScale(6),
     },
-
-    
-    scrollContainer: {
-        flexGrow: 1,
-        paddingBottom: 65,
-        borderRadius: 30,
-    },
-
-   
     innerScrollContainer: {
-        backgroundColor: '#fff',
-        height: 270,
-        width: 350,
-        alignSelf: 'center',
-        marginTop: -60,
-        borderRadius: 20,
-        elevation: 10,
-        shadowOffset: { width: 4, height: 4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 2.41,
-        padding: 20,
+        flex: 1,
+        marginTop: verticalScale(9),
+        marginHorizontal: scale(12),
+        borderRadius: scale(15),
+        backgroundColor: 'white',
+        padding: scale(15),
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: verticalScale(2) },
+        shadowOpacity: 0.25,
+        shadowRadius: moderateScale(3.84),
+        elevation: 5,
+        maxHeight: verticalScale(165),
     },
-
+    dropdownMenu: {
+        borderWidth: 1,
+        borderColor: '#488DDD',
+        borderRadius: scale(8),
+        backgroundColor: 'white',
+        padding: scale(10),
+        position: 'absolute',
+        zIndex: 1,
+        width: '100%',
+        maxHeight: verticalScale(200),
+        overflow: 'hidden',
+    },
+    dropdownItem: {
+        paddingVertical: verticalScale(12),
+        paddingHorizontal: scale(16),
+        fontSize: moderateScale(16),
+        color: '#333',
+        borderBottomWidth: 1,
+        borderBottomColor: '#E0E0E0',
+    },
     notificationCard: {
         backgroundColor: '#fff',
-        height: 90,
+        height: verticalScale(90),
         width: '100%',
-        borderRadius: 15,
-        marginTop: 25,
+        borderRadius: scale(15),
+        marginTop: verticalScale(10),
         elevation: 10,
-        shadowOffset: { width: 8, height: 4 },
+        shadowOffset: { width: scale(8), height: verticalScale(4) },
         shadowOpacity: 0.3,
-        shadowRadius: 2.41,
+        shadowRadius: moderateScale(2.41),
         flexDirection: 'row',
         alignItems: 'center',
-        paddingHorizontal: 15,
+        paddingHorizontal: scale(15),
     },
-
     textContainer: {
         flex: 1,
-        marginLeft: 10,
+        marginLeft: scale(10),
     },
     titleText: {
-        fontSize: 16,
+        fontSize: moderateScale(16),
         color: 'black',
         fontFamily: 'Kameron-SemiBold',
-        marginBottom: 5,
+        marginBottom: verticalScale(5),
     },
     subtitleText: {
-        fontSize: 10,
+        fontSize: moderateScale(10),
         color: '#4e4e4e',
         fontFamily: 'Kameron-SemiBold',
     },
     descriptionText: {
-        fontSize: 10,
+        fontSize: moderateScale(10),
         color: '#4e4e4e',
         fontFamily: 'Kameron-SemiBold',
     },
-    notificationImage: {
-        width: 40,
-        height: 40,
-        resizeMode: 'contain',
-        marginLeft: 10,
-    },
-
     downloadButton: {
         backgroundColor: '#274c77',
-        borderRadius: 10,
+        borderRadius: scale(10),
         justifyContent: 'center',
         alignItems: 'center',
-        width: 75,
-        height: 35,
-        marginLeft: 10,
+        width: scale(75),
+        height: verticalScale(35),
+        marginLeft: scale(10),
     },
-
     downloadButtonText: {
         color: 'white',
-        fontSize: 14,
+        fontSize: moderateScale(14),
     },
 });
 
 
-const pickerSelectStyles = StyleSheet.create({
-    inputIOS: {
-        height: 52,
-        width: 310,
-        padding: 10,
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 20,
-        color: '#333',
-        backgroundColor: '#f5f5f5',
-        fontSize: 16,
-        marginBottom: 15,
-    },
-    inputAndroid: {
-        height: 52,
-        width: 290,
-        padding: 20,
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 30,
-        color: '#333',
-        backgroundColor: '#f5f5f5',
-        fontSize: 26,
-        marginBottom: 25,
-    },
-});

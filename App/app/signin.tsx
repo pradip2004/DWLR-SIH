@@ -5,6 +5,7 @@ import { useRouter } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { LinearGradient } from 'expo-linear-gradient';
+import { moderateScale, verticalScale } from 'react-native-size-matters';
 
 export default function SignIn() {
   const router = useRouter();
@@ -53,7 +54,7 @@ export default function SignIn() {
       
         <View style={styles.container}>
           <TouchableOpacity onPress={() => router.back()}>
-            <Ionicons name="arrow-back-circle" size={30} color="black" />
+            <Ionicons name="arrow-back-circle" size={moderateScale(30)} color="black" />
           </TouchableOpacity>
           <Text style={styles.title}>Let's Sign You In</Text>
           <Text style={styles.subtitle}>Welcome Back</Text>
@@ -88,7 +89,7 @@ export default function SignIn() {
           {/* Sign In with Google */}
           <TouchableOpacity style={styles.signInButton2}>
             <View style={styles.iconAndTextContainer}>
-              <AntDesign name="google" size={23} color="black" style={styles.icon} />
+              <AntDesign name="google" size={moderateScale(23)} color="black" style={styles.icon} />
               <Text style={styles.signInButtonText2}>Sign In with Google</Text>
             </View>
           </TouchableOpacity>
@@ -113,52 +114,52 @@ export default function SignIn() {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 25,
+    padding: moderateScale(25),
     backgroundColor: 'transparent',
     flex: 1,
-    paddingTop: 40,
+    paddingTop: moderateScale(40),
   },
   title: {
-    fontSize: 30,
-    marginTop: 30,
+    fontSize: moderateScale(30),
+    marginTop: moderateScale(30),
     fontWeight: 'bold',
   },
   subtitle: {
-    fontSize: 20,
+    fontSize: moderateScale(20),
     color: 'grey',
-    marginTop: 10,
+    marginTop: moderateScale(10),
   },
   inputContainer: {
-    marginTop: 30,
+    marginTop: moderateScale(30),
   },
   label: {
-    fontSize: 16,
+    fontSize: moderateScale(16),
     fontWeight: '600',
   },
   input: {
-    padding: 15,
+    padding: moderateScale(15),
     borderWidth: 1,
-    borderRadius: 15,
+    borderRadius: moderateScale(15),
     borderColor: 'grey',
-    marginTop: 5,
+    marginTop: moderateScale(5),
   },
   signInButton: {
-    padding: 18,
+    padding: moderateScale(18),
     backgroundColor: '#003f88',
-    borderRadius: 15,
-    marginTop: 35,
+    borderRadius: moderateScale(15),
+    marginTop: moderateScale(35),
   },
   signInButtonText: {
     color: 'white',
     textAlign: 'center',
     fontWeight: '600',
-    fontSize:16
+    fontSize: moderateScale(16),
   },
   signInButton2: {
-    padding: 15,
+    padding: moderateScale(15),
     backgroundColor: 'white',
-    borderRadius: 15,
-    marginTop: 30,
+    borderRadius: moderateScale(15),
+    marginTop: moderateScale(30),
     borderWidth: 1,
     borderColor: 'grey',
   },
@@ -168,24 +169,24 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   icon: {
-    marginRight: 8,
+    marginRight: moderateScale(8),
   },
   signInButtonText2: {
     color: 'black',
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: moderateScale(16),
   },
   signUpContainer: {
     flex: 1,
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: moderateScale(20),
   },
   signUpText: {
-    fontSize: 16,
+    fontSize: moderateScale(16),
   },
   signUpLink: {
     fontWeight: 'bold',
-    fontSize: 18,
+    fontSize: moderateScale(18),
     color: '#003459',
   },
 });
