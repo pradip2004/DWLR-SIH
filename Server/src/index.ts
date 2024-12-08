@@ -10,6 +10,7 @@ import cors from 'cors';
 import { setupWebSocket } from "./config/websocket";
 import { sendToKafka } from "./config/kafkaProducer";
 import './config/kafkaConsumer';
+import checkAndNotify from "./utils/notificationService";
 
 
 dotenv.config();
@@ -64,6 +65,8 @@ setupWebSocket((data: string) => {
   }
 });
 
+
+checkAndNotify();
 
 const PORT = process.env.PORT ;
 
