@@ -13,6 +13,7 @@ import { useRouter } from "expo-router";
 import Entypo from '@expo/vector-icons/Entypo';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+import Footer from '@/component/Footer';
 
 
 export default function Report() {
@@ -250,33 +251,7 @@ export default function Report() {
 
 
             {/* Footer Section */}
-            <SafeAreaView style={
-                styles.footer
-            }>
-                <TouchableOpacity style={{ alignItems: 'center', marginTop: 15 }} onPress={() => router.push("/dashboard")}>
-                    <MaterialCommunityIcons name="view-dashboard-outline" size={26} color="#0077cc" />
-                    <Text style={{ fontSize: 12, color: '#0077cc' }}>Dashboard</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={{ alignItems: 'center', marginTop: 15 }} onPress={() => router.push("/dwlrs")}>
-                    <FontAwesome6 name="anchor-circle-check" size={24} color="#0077cc" />
-                    <Text style={{ fontSize: 12, color: '#0077cc' }}>DWLR</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={{ alignItems: 'center', marginTop: 15 }} >
-                    <MaterialIcons name="report-problem" size={26} color="#0077cc" />
-                    <Text style={{ fontSize: 12, color: '#0077cc' }}>Report</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={{ alignItems: 'center', marginTop: 15 }} onPress={() => router.push("/alert")}>
-                    <FontAwesome5 name="bell" size={24} color="#0077cc" />
-                    <Text style={{ fontSize: 12, color: '#0077cc' }}>Alert</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ alignItems: 'center', marginTop: 15 }} onPress={() => router.push("/analytic")}>
-                    <Ionicons name="analytics" size={26} color="#0077cc" />
-                    <Text style={{ fontSize: 12, color: '#0077cc' }}>Analytics</Text>
-                </TouchableOpacity>
-            </SafeAreaView>
+            <Footer/>
 
 
 

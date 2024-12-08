@@ -9,19 +9,25 @@ import {
     Modal,
     Pressable,
     ActivityIndicator,
+    Dimensions,
+    TextInput
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import axios from "axios";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { BarChart } from "react-native-chart-kit";
 
 import { useFonts } from "expo-font";
 import { useRouter } from "expo-router";
 
-import Piechart from "../component/piechart";
+
 import SecondBox from "../component/DashboardBox";
 import Footer from "@/component/Footer";
-import DwlrBarChart from "@/component/DwlrBarChart";
+import Header from "@/component/Header";
+import PieChartComponent from "../component/pieChartComponent";
+import ProblematicChartData from "@/component/problematicChartData";
+// import DwlrBarChart from "@/component/DwlrBarChart";
 
 export default function Dashboard() {
     const router = useRouter();
@@ -36,31 +42,31 @@ export default function Dashboard() {
     const [selectedState, setSelectedState] = useState(null);
     const [selectedDistrict, setSelectedDistrict] = useState(null);
     const [dropdownType, setDropdownType] = useState(null);
-    const [dwlrData, setDwlrData] = useState([]); 
-
-
-  
+    const [dwlrData, setDwlrData] = useState([]);
     const [loading, setLoading] = useState(false);
+
+
+
 
     useEffect(() => {
         fetchStates();
         // Fetch data for the initial default state
-        fetchDwlrData("default", "default");
+        fetchDwlrData("default", "default",);
     }, []);
 
     const fetchStates = async () => {
         try {
-            const response = await axios.get("http://192.168.146.24:8000/api/v1/dwlr/states");
+            const response = await axios.get("http://192.168.56.24:8000/api/v1/dwlr/states");
             setStates(response.data.states);
         } catch (error) {
             console.error("Error fetching states:", error);
         }
     };
 
-    const fetchDistricts = async (state) => {
+    const fetchDistricts = async (state: any) => {
         try {
             setLoading(true);
-            const response = await axios.get(`http://192.168.146.24:8000/api/v1/dwlr/districts?state=${state}`);
+            const response = await axios.get(`http://192.168.56.24:8000/api/v1/dwlr/districts?state=${state}`);
             setDistricts(response.data.districts);
             setLoading(false);
         } catch (error) {
@@ -69,10 +75,11 @@ export default function Dashboard() {
         }
     };
 
-    const fetchDwlrData = async (queryKey, queryValue) => {
+    const fetchDwlrData = async (queryKey: string, queryValue: string) => {
         try {
             setLoading(true);
-            const response = await axios.get(`http://192.168.146.24:8000/api/v1/dwlr/info?${queryKey}=${queryValue}`);
+            const response = await axios.get(`http://192.168.56.24:8000/api/v1/dwlr/info?${queryKey}=${queryValue}`);
+            console.log("DWLR Data Response:", response.data); // Debugging log
             setDwlrData(response.data);
             setLoading(false);
         } catch (error) {
@@ -80,8 +87,11 @@ export default function Dashboard() {
             setLoading(false);
         }
     };
+    // Ensure that 'dwlrData' contains 'anomalyDwlr' and 'lowbattery'
+    const ProblematicDwlr = (dwlrData.anomalyDwlr || 0) + (dwlrData.lowBattery || 0);
 
-    const handleSelect = (type, value) => {
+
+    const handleSelect = (type: string, value: React.SetStateAction<null>) => {
         if (type === "state") {
             setSelectedState(value);
             setSelectedDistrict(null);
@@ -142,8 +152,7 @@ export default function Dashboard() {
 
     if (!fontsLoaded) return <ActivityIndicator size="large" color="#0000ff" />;
 
-    const getBarHeight = (value) => Math.max(value * 5, 20); // Scale the bar height
-
+ 
     return (
         <LinearGradient
             colors={["#DEFFFC", "#D4F8FA", "#488DDD"]}
@@ -152,20 +161,7 @@ export default function Dashboard() {
             style={{ flex: 1 }}
         >
             {/* Header */}
-            <View
-                style={{
-                    height: 60,
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    paddingHorizontal: 20,
-                    backgroundColor: "#fff",
-                }}
-            >
-                <Image source={require("../assets/images/image1.png")} style={{ height: 40, width: 100 }} />
-                <Image source={require("../assets/images/image2.png")} style={{ height: 30, width: 50 }} />
-                <Image source={require("../assets/images/image3.png")} style={{ height: 30, width: 50 }} />
-            </View>
+            <Header />
 
             {/* Dropdowns */}
             <View style={{ flexDirection: "row", justifyContent: "space-evenly", marginVertical: 20 }}>
@@ -240,12 +236,50 @@ export default function Dashboard() {
 
                                 <View style={{ flexDirection: 'row' }}>
                                     <Text style={{ fontSize: 22, fontFamily: 'Kameron-SemiBold', color: '#000' }}>PROBLEMATIC DWLR:</Text>
-                                    <Text style={{ color: "#274C77", fontFamily: 'Kameron-SemiBold', fontSize: 42, marginBottom: 15, left: 40, top: -16 }}>{dwlrData.problematic || 0}</Text>
+                                    <Text style={{ color: "#274C77", fontFamily: 'Kameron-SemiBold', fontSize: 42, marginBottom: 15, left: 10, top: -16 }}> {ProblematicDwlr || 0}</Text>
                                 </View>
                             </View>
 
+
                             {/* Bar section  */}
-                            <DwlrBarChart data={[dwlrData.total, dwlrData.problematic, dwlrData.active]} />
+                            <BarChart
+                                data={{
+                                    labels: ["Total", "Active", "Problematic"],
+                                    datasets: [
+                                        {
+                                            data: [
+                                                dwlrData.total || 0,
+                                                dwlrData.active || 0,
+                                                (dwlrData.anomalyDwlr || 0) + (dwlrData.lowBattery || 0),
+                                            ],
+                                            colors: [
+                                                (opacity = 1) => `rgba(110, 206,255, ${opacity})`, // Red for Total
+                                                (opacity = 1) => `rgba(249, 43, 91, ${opacity})`, // Blue for Active
+                                                (opacity = 1) => `rgba(252, 243,123, ${opacity})`, // Green for Problematic
+                                            ],
+                                        },
+                                    ],
+                                }}
+                                width={Dimensions.get("window").width - 70}
+                                height={220}
+                                yAxisLabel=""
+                                chartConfig={{
+                                    backgroundGradientFrom: "#FFF",
+                                    backgroundGradientTo: "#FFF",
+                                    decimalPlaces: 0,
+                                    color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`, // Label color
+                                    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`, // Axis label color
+                                    barPercentage: 1.5,
+                                }}
+                                style={{
+                                    marginVertical: 20,
+                                    borderRadius: 10,
+                                }}
+                                withCustomBarColorFromData={true} // Enable custom color for bars
+                                flatColor={true} // Optional: Enable flat color
+
+                            />
+
                         </>
                     )}
                 </View>
@@ -259,7 +293,7 @@ export default function Dashboard() {
                     <Text style={{ fontSize: 22, fontFamily: 'Kameron-SemiBold', color: '#000' }}>
                         {selectedDistrict || "City Name"}
                     </Text>
-                    <Piechart />
+                    <PieChartComponent dwlrData={dwlrData} />
                 </SecondBox>
 
                 {/* Third box */}
@@ -273,13 +307,71 @@ export default function Dashboard() {
                     </Text>
 
                     {/* chart section  */}
-                    <Piechart />
+                    {/* Inside your Dashboard component, pass dwlrData to PieChartComponent */}
+                    <ProblematicChartData dwlrData={dwlrData} />
+
                 </SecondBox>
+
+                    {/* Fourth box  */}
+                    <SecondBox>
+                        
+                    </SecondBox>
+
+                    {/* fifth box  */}
+                <SecondBox>
+                    <View style={{justifyContent:'center',alignContent:'center',flex:1}}>
+                        <Text style={{  fontSize: 20, color: '#274c77', }}>Email</Text>
+                        <View
+                            style={{
+                                height: 60, width: 280,
+                                borderRadius: 10, borderWidth: 1, borderColor: 'gray',
+                                justifyContent: 'center', padding: 5, marginTop: 10
+                            }}>
+                            <TextInput
+                                style={{ fontSize:18 }}
+                                placeholder="Enter your gmail"
+                            />
+                        </View>
+
+                        {/* mobile number  */}
+
+                        <Text style={{ marginTop: 20, fontSize: 20, color: '#274c77', }}>Mobile Number</Text>
+                        <View
+                            style={{
+                                height: 60, width: 280,
+                                borderRadius: 10, borderWidth: 1, borderColor: 'gray',
+                                justifyContent: 'center', padding: 10, marginTop: 10
+                            }}>
+                            <TextInput
+                                style={{ fontSize:18 }}
+                                placeholder="Enter your Mobile Number"
+                                keyboardType="phone-pad"
+                                
+                            />
+                        </View>
+
+                        {/* Button  */}
+                        <TouchableOpacity 
+                        style={{
+                            height: 60, width: 280,
+                            borderRadius: 10, backgroundColor:'#274c77',
+                            justifyContent:'center',
+                            marginTop:40,alignSelf:'center'
+                        }}>
+                            <Text style={{color:'#fff',textAlign:'center',fontSize:24,fontWeight:'bold'}}>Submit</Text>
+                        </TouchableOpacity>
+                    </View>
+                </SecondBox>
+
+
+
             </ScrollView>
             {/* Dropdown Modals */}
             {dropdownType === "state" && <Dropdown type="state" data={states} />}
             {dropdownType === "district" && <Dropdown type="district" data={districts} />}
+
+            {/* Footer  */}
             <Footer />
         </LinearGradient>
     );
-}
+};

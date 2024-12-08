@@ -1,18 +1,23 @@
-import { View, Text ,TouchableOpacity} from 'react-native'
-import React from 'react'
+import { View, Text, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import Ionicons from "@expo/vector-icons/Ionicons";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { Router, useRouter } from 'expo-router';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { useRouter } from 'expo-router';
 
 export default function Footer() {
+  const [selected, setSelected] = useState(null);
+  const router = useRouter();
 
-    const router= useRouter()
+  const handlePress = (screen, index) => {
+    setSelected(index); // Update selected icon index
+    router.push(screen); // Navigate to the respective screen
+  };
 
   return (
-    <View style={{
+    <View
+      style={{
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',
@@ -30,31 +35,99 @@ export default function Footer() {
         shadowOffset: { width: 0, height: -2 },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
-    }}>
-        <TouchableOpacity style={{ alignItems: 'center', marginTop: 15 }} >
-            <MaterialCommunityIcons name="view-dashboard-outline" size={26} color="#0077cc" />
-            <Text style={{ fontSize: 12, color: '#0077cc' }}>Dashboard</Text>
-        </TouchableOpacity>
+      }}
+    >
+      <TouchableOpacity
+        style={{
+          alignItems: 'center',
+          marginTop: 15,
+          backgroundColor: selected === 0 ? '#0077cc' : 'transparent',
+          borderRadius: 10,
+          padding: 5,
+        }}
+        onPress={() => handlePress('/dashboard', 0)}
+      >
+        <MaterialCommunityIcons
+          name="view-dashboard-outline"
+          size={26}
+          color={selected === 0 ? 'white' : '#0077cc'}
+        />
+        <Text style={{ fontSize: 12, color: selected === 0 ? 'white' : '#0077cc' }}>
+          Dashboard
+        </Text>
+      </TouchableOpacity>
 
-        <TouchableOpacity style={{ alignItems: 'center', marginTop: 15 }} onPress={() => router.push("/dwlrs")}>
-            <Ionicons name="person-outline" size={24} color="#0077cc" />
-            <Text style={{ fontSize: 12, color: '#0077cc' }}>DWLR</Text>
-        </TouchableOpacity>
+      <TouchableOpacity
+        style={{
+          alignItems: 'center',
+          marginTop: 15,
+          backgroundColor: selected === 1 ? '#0077cc' : 'transparent',
+          borderRadius: 10,
+          padding: 5,
+        }}
+        onPress={() => handlePress('/dwlrs', 1)}
+      >
+        <Ionicons
+          name="person-outline"
+          size={24}
+          color={selected === 1 ? 'white' : '#0077cc'}
+        />
+        <Text style={{ fontSize: 12, color: selected === 1 ? 'white' : '#0077cc' }}>DWLR</Text>
+      </TouchableOpacity>
 
-        <TouchableOpacity style={{ alignItems: 'center', marginTop: 15 }} onPress={() => router.push("/report")}>
-            <MaterialIcons name="report-problem" size={26} color="#0077cc" />
-            <Text style={{ fontSize: 12, color: '#0077cc' }}>Report</Text>
-        </TouchableOpacity>
+      <TouchableOpacity
+        style={{
+          alignItems: 'center',
+          marginTop: 15,
+          backgroundColor: selected === 2 ? '#0077cc' : 'transparent',
+          borderRadius: 10,
+          padding: 5,
+        }}
+        onPress={() => handlePress('/report', 2)}
+      >
+        <MaterialIcons
+          name="report-problem"
+          size={26}
+          color={selected === 2 ? 'white' : '#0077cc'}
+        />
+        <Text style={{ fontSize: 12, color: selected === 2 ? 'white' : '#0077cc' }}>Report</Text>
+      </TouchableOpacity>
 
-        <TouchableOpacity style={{ alignItems: 'center', marginTop: 15 }} onPress={() => router.push("/alert")}>
-            <FontAwesome5 name="bell" size={24} color="#0077cc" />
-            <Text style={{ fontSize: 12, color: '#0077cc' }}>Alert</Text>
-        </TouchableOpacity>
+      <TouchableOpacity
+        style={{
+          alignItems: 'center',
+          marginTop: 15,
+          backgroundColor: selected === 3 ? '#0077cc' : 'transparent',
+          borderRadius: 10,
+          padding: 5,
+        }}
+        onPress={() => handlePress('/alert', 3)}
+      >
+        <FontAwesome5
+          name="bell"
+          size={24}
+          color={selected === 3 ? 'white' : '#0077cc'}
+        />
+        <Text style={{ fontSize: 12, color: selected === 3 ? 'white' : '#0077cc' }}>Alert</Text>
+      </TouchableOpacity>
 
-        <TouchableOpacity style={{ alignItems: 'center', marginTop: 15 }} onPress={() => router.push("/analytic")}>
-            <Ionicons name="pie-chart" size={26} color="#0077cc" />
-            <Text style={{ fontSize: 12, color: '#0077cc' }}>Analytics</Text>
-        </TouchableOpacity>
+      <TouchableOpacity
+        style={{
+          alignItems: 'center',
+          marginTop: 15,
+          backgroundColor: selected === 4 ? '#0077cc' : 'transparent',
+          borderRadius: 10,
+          padding: 5,
+        }}
+        onPress={() => handlePress('/analytic', 4)}
+      >
+        <Ionicons
+          name="pie-chart"
+          size={26}
+          color={selected === 4 ? 'white' : '#0077cc'}
+        />
+        <Text style={{ fontSize: 12, color: selected === 4 ? 'white' : '#0077cc' }}>Analytics</Text>
+      </TouchableOpacity>
     </View>
-  )
+  );
 }

@@ -9,6 +9,7 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { Linking } from 'react-native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useRouter } from "expo-router";
+import Footer from '@/component/Footer';
 
 export default function Alert() {
 
@@ -88,31 +89,7 @@ export default function Alert() {
       </TouchableOpacity>
 
       {/* Footer Navigation */}
-      <View style={styles.footer}>
-        <TouchableOpacity style={styles.footerIcon} onPress={() => router.push("/dashboard")}>
-          <MaterialCommunityIcons name="view-dashboard-outline" size={26} color="#0077cc" />
-          <Text style={styles.iconLabel}>Dashboard</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.footerIcon} onPress={() => router.push("/dwlrs")}>
-          <FontAwesome6 name="anchor-circle-check" size={24} color="#0077cc" />
-          <Text style={styles.iconLabel}>DWLR</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.footerIcon} onPress={() => router.push("/report")}>
-          <MaterialIcons name="report-problem" size={26} color="#0077cc" />
-          <Text style={styles.iconLabel}>Report</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.footerIcon}>
-          <FontAwesome5 name="bell" size={24} color="#0077cc" />
-          <Text style={styles.iconLabel}>Alert</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.footerIcon} onPress={() => router.push("/analytic")}>
-          <Ionicons name="analytics" size={26} color="#0077cc" />
-          <Text style={styles.iconLabel}>Analytics</Text>
-        </TouchableOpacity>
-      </View>
+      <Footer/>
     </LinearGradient>
   );
 }

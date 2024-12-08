@@ -6,7 +6,7 @@ const DashboardBox = ({ children }) => {
         <View
             style={{
                 backgroundColor: '#fff',
-                height: 309,
+                height: 419,
                 width: 356,
                 marginTop: 10,
                 borderRadius: 15,

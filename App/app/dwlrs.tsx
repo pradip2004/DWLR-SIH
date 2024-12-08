@@ -8,6 +8,7 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import axios from "axios";
+import Footer from "@/component/Footer";
 
 export default function DWLR() {
     const router = useRouter();
@@ -16,7 +17,7 @@ export default function DWLR() {
 
     // Fetch data from API on component mount
     useEffect(() => {
-        axios.get('http://192.168.146.24:8000/api/v1/dwlr/all')
+        axios.get('http://192.168.56.24:8000/api/v1/dwlr/all')
             .then(response => setCardData(response.data))
             .catch(error => console.error("Error fetching data:", error));
     }, []);
@@ -25,18 +26,21 @@ export default function DWLR() {
     const filterCards = () => {
         switch (selectedOption) {
             case "Low Battery":
-                return cardData.filter(card => card.lowBattery);
+                return cardData.filter(card => card.lowBattery === true);
             case "Active":
-                return cardData.filter(card => card.active);
+                return cardData.filter(card => card.active === true);
             case "Abnormal Data":
-                return cardData.filter(card => card.anomalyDwlr);
+                return cardData.filter(card => card.anomalyDwlr === true);
             case "No Data":
-                return cardData.filter(card => !card.active && !card.lowBattery && !card.anomalyDwlr);
+                return cardData.filter(card => 
+                    !card.active && !card.lowBattery && !card.anomalyDwlr
+                );
             case "All":
             default:
                 return cardData;
         }
     };
+    
 
     const filteredCards = filterCards();
 
@@ -106,7 +110,7 @@ export default function DWLR() {
                                 backgroundColor: card.lowBattery
                                     ? "#FF6262"
                                     : card.anomalyDwlr
-                                        ? "#FFA500"
+                                        ? "#FFFA500"
                                         : card.active
                                             ? "#A7F482"
                                             : "#B0BEC5",
@@ -250,49 +254,7 @@ export default function DWLR() {
 
 
             {/* Footer Section */}
-            <View style={{
-                flexDirection: 'row',
-                justifyContent: 'space-around',
-                alignItems: 'center',
-                backgroundColor: 'white',
-                borderTopLeftRadius: 20,
-                borderTopRightRadius: 20,
-                height: 70,
-                position: 'absolute',
-                bottom: 0,
-                left: 0,
-                right: 0,
-                zIndex: 10,
-                elevation: 10,
-                shadowColor: '#000',
-                shadowOffset: { width: 0, height: -2 },
-                shadowOpacity: 0.25,
-                shadowRadius: 3.84,
-            }}>
-                <TouchableOpacity style={{ alignItems: 'center', marginTop: 15 }} onPress={() => router.push("/dashboard")}>
-                    <MaterialCommunityIcons name="view-dashboard-outline" size={26} color="#0077cc" />
-                    <Text style={{ fontSize: 12, color: '#0077cc' }}>Dashboard</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={{ alignItems: 'center', marginTop: 15 }} onPress={() => router.push("/dwlrs")}>
-                    <FontAwesome6 name="anchor-circle-check" size={24} color="#0077cc" />
-                    <Text style={{ fontSize: 12, color: '#0077cc' }}>DWLR</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={{ alignItems: 'center', marginTop: 15 }} onPress={() => router.push("/report")}>
-                    <MaterialIcons name="report-problem" size={26} color="#0077cc" />
-                    <Text style={{ fontSize: 12, color: '#0077cc' }}>Report</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={{ alignItems: 'center', marginTop: 15 }} onPress={() => router.push("/alert")}>
-                    <FontAwesome5 name="bell" size={24} color="#0077cc" />
-                    <Text style={{ fontSize: 12, color: '#0077cc' }}>Alert</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ alignItems: 'center', marginTop: 15 }} onPress={()=> router.push("/analytic")}>
-                    <Ionicons name="analytics" size={26} color="#0077cc" />
-                    <Text style={{ fontSize: 12, color: '#0077cc' }}>Analytics</Text>
-                </TouchableOpacity>
-            </View>
+           <Footer/>
 
 
         </LinearGradient>
