@@ -11,6 +11,8 @@ export default function Header() {
                     alignItems: "center",
                     paddingHorizontal: 20,
                     backgroundColor: "#fff",
+                    borderBottomLeftRadius:30,
+                    borderBottomRightRadius:30
                 }}
             >
                 <Image source={require("../assets/images/image1.png")} style={{ height: 40, width: 100 }} />

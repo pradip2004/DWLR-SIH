@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -7,13 +7,37 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { Linking } from 'react-native';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useRouter } from "expo-router";
 import Footer from '@/component/Footer';
+import axios from 'axios'; // Make sure to import axios
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+
 
 export default function Alert() {
-
   const router = useRouter();
+
+  const [problematicDwlrs, setProblematicDwlrs] = useState([]); // State to store DWLR data
+  const [loading, setLoading] = useState(false); // Loading state
+  const [error, setError] = useState(null); // Error state
+
+  // Fetch problematic DWLRs from the backend API
+  const fetchProblematicDwlrs = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await axios.get('http://192.168.56.24:8000/api/v1/dwlr/coordinates-info'); // Backend API URL
+      setProblematicDwlrs(response.data); // Set problematic DWLRs data
+    } catch (err) {
+      setError('Failed to load problematic DWLRs.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // UseEffect to fetch data on component mount
+  useEffect(() => {
+    fetchProblematicDwlrs();
+  }, []);
 
   const openGoogleMaps = () => {
     const latitude = 37.7749; // Example: Latitude of San Francisco
@@ -29,14 +53,12 @@ export default function Alert() {
 
   return (
     <LinearGradient
-    colors={["#DEFFFC", "#D4F8FA", "#488DDD"]}
-    locations={[0, 0.22, 28.5]} // Define color stops
-    start={{ x: 0, y: 0 }}
-    end={{ x: 1, y: 1 }}
-    style={{ flex: 1 }}
+      colors={["#DEFFFC", "#D4F8FA", "#488DDD"]}
+      locations={[0, 0.22, 28.5]} // Define color stops
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={styles.gradient}
     >
-      <View style={styles.container}></View>
-
       {/* Header with Images */}
       <View style={styles.nav}>
         <Image source={require('./../assets/images/image 7.png')} style={styles.headerImage} />
@@ -44,45 +66,46 @@ export default function Alert() {
         <Image source={require('./../assets/images/image 7 (2).png')} style={styles.header2Image} />
       </View>
 
-      {/* ScrollView for Form Content */}
       <View contentContainerStyle={styles.scrollContent}>
-
-
         <View style={styles.container2}>
           {/* Main ScrollView */}
           <ScrollView contentContainerStyle={styles.scrollContainer}>
+            <Text style={styles.title}>PROBLEMETIC DWLRs</Text>
 
+            {/* Show Loading Spinner while fetching data */}
+            {loading && <ActivityIndicator size="large" color="#0077cc" />}
 
-            <ScrollView style={styles.innerScrollContainer}>
-              <Text style={{
-                fontSize: 26,
-                fontWeight: 'bold',
-              }}>Download Data</Text>
-              {/* Notification Items */}
-              {[...Array(14)].map((_, index) => (
-                <View key={index} style={styles.notificationCard}>
-                  <FontAwesome name="bell" size={26} color="orange" />
+            {/* Show Error Message if fetching fails */}
+            {error && <Text style={styles.error}>{error}</Text>}
 
-                  <View style={styles.textContainer}>
-                    <Text style={styles.titleText}>DWLRs ID</Text>
-                    <Text style={styles.subtitleText}>Problem</Text>
-                    <Text style={styles.descriptionText}>Explain in one line</Text>
+            {/* Render List of Problematic DWLRs */}
+            {!loading && !error && problematicDwlrs.length > 0 && (
+              <ScrollView style={styles.innerScrollContainer}>
+                {problematicDwlrs.map((item, index) => (
+                  <View key={index} style={styles.notificationCard}>
+                    <FontAwesome5 name="bell" size={26} color="orange" />
+
+                    <View style={styles.textContainer}>
+                      <Text style={styles.titleText}>DWLR ID: {item.id}</Text>
+                      <Text style={styles.subtitleText}>{item.anomalyDwlr ? 'Anomaly Detected' : 'No Anomaly'}</Text>
+                      <Text style={styles.descriptionText}>{item.lowBattery ? 'Low Battery' : 'Battery OK'}</Text>
+                    </View>
+                    <View style={styles.buttonContainer}>
+                      <TouchableOpacity style={[styles.downloadButton, { marginBottom: 10 }]}>
+                        <Text style={styles.downloadButtonText}>Details</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity style={styles.downloadButton}>
+                        <Text style={styles.downloadButtonText}>Hide</Text>
+                      </TouchableOpacity>
+                    </View>
                   </View>
-                  <View style={{ flexDirection: 'column', alignItems: 'center', gap: 10 }}>
-                    <TouchableOpacity style={styles.downloadButton}>
-                      <Text style={styles.downloadButtonText}>Details</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.downloadButton}>
-                      <Text style={styles.downloadButtonText}>Hide</Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              ))}
-            </ScrollView>
-
+                ))}
+              </ScrollView>
+            )}
           </ScrollView>
         </View>
       </View>
+
       {/* Map Section */}
       <TouchableOpacity style={styles.mapcontainer} onPress={openGoogleMaps}>
         <Text style={styles.mapText}>Click to Open Map</Text>
@@ -95,15 +118,22 @@ export default function Alert() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, },
+  title: {
+    fontSize: moderateScale(28),
+    fontFamily: 'Kameron-SemiBold',
+    marginTop: moderateScale(1),
+    marginLeft: moderateScale(19),
+  },
+  container: { flex: 1 },
   gradient: { flex: 1 },
   nav: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    height: 70,
+    height: verticalScale(55),
     backgroundColor: 'white',
-  
+    borderBottomLeftRadius: scale(20),
+    borderBottomRightRadius: scale(20),
     position: 'absolute',
     top: 0,
     left: 0,
@@ -111,48 +141,44 @@ const styles = StyleSheet.create({
     zIndex: 10,
     elevation: 10,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 0, height: verticalScale(2) },
     shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-  },
-  headerImage: {  height: 46, width: 99 , resizeMode: 'contain' },
-  header1Image: { height: 27, width: 45, marginLeft: 105 },
-  header2Image: { height: 27, width: 45 },
-
-  scrollContent: { paddingHorizontal: 30 },
-
-
-  input: { flex: 1, paddingVertical: 10, paddingHorizontal: 10, fontSize: 16 },
-  icon: { marginLeft: 10 },
+    shadowRadius: moderateScale(3.84),
+},
+  headerImage: { height: moderateScale(46), width: moderateScale(99), resizeMode: 'contain' },
+  header1Image: { height: moderateScale(27), width: moderateScale(45), marginLeft: moderateScale(105) },
+  header2Image: { height: moderateScale(27), width: moderateScale(45) },
+  scrollContent: { paddingHorizontal: moderateScale(30) },
+  input: { flex: 1, paddingVertical: moderateScale(10), paddingHorizontal: moderateScale(10), fontSize: moderateScale(16) },
+  icon: { marginLeft: moderateScale(10) },
   buttonText: {
     color: '#5A6ACF',
-    fontSize: 16,
+    fontSize: moderateScale(16),
     textAlign: 'center',
   },
   midContainer: {
-    height: 190,
-    width: 318,
+    height: moderateScale(200),
+    width: moderateScale(318),
     backgroundColor: 'white',
-    borderRadius: 20,
+    borderRadius: moderateScale(20),
     justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: 20,
+    marginVertical: moderateScale(20),
   },
   midContainerText: {
-    fontSize: 50,
+    fontSize: moderateScale(50),
     fontWeight: '900',
     textAlign: 'center',
     color: '#274C77',
   },
-
   footer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
     backgroundColor: 'white',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    height: 70,
+    borderTopLeftRadius: moderateScale(20),
+    borderTopRightRadius: moderateScale(20),
+    height: moderateScale(70),
     position: 'absolute',
     bottom: 0,
     left: 0,
@@ -160,113 +186,105 @@ const styles = StyleSheet.create({
     zIndex: 10,
     elevation: 10,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: -2 },
+    shadowOffset: { width: 0, height: moderateScale(-2) },
     shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    shadowRadius: moderateScale(3.84),
   },
-  footerIcon: { alignItems: 'center', marginTop: 15 },
-  iconLabel: { fontSize: 12, color: '#0077cc' },
-
-
-  container: {
-    flex: 1,
-    backgroundColor: '#DEFFFC',
-    position: 'relative',
-  },
+  footerIcon: { alignItems: 'center', marginTop: moderateScale(15) },
+  iconLabel: { fontSize: moderateScale(12), color: '#0077cc' },
   scrollContainer: {
     flexGrow: 1,
-    paddingBottom: 255,
-    borderRadius: 30,
-    paddingTop: 70,
+    paddingBottom: moderateScale(250),
+    borderRadius: moderateScale(30),
+    paddingTop: moderateScale(80),
   },
-
   innerScrollContainer: {
     backgroundColor: '#fff',
-    height: 328,
-    width: 322,
+    height: moderateScale(328),
+    width: moderateScale(322),
     alignSelf: 'center',
-    marginTop: 20,
-    borderRadius: 25,
+    marginTop: moderateScale(10),
+    borderRadius: moderateScale(25),
     elevation: 10,
-    shadowOffset: { width: 4, height: 4 },
+    shadowOffset: { width: moderateScale(4), height: moderateScale(4) },
     shadowOpacity: 0.3,
-    shadowRadius: 2.41,
-    padding: 20,
+    shadowRadius: moderateScale(2.41),
+    padding: moderateScale(20),
   },
-
   notificationCard: {
     backgroundColor: '#fff',
-    height: 90,
+    height: moderateScale(90),
     width: '100%',
-    borderRadius: 15,
-    marginTop: 25,
+    borderRadius: moderateScale(15),
+    marginTop: moderateScale(5),
     elevation: 10,
-    shadowOffset: { width: 8, height: 4 },
+    shadowOffset: { width: moderateScale(8), height: moderateScale(4) },
     shadowOpacity: 0.3,
-    shadowRadius: 2.41,
+    shadowRadius: moderateScale(2.41),
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 15,
+    paddingHorizontal: moderateScale(15),
   },
   textContainer: {
     flex: 1,
-    marginLeft: 10,
+    marginLeft: moderateScale(10),
   },
   titleText: {
-    fontSize: 16,
+    fontSize: moderateScale(16),
     color: 'black',
     fontFamily: 'Kameron-SemiBold',
-    marginBottom: 5,
+    marginBottom: moderateScale(5),
   },
   subtitleText: {
-    fontSize: 10,
+    fontSize: moderateScale(10),
     color: '#4e4e4e',
     fontFamily: 'Kameron-SemiBold',
   },
   descriptionText: {
-    fontSize: 10,
+    fontSize: moderateScale(10),
     color: '#4e4e4e',
     fontFamily: 'Kameron-SemiBold',
   },
   notificationImage: {
-    width: 40,
-    height: 40,
+    width: moderateScale(40),
+    height: moderateScale(40),
     resizeMode: 'contain',
-    marginLeft: 10,
+    marginLeft: moderateScale(10),
   },
   downloadButton: {
     backgroundColor: '#274c77',
-    borderRadius: 10,
+    borderRadius: moderateScale(10),
     justifyContent: 'center',
     alignItems: 'center',
-    width: 75,
-    height: 35,
-    marginLeft: 10,
+    width: moderateScale(75),
+    height: moderateScale(35),
+    marginLeft: moderateScale(10),
   },
   downloadButtonText: {
     color: 'white',
-    fontSize: 14,
+    fontSize: moderateScale(14),
   },
   mapcontainer: {
-    height: 200,
-    width: '90%',
+    height: moderateScale(185),
+    width: moderateScale(322),
     backgroundColor: 'white',
-    borderRadius: 25,
+    borderRadius: moderateScale(25),
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 4,
-    padding: 20,
-    marginTop: -220,
+    padding: moderateScale(20),
+    marginTop: moderateScale(-240),
     alignSelf: 'center',
-    marginBottom: 165,
+    marginBottom: moderateScale(155),
   },
   mapText: {
-    fontSize: 18,
+    fontSize: moderateScale(18),
     fontWeight: 'bold',
     color: '#274c77',
   },
-
-
-
+  error: { 
+    color: 'red', 
+    textAlign: 'center', 
+    marginTop: moderateScale(20) 
+  },
 });
-

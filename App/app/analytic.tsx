@@ -1,4 +1,4 @@
-import { View, Text, Image, ScrollView, TouchableOpacity, TextInput } from "react-native";
+import { View, Text, Image, ScrollView, TouchableOpacity, TextInput, Dimensions, StyleSheet } from "react-native";
 import React from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
@@ -6,7 +6,7 @@ import { useFonts } from 'expo-font';
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { LineChart } from "react-native-chart-kit";
 
-import { Dimensions } from "react-native";
+
 const screenWidth = Dimensions.get("window").width;
 
 import Footer from "@/component/Footer";
@@ -18,6 +18,29 @@ import FutureWater from "@/component/FutureWater";
 
 export default function Analytic() {
 
+  const chartConfig = {
+    backgroundGradientFrom: "#fff",
+    backgroundGradientTo: "#fff",
+    fillShadowGradient: "#4CAF50", // Bar fill color
+    fillShadowGradientOpacity: 1,
+    color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+    barPercentage: 0.5,
+    style: {
+      borderRadius: 16,
+    },
+  };
+
+  const batteryData = {
+    labels: ["Week 1", "Week 2", "Week 3", "Week 4"],
+    datasets: [
+      {
+        data: [50, 75, 60, 90], // Battery drain percentages
+      },
+    ],
+  };
+
+
   const router = useRouter();
 
   const [fontsLoaded] = useFonts({
@@ -28,17 +51,13 @@ export default function Analytic() {
 
   });
 
-
-
-
-
   return (
     <LinearGradient
       colors={["#DEFFFC", "#D4F8FA", "#488DDD"]}
-      locations={[0, 0.22, 28.5]} // Define color stops
+      locations={[0, 0.22, 0.85]} // Fixed locations
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
-      style={{ flex: 1 }} // Ensure gradient covers the whole screen
+      style={{ flex: 1 }}
     >
       <Header />
 
@@ -67,23 +86,23 @@ export default function Analytic() {
             }}>
             <Text style={{ fontFamily: 'Poppins-Regular', fontSize: 16, color: '#fff' }}>AI Sahayak</Text>
           </View>
+       
+        <View
+          style={{
+            paddingVertical: 5,
+            paddingHorizontal: 22,
+            borderRadius: 10,
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: 135,
+            height: 44,
+            backgroundColor: '#274C77',
 
-          <View
-            style={{
-              paddingVertical: 5,
-              paddingHorizontal: 22,
-              borderRadius: 10,
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: 135,
-              height: 44,
-              backgroundColor: '#274C77',
-
-            }}>
-            <Text style={{ fontFamily: 'Poppins-Regular', fontSize: 16, color: '#fff' }}>Training</Text>
-          </View>
-
+          }}>
+          <Text style={{ fontFamily: 'Poppins-Regular', fontSize: 16, color: '#fff' }}>Training</Text>
         </View>
+        </View>
+
 
         {/* Dwlr id  */}
 
@@ -153,18 +172,161 @@ export default function Analytic() {
       </ScrollView>
 
 
-
-
-
-
-
-
-
-
-
       {/* Footer Section */}
       <Footer />
 
     </LinearGradient>
-  )
+  );
 }
+const styles = StyleSheet.create({
+  container: {
+    flexGrow: 1,
+    padding: 20,
+    backgroundColor: '#F7FFF7',
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  headerTitle: {
+    fontSize: 25,
+    fontFamily: 'Kameron-SemiBold',
+    color: '#364FC7',
+  },
+  headerAction: {
+    fontSize: 14,
+    color: '#2F9E44',
+    fontWeight: '600',
+  },
+  card: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 10,
+    padding: 15,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 5,
+  },
+  cardTitle: {
+    fontSize: 16,
+    fontFamily: 'Kameron-SemiBold',
+    color: '#495057',
+    marginBottom: 10,
+  },
+  separator: {
+    height: 1,
+    backgroundColor: '#E9ECEF',
+    marginVertical: 10,
+  },
+  alertBox: {
+    padding: 15,
+    borderRadius: 8,
+    marginBottom: 10,
+  },
+  successBox: {
+    backgroundColor: '#DFFFE0',
+    borderColor: '#2F9E44',
+    borderWidth: 1,
+    height: 75,
+  },
+  infoBox: {
+    backgroundColor: '#F8F9FA',
+    borderColor: '#ADB5BD',
+    borderWidth: 1,
+    height: 75,
+  },
+  alertTitle: {
+    fontSize: 14,
+    fontFamily: 'Kameron-SemiBold',
+    color: '#495057',
+    marginBottom: 5,
+  },
+  alertText: {
+    fontSize: 14,
+    color: '#495057',
+    fontFamily: 'Kameron-SemiBold',
+  },
+  boldText: {
+    fontFamily: 'Kameron-SemiBold',
+  },
+
+  // batery alert section
+  container: {
+    flex: 1,
+    padding: 25,
+
+  },
+  sectionTitle: {
+    fontSize: 28,
+    fontWeight: "600",
+    color: "#11263c",
+    marginBottom: 20,
+    marginTop: -34,
+    fontFamily: 'Kameron-SemiBold',
+  },
+  cardContainer: {
+    flexDirection: "column",
+    justifyContent: "space-between",
+
+  },
+  chartCard: {
+    backgroundColor: "#fff",
+    borderRadius: 16,
+    elevation: 3,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    width: screenWidth * 0.75,
+    padding: 10,
+    alignItems: "center",
+
+  },
+  batteryCard: {
+    backgroundColor: "#fff",
+    borderRadius: 16,
+    elevation: 3,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    width: screenWidth * 0.75,
+    padding: 35,
+    alignItems: "center",
+  },
+  cardTitle: {
+    fontSize: 16,
+    fontWeight: "500",
+    color: "#000",
+    marginBottom: 6,
+    fontFamily: 'Kameron-SemiBold',
+  },
+  chartStyle: {
+    marginVertical: 8,
+    borderRadius: 16,
+  },
+  batteryBarContainer: {
+    alignItems: "center",
+
+  },
+  batteryBar: {
+    width: 100,
+    height: 35,
+    backgroundColor: "#E0E0E0",
+    borderRadius: 20,
+    overflow: "hidden",
+    marginBottom: 8,
+  },
+  batteryFill: {
+    width: "57%",
+    height: "100%",
+    backgroundColor: "#4CAF50",
+  },
+  batteryPercentage: {
+    fontSize: 20,
+    fontWeight: "600",
+    color: "#4CAF50",
+  },
+});

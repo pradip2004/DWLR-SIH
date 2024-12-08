@@ -42,10 +42,6 @@ const router = createBrowserRouter([
         path: '/analytics',
         element:<Analytics />
       },
-      {
-        path: "/analytics/training_model",
-        element: <TrainingModel />
-      },
     ],
   },
   {

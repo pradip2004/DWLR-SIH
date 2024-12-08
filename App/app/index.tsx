@@ -5,6 +5,7 @@ import MaskedView from '@react-native-masked-view/masked-view';
 import { useRouter } from "expo-router";
 import { useFonts } from 'expo-font';
 import { useWindowDimensions } from 'react-native';
+import Header from '@/component/Header';
 
 export default function Index() {
   const router = useRouter();
@@ -31,29 +32,7 @@ export default function Index() {
       style={{ flex: 1 }} // Ensure gradient covers the whole screen
     >
       {/* Header Section */}
-      <View
-        style={{
-          height: 60,
-          width: '100%',
-          flexDirection: "row",
-          backgroundColor: 'white',
-          justifyContent: 'space-around',
-          alignItems: 'center',
-        }}
-      >
-        <Image
-          source={require("../assets/images/image1.png")}
-          style={{ height: 46, width: 99 }}
-        />
-        <Image
-          source={require("../assets/images/image2.png")}
-          style={{ height: 27, width: 45, marginLeft: 110 }}
-        />
-        <Image
-          source={require("../assets/images/image3.png")}
-          style={{ height: 30, width: 55, }}
-        />
-      </View>
+     <Header/>
 
       <View style={{ marginTop: 80, }}>
         {/* Name Section */}
