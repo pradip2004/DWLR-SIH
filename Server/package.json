@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && cp -r src/assets dist/assets",
     "start": "node dist/index.js"
   },
   "keywords": [],

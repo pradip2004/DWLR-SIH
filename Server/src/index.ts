@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import authRoutes from "./routes/auth";
 import dwlrRoutes from "./routes/dwlrRoutes"
 import authorityRoutes from "./routes/authorityRoutes"
+import getSvgRoutes from "./routes/SvgRoutes"
 import connectDB from "./config/db";
 import passport from "./config/passportConfig";
 import session from "express-session";
@@ -46,6 +47,7 @@ app.get("/", (req: Request, res: Response) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/v1/dwlr", dwlrRoutes);
 app.use('/api/v1/authority', authorityRoutes);
+app.use('/api/v1/getSvg', getSvgRoutes)
 
 
 
@@ -66,7 +68,7 @@ setupWebSocket((data: string) => {
 });
 
 
-checkAndNotify();
+// checkAndNotify();
 
 const PORT = process.env.PORT ;
 

@@ -17,6 +17,8 @@ const Dashboard = () => {
   const [selectedCity, setSelectedCity] = useState<string | null>(null);
   const [districts, setDistricts] = useState<string[]>([]);
   const { data, loading, error, setData } = useDwlrContext();
+  const [highlightedDistricts, setHighlightedDistricts] = useState<string[]>([]);
+
 
   useEffect(() => {
     if (selectedState) {
@@ -33,6 +35,25 @@ const Dashboard = () => {
       setDistricts([]);
     }
   };
+
+  const fetchHighlightedDistricts = async () => {
+    try {
+      const response = await axios.get(`http://localhost:8000/api/v1/dwlr/coordinates-info`);
+      const districts = response.data
+        .filter((item: any) => item.lowBattery)
+        .map((item: any) => item.district);
+  
+      setHighlightedDistricts(districts);
+    } catch (err) {
+      console.error("Error fetching highlighted districts:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchHighlightedDistricts();
+  }, []);
+  
+  
 
   const fetchAndUpdateData = async (queryKey: string, queryValue: string) => {
     try {
@@ -153,7 +174,9 @@ const Dashboard = () => {
             </div>
             <div className="flex gap-2 w-full mt-4 h-auto">
               <div className="w-1/2 h-full bg-white rounded-md shadow-lg">
-                <DashIndia />
+              <DashIndia selectedState={selectedState} districtsToHighlight={highlightedDistricts} />
+
+
               </div>
               <div className="w-1/2 h-full flex bg-white rounded-md shadow-lg">
                 <DashForm />

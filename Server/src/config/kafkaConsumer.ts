@@ -99,7 +99,10 @@ kafkaConsumer.on("error", (err: Error) => {
 
 // Offset out-of-range handling
 kafkaConsumer.on("offsetOutOfRange", (err) => {
-  console.error("Kafka Consumer offset out of range error:", err);
+  const { topic, partition } = err;
+  console.error("OffsetOutOfRange error:", err);
+  kafkaConsumer.setOffset(topic, partition, 0); // Reset to the earliest offset
+  console.log(`Resetting offset for topic ${topic}, partition ${partition} to 0`);
 });
 
 // Graceful shutdown handling
