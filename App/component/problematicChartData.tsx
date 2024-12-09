@@ -8,16 +8,14 @@ import {
 } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { PieChart, BarChart } from "react-native-chart-kit";
-import axios from "axios";
 
-const ProblematicChartData = ({ dwlrData }) => {  // Receive dwlrData as a prop
+const ProblematicChartData = ({ dwlrData }) => {
     const [loading, setLoading] = useState(false);
     const [chartType, setChartType] = useState("pie");
 
     const screenWidth = Dimensions.get("window").width - 50;
 
     useEffect(() => {
-        // We no longer need to fetch data here, dwlrData is passed down as a prop
         if (!dwlrData) {
             setLoading(true);
         } else {
@@ -33,23 +31,21 @@ const ProblematicChartData = ({ dwlrData }) => {  // Receive dwlrData as a prop
         );
     }
 
-    // Prepare the dataset for the charts
     const lowBattery = dwlrData?.lowBattery || 0;
     const anomalyDwlr = dwlrData?.anomalyDwlr || 0;
-    // const problematicDwlr = (dwlrData?.lowBattery || 0) + (dwlrData?.anomalyDwlr || 0);
 
     const pieData = [
         {
             name: "Low Battery",
             population: lowBattery,
-            color: "#E03F3F",
+            color: "#274C77", // Blue color
             legendFontColor: "#274C77",
             legendFontSize: 14,
         },
         {
             name: "Anomaly",
             population: anomalyDwlr,
-            color: "#274C77",
+            color: "#1089ff", // Lighter blue for distinction
             legendFontColor: "#274C77",
             legendFontSize: 14,
         },
@@ -59,7 +55,7 @@ const ProblematicChartData = ({ dwlrData }) => {  // Receive dwlrData as a prop
         labels: ["Low Battery", "Anomaly"],
         datasets: [
             {
-                data: [lowBattery,anomalyDwlr ],
+                data: [lowBattery, anomalyDwlr],
             },
         ],
     };
@@ -70,14 +66,17 @@ const ProblematicChartData = ({ dwlrData }) => {  // Receive dwlrData as a prop
         decimalPlaces: 0,
         color: (opacity = 1) => `rgba(39, 76, 119, ${opacity})`,
         labelColor: (opacity = 1) => `rgba(39, 76, 119, ${opacity})`,
+        fillShadowGradient: "#274C77", // Changed to blue
+        fillShadowGradientOpacity: 1,
         style: {
             borderRadius: 16,
         },
     };
 
     return (
-        <View style={{ flex: 1, marginTop: 40 }}>
-            <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+        <View style={{ flex: 1, marginTop: 40, alignItems: "center" }}>
+            {/* Toggle Buttons */}
+            <View style={{ flexDirection: "row", marginBottom: 20 }}>
                 <TouchableOpacity
                     onPress={() => setChartType("pie")}
                     style={{
@@ -89,9 +88,14 @@ const ProblematicChartData = ({ dwlrData }) => {  // Receive dwlrData as a prop
                         justifyContent: "center",
                         alignItems: "center",
                         flexDirection: "row",
+                        marginRight: 10,
                     }}
                 >
-                    <MaterialIcons name="donut-small" size={20} color={"white"} />
+                    <MaterialIcons
+                        name="donut-small"
+                        size={20}
+                        color={chartType === "pie" ? "white" : "#274C77"}
+                    />
                     <Text style={{ color: chartType === "pie" ? "#FFF" : "#274C77" }}>
                         {"  "}Pie Chart
                     </Text>
@@ -110,33 +114,42 @@ const ProblematicChartData = ({ dwlrData }) => {  // Receive dwlrData as a prop
                         flexDirection: "row",
                     }}
                 >
-                    <MaterialIcons name="bar-chart" size={22} />
+                    <MaterialIcons
+                        name="bar-chart"
+                        size={22}
+                        color={chartType === "bar" ? "white" : "#274C77"}
+                    />
                     <Text style={{ color: chartType === "bar" ? "#FFF" : "#274C77" }}>
-                        Bar Chart
+                        {"  "}Bar Chart
                     </Text>
                 </TouchableOpacity>
             </View>
 
-            {chartType === "pie" ? (
-                <PieChart
-                    data={pieData}
-                    width={screenWidth}
-                    height={220}
-                    chartConfig={chartConfig}
-                    accessor="population"
-                    backgroundColor="transparent"
-                    paddingLeft="15"
-                    absolute
-                />
-            ) : (
-                <BarChart
-                    data={barData}
-                    width={screenWidth}
-                    height={220}
-                    chartConfig={chartConfig}
-                    verticalLabelRotation={30}
-                />
-            )}
+            {/* Chart Display */}
+            <View style={{ width: screenWidth + 50, alignItems: "center" }}>
+                {chartType === "pie" ? (
+                    <PieChart
+                        data={pieData}
+                        width={screenWidth}
+                        height={220}
+                        chartConfig={chartConfig}
+                        accessor="population"
+                        backgroundColor="transparent"
+                        paddingLeft="15"
+                        absolute
+                    />
+                ) : (
+                    <BarChart
+                        data={barData}
+                        width={screenWidth}
+                        height={200}
+                        chartConfig={chartConfig}
+                        fromZero
+                        showValuesOnTopOfBars
+                        verticalLabelRotation={0}
+                    />
+                )}
+            </View>
         </View>
     );
 };

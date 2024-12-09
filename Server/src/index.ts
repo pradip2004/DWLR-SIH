@@ -66,7 +66,7 @@ setupWebSocket((data: string) => {
 });
 
 
-checkAndNotify();
+// checkAndNotify();
 
 const PORT = process.env.PORT ;
 

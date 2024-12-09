@@ -11,7 +11,6 @@ const DashboardBox = ({ children }) => {
                 marginTop: 10,
                 borderRadius: 15,
                 alignSelf: 'center',
-                padding: 20,
                 elevation: 4,
                 shadowOffset: { width: 1, height: 1 },
                 shadowOpacity: 0.3,
