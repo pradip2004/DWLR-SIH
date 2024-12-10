@@ -56,7 +56,7 @@ export default function Dashboard() {
 
     const fetchStates = async () => {
         try {
-            const response = await axios.get("http://192.168.56.24:8000/api/v1/dwlr/states");
+            const response = await axios.get("http://192.168.137.83:8000/api/v1/dwlr/states");
             setStates(response.data.states);
         } catch (error) {
             console.error("Error fetching states:", error);
@@ -66,7 +66,7 @@ export default function Dashboard() {
     const fetchDistricts = async (state: any) => {
         try {
             setLoading(true);
-            const response = await axios.get(`http://192.168.56.24:8000/api/v1/dwlr/districts?state=${state}`);
+            const response = await axios.get(`http://192.168.137.83:8000/api/v1/dwlr/districts?state=${state}`);
             setDistricts(response.data.districts);
             setLoading(false);
         } catch (error) {
@@ -78,7 +78,7 @@ export default function Dashboard() {
     const fetchDwlrData = async (queryKey: string, queryValue: string) => {
         try {
             setLoading(true);
-            const response = await axios.get(`http://192.168.56.24:8000/api/v1/dwlr/info?${queryKey}=${queryValue}`);
+            const response = await axios.get(`http://192.168.137.83:8000/api/v1/dwlr/info?${queryKey}=${queryValue}`);
             console.log("DWLR Data Response:", response.data); // Debugging log
             setDwlrData(response.data);
             setLoading(false);
