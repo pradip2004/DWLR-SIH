@@ -17,7 +17,7 @@ export default function DWLR() {
 
     // Fetch data from API on component mount
     useEffect(() => {
-        axios.get('http://192.168.56.24:8000/api/v1/dwlr/all')
+        axios.get('http://192.168.137.102:8000/api/v1/dwlr/all')
             .then(response => setCardData(response.data))
             .catch(error => console.error("Error fetching data:", error));
     }, []);

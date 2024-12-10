@@ -18,6 +18,8 @@ import Footer from "@/component/Footer";
 import Header from "@/component/Header";
 import CurrentWater from "@/component/CurrentWater";
 import FutureWater from "@/component/FutureWater";
+import CurrentBatteryLevel from "@/component/CurrentBatteryLevel";
+import FutureBatteryLevel from "@/component/FutureBatteryLevel";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -27,8 +29,9 @@ export default function Analytic() {
     backgroundGradientTo: "#fff",
     fillShadowGradient: "#4CAF50",
     fillShadowGradientOpacity: 1,
-    color: (opacity = 1) => rgba(0, 0, 0, ${opacity}),
-    labelColor: (opacity = 1) => rgba(0, 0, 0, ${opacity}),
+    color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+
     barPercentage: 0.5,
     style: {
       borderRadius: 16,
@@ -68,6 +71,7 @@ export default function Analytic() {
       <Header />
 
       <ScrollView style={{ marginBottom: 71 }}>
+        {/* AI SAHAYAK  */}
         <View
           style={{
             flexDirection: "row",
@@ -150,38 +154,15 @@ export default function Analytic() {
           <CurrentWater data={undefined} loading={undefined} id={undefined} />
         </View>
 
-        <View style={styles.box}>
+       
           <FutureWater data={undefined} loading={undefined} id={undefined} />
-        </View>
+        
 
-        <ScrollView style={styles.batterySection}>
-          <View style={styles.container}>
-            <Text style={styles.sectionTitle}>Battery Levels</Text>
-            <View style={[styles.cardContainer, { alignItems: "center" }]}>
-              <View style={[styles.chartCard, { marginBottom: 20 }]}>
-                <Text style={styles.cardTitle}>Weekly Overview</Text>
-                <BarChart
-                  data={batteryData}
-                  width={screenWidth * 0.7}
-                  height={180}
-                  yAxisSuffix="%"
-                  chartConfig={chartConfig}
-                  verticalLabelRotation={0}
-                  showValuesOnTopOfBars={true}
-                  style={styles.chartStyle}
-                />
-              </View>
-              <View style={styles.batteryCard}>
-                <Text style={styles.cardTitle}>Battery Status</Text>
-                <View style={{alignItems:'center'}}>
-                  <View style={styles.batteryBar}>
-                    <View style={styles.batteryFill} />
-                  </View>
-                </View>
-              </View>
-            </View>
-          </View>
-        </ScrollView>
+        {/* Battery Status  */}
+   <CurrentBatteryLevel/>
+
+        {/* ESTIMATED CHARGING BOX  */}
+       <FutureBatteryLevel/>
       </ScrollView>
 
       <Footer />
@@ -282,9 +263,52 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: 16,
-    fontFamily: 'Kameron-SemiBold',
-    color: '#495057',
+    fontFamily: "Kameron-SemiBold",
+    color: "#495057",
     marginBottom: 10,
   },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  headerTitle: {
+    fontSize: 25,
+    fontFamily: "Kameron-SemiBold",
+    color: "#364FC7",
+  },
 
+  card: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 10,
+    padding: 15,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 5,
+  },
+
+  separator: {
+    height: 1,
+    backgroundColor: "#E9ECEF",
+    marginVertical: 10,
+  },
+  alertBox: {
+    padding: 15,
+    borderRadius: 8,
+    marginBottom: 10,
+  },
+  successBox: {
+    backgroundColor: "#DFFFE0",
+    borderColor: "#2F9E44",
+    borderWidth: 1,
+    height: 75,
+  },
+  infoBox: {
+    backgroundColor: "#F8F9FA",
+    borderColor: "#ADB5BD",
+    borderWidth: 1,
+    height: 75,
+  },
 });

@@ -57,7 +57,25 @@ function FutureWater() {
   };
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: "#fff" }}>
+    <View
+      style={{
+        backgroundColor: "#fff",
+        borderRadius: 20,
+        paddingHorizontal: 10,
+        paddingVertical: 20,
+        height: 650,
+        alignSelf: "center",
+        alignItems: "center",
+        width: "90%",
+        maxWidth: 348,
+        elevation: 5,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 3,
+        marginBottom: 20,
+      }}
+    >
       <Text
         style={{
           fontSize: 20,
@@ -70,7 +88,7 @@ function FutureWater() {
         Projected Water Levels
       </Text>
       {loading ? (
-        <View style={{ flex: 1, justifyContent: "center", alignItems: "center", height: 200 }}>
+        <View style={{ justifyContent: "center", alignItems: "center", height: 200 }}>
           <ActivityIndicator size="large" color="#274C77" />
         </View>
       ) : (
@@ -82,30 +100,37 @@ function FutureWater() {
               borderRadius: 10,
               marginBottom: 20,
               elevation: 5,
+              paddingBottom: 10, // Added padding to avoid space issues
+              width: "100%", // Ensure the chart takes full width inside container
+              maxWidth: 348, // Max width to keep it aligned
             }}
           >
             <LineChart
               data={lineChartData}
-              width={screenWidth - 30}
+              width={screenWidth - 60} // Decrease width to fit properly within the container
               height={220}
               chartConfig={chartConfig}
               bezier
               style={{
                 borderRadius: 10,
+                alignSelf: "center", // Center the chart horizontally
               }}
             />
           </View>
 
           {/* Pie Chart Section */}
-          <View style={{ flex: 1, marginBottom: 20 }}>
+          <View style={{ marginBottom: 20, paddingBottom: 10, width: "100%" }}>
             <PieChart
               data={pieChartData}
-              width={screenWidth - 110}
+              width={screenWidth - 110} // Adjust the width to match container
               height={150}
               chartConfig={chartConfig}
               accessor="value"
               backgroundColor="transparent"
               absolute
+              style={{
+                alignSelf: "center", // Center the pie chart horizontally
+              }}
             />
           </View>
 
@@ -117,6 +142,8 @@ function FutureWater() {
               padding: 15,
               marginBottom: 20,
               elevation: 5,
+              width: "100%", // Ensure it takes full container width
+              maxWidth: 348, // Max width for alignment
             }}
           >
             <Text
@@ -148,12 +175,9 @@ function FutureWater() {
               Prediction ID: {id}
             </Text>
           </View>
-
-
-
         </>
       )}
-    </ScrollView>
+    </View>
   );
 }
 
