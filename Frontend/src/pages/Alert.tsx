@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
-import Notification from '../components/Notification';
-import { FaMapMarkedAlt, FaClock, FaTint, FaBatteryHalf } from 'react-icons/fa';
-import { useDwlrContext } from '../context/DwlrContext';
 import axios from 'axios';
+import React, { useState } from 'react';
+import { FaBatteryHalf, FaClock, FaMapMarkedAlt, FaTint } from 'react-icons/fa';
+import Loading from '../components/Loading';
+import NotData from '../components/NotData';
+import Notification from '../components/Notification';
+import { useDwlrContext } from '../context/DwlrContext';
 
 const Alert: React.FC = () => {
   const { data, loading, error } = useDwlrContext();
@@ -17,8 +19,8 @@ const Alert: React.FC = () => {
     }
   };
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (loading) return <Loading />;
+  if (error) return <NotData />;
 
   return (
     <div className="w-full p-2 flex justify-around items-center">

@@ -1,23 +1,23 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import App from './App';
-import './index.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import AllDWLRs from './pages/AllDWLRs';
-import Alert from './pages/Alert';
-import Report from './pages/Report';
-import LandingPage from './pages/LandingPage';
-import Dashboard from './pages/Dashboard';
-import Analytics from './pages/Analytics';
-import LoginPage from './pages/LoginPage';
-import SignupPage from './pages/SignupPage';
-import TrainingModel from './pages/TrainingModel';
+import App from './App';
 import { DwlrProvider } from './context/DwlrContext';
+import './index.css';
+import Alert from './pages/Alert';
+import AllDWLRs from './pages/AllDWLRs';
+import Analytics from './pages/Analytics';
+import Dashboard from './pages/Dashboard';
+import LandingPage from './pages/LandingPage';
+import LoginPage from './pages/LoginPage';
+import NotFound from './pages/NotFound';
+import Report from './pages/Report';
+import SignupPage from './pages/SignupPage';
 
 
 
 
-// Create the router without explicitly typing it as RouteObject[]
+
 const router = createBrowserRouter([
   {
     element: <App />,
@@ -41,6 +41,14 @@ const router = createBrowserRouter([
       {
         path: '/analytics',
         element:<Analytics />
+      },
+      {
+        path: '/notfound',
+        element: <NotFound />
+      },
+      {
+        path: '*',
+        element: <NotFound />,
       },
     ],
   },

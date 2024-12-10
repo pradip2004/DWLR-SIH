@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from "react";
 import axios from "axios";
-import CardComponent from "../components/CardComponent.jsx"; // Import the CardComponent
+import { useEffect, useState } from "react";
 import {
-  FaFilter,
   FaBatteryFull,
   FaExclamationTriangle,
-  FaRegQuestionCircle,
+  FaFilter,
   FaRegCircle,
+  FaRegQuestionCircle,
 } from "react-icons/fa"; // Example icons from react-icons
+import CardComponent from "../components/CardComponent.jsx"; // Import the CardComponent
+import Loading from "../components/Loading.js";
+import NotData from "../components/NotData.js";
 
 const AllDWLRs = () => {
   // State for DWLR data and loading state
@@ -55,8 +57,8 @@ const AllDWLRs = () => {
     { label: "Low Battery", value: "Low Battery", icon: <FaBatteryFull /> },
   ];
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
+  if (loading) return <Loading />;
+  if (error) return <NotData />;
 
   return (
     <div className="w-full p-4 h-full flex flex-col justify-between">

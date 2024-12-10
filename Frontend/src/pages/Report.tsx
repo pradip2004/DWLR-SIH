@@ -1,7 +1,9 @@
+import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import Loading from '../components/Loading';
+import NotData from '../components/NotData';
 import ReportCard from '../components/ReportCard';
 import { useDwlrContext } from '../context/DwlrContext';
-import axios from 'axios';
 
 function Report() {
   const { data, loading, error } = useDwlrContext();
@@ -100,8 +102,8 @@ function Report() {
   };
 
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (loading) return <Loading />;
+  if (error) return <NotData />;
 
   return (
     <div className='w-full p-2 flex justify-around items-center'>

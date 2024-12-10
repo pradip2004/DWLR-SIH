@@ -1,11 +1,12 @@
+import axios from "axios";
 import React, { useState } from "react";
 import { FaSearch } from "react-icons/fa";
-import { useNavigate, useLocation } from "react-router-dom";
-import CurrentWater from "../components/CurrentWater";
-import FutureWater from "../components/FutureWater";
+import { useLocation, useNavigate } from "react-router-dom";
 import CurrentBatteryLevel from "../components/CurrentBatteryLevel";
+import CurrentWater from "../components/CurrentWater";
 import FutureBatteryLevel from "../components/FutureBatteryLevel";
-import axios from "axios";
+import FutureWater from "../components/FutureWater";
+import NotData from "../components/NotData";
 import TrainingModel from "./TrainingModel";
 
 
@@ -124,7 +125,7 @@ const Analytics: React.FC = () => {
       </div>
 
       {/* Error Message */}
-      {error && <p className="text-red-500 mt-4">{error}</p>}
+      {error && <NotData />}
 
       {/* Render the active component */}
       <div >
