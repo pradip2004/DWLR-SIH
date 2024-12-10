@@ -73,14 +73,14 @@ function CurrentBatteryLevel({ id, data, loading }) {
   };
 
   return (
-    <div className="currentb w-full sm:w-1/2 h-auto sm:h-[50vh] bg-white rounded-lg shadow-md justify-evenly flex flex-wrap gap-4 p-4 sm:p-6">
+    <div className="currentb w-full  sm:w-1/2 h-auto sm:h-[60vh] bg-white rounded-lg shadow-md justify-evenly flex flex-wrap gap-4 p-4 sm:p-6">
       {/* Header Section */}
       <div className="flex justify-between items-center w-full mb-4">
         <h2 className="text-xl font-bold text-[#274C77] ">Battery Levels </h2>
       </div>
 
       {/* Weekly Overview Chart */}
-      <div className="weekly-overview w-full sm:w-[45%] h-auto sm:h-[70%] flex flex-col justify-evenly bg-gray-50 rounded-lg shadow-lg p-4">
+      <div className="weekly-overview w-full sm:w-[45%] h-80 sm:h-[70%] flex flex-col justify-evenly bg-gray-50 rounded-lg shadow-lg p-4">
         <h3 className="text-sm font-medium text-gray-700 mb-5">Weekly Overview</h3>
         <div className="h-[70%]">
           <Bar data={weeklyOverviewData} options={chartOptions} />

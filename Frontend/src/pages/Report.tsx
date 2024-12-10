@@ -104,9 +104,9 @@ function Report() {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className='w-full p-2 flex justify-around items-center'>
+    <div className='w-full p-2 flex justify-around items-center ' id='report_page_container'>
       {/* Reports Section */}
-      <div className='w-[40%] h-[90%] bg-white rounded-lg flex flex-col gap-3 overflow-y-scroll items-center p-3'>
+      <div className='w-[40%] h-[90%]  bg-white rounded-lg flex flex-col gap-3 overflow-y-scroll items-center p-3' id='dwlr_report_list_container'>
         <h2 className='text-lg pb-3 font-kameron font-bold'>DWLRs Reports</h2>
         {data?.coordinates.map((coordinate) => (
           <ReportCard
@@ -119,7 +119,7 @@ function Report() {
       </div>
 
       {/* Form Section */}
-      <div className='w-[40%] h-[90%] bg-white rounded-lg overflow-y-scroll p-6'>
+      <div className='w-[40%]  h-[90%] bg-white rounded-lg overflow-y-scroll p-6'>
         <h2 className='text-lg pb-3 font-kameron font-bold'>Download Data</h2>
         <form className='flex flex-col gap-4'>
           {/* Start Date */}
