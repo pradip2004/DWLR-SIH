@@ -6,6 +6,7 @@ import {
   FaFilter,
   FaRegCircle,
   FaRegQuestionCircle,
+  FaDownload, // Add the download icon
 } from "react-icons/fa"; // Example icons from react-icons
 import CardComponent from "../components/CardComponent.jsx"; // Import the CardComponent
 import Loading from "../components/Loading.js";
@@ -57,6 +58,16 @@ const AllDWLRs = () => {
     { label: "Low Battery", value: "Low Battery", icon: <FaBatteryFull /> },
   ];
 
+  const handleDownload = () => {
+    // You can add logic here to export the data or trigger a file download
+    const dataToDownload = JSON.stringify(filteredCards, null, 2); // Converts filtered data to JSON
+    const blob = new Blob([dataToDownload], { type: "application/json" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "dwlr_data.json"; // Filename for the download
+    link.click();
+  };
+
   if (loading) return <Loading />;
   if (error) return <NotData />;
 
@@ -80,21 +91,29 @@ const AllDWLRs = () => {
 
       {/* Dropdowns for State and City */}
       <div className="flex gap-4 pt-5 w-full justify-evenly">
-  <div className="flex flex-col">
-    <select
-      id="state"
-      className="w-full p-2 rounded-md border border-gray-300 bg-[#274C77] text-white"
-      value={selectedState}
-      onChange={(e) => setSelectedState(e.target.value)}
-    >
-      <option value="">All States</option>
-      {states.map((state, index) => (
-        <option key={index} value={state} className="bg-white text-black">{state}</option>
-      ))}
-    </select>
-  </div>
-</div>
+        <div className="flex flex-col">
+          <select
+            id="state"
+            className="w-full p-2 rounded-md border border-gray-300 bg-[#274C77] text-white"
+            value={selectedState}
+            onChange={(e) => setSelectedState(e.target.value)}
+          >
+            <option value="">All States</option>
+            {states.map((state, index) => (
+              <option key={index} value={state} className="bg-white text-black">{state}</option>
+            ))}
+          </select>
+        </div>
 
+        {/* Download Button */}
+        <button
+          onClick={handleDownload}
+          className="flex items-center justify-center gap-2 w-full sm:w-[150px] h-[3rem] text-center sm:px-4 sm:py-2 px-2 text-xs sm:text-md rounded-md bg-[#274C77] text-white transition-all duration-300 ease-in-out transform hover:shadow-lg hover:bg-[#FFA726] hover:text-white"
+        >
+          <FaDownload />
+          Download Data
+        </button>
+      </div>
 
       <div className="w-full h-screen mt-10">
         <div className="w-full h-full rounded-md overflow-y-scroll custom-scrollbar pb-10">
@@ -107,15 +126,7 @@ const AllDWLRs = () => {
                   lastReported={`${card.lastUpdatedInHours.toFixed(2)} hours ago`}
                   waterLevel={card.latestWaterLevel}
                   battery={card.latestBatteryPercentage}
-                  status={
-                    card.active
-                      ? "Active"
-                      : card.lowBattery
-                      ? "Low Battery"
-                      : card.anomalyDwlr
-                      ? "Abnormal Data"
-                      : "No Data"
-                  }
+                  status={card.active ? "Active" : card.lowBattery ? "Low Battery" : card.anomalyDwlr ? "Abnormal Data" : "No Data"}
                 />
               </div>
             ))}
