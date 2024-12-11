@@ -110,7 +110,7 @@ function DwlrCounting() {
                 {category.label}
               </h1>
               <p className="text-5xl text-[#274C77] font-extrabold">
-                {category.value -1}
+                {category.value }
               </p>
             </div>
           ))}
