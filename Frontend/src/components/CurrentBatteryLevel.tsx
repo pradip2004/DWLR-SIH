@@ -73,7 +73,7 @@ function CurrentBatteryLevel({ id, data, loading }) {
   };
 
   return (
-    <div className="currentb w-full  sm:w-1/2 h-auto sm:h-[60vh] bg-white rounded-lg shadow-md justify-evenly flex flex-wrap gap-4 p-4 sm:p-6">
+    <div className="currentb w-full  sm:w-1/2 h-auto sm:h-[50vh] bg-white rounded-lg shadow-md justify-evenly flex flex-wrap gap-4 p-4 sm:p-6">
       {/* Header Section */}
       <div className="flex justify-between items-center w-full mb-4">
         <h2 className="text-xl font-bold text-[#274C77] ">Battery Levels </h2>

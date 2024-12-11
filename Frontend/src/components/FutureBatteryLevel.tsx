@@ -21,7 +21,7 @@ function FutureBatteryLevel({data, loading}) {
   }
   return (
   
-    <div className="Future w-full lg:w-1/2 h-[50vh] bg-white shadow-lg rounded-md p-5">
+    <div className="Future w-full lg:w-1/2 sm:h-[50vh] h-[80vh] bg-white shadow-lg rounded-md p-5">
       {/* Estimated Charging Date */}
       <div className="flex justify-between items-center text-[#274C77] mb-4">
         <span className="font-bold text-2xl">Estimated Charging Date:</span>
@@ -29,7 +29,7 @@ function FutureBatteryLevel({data, loading}) {
       </div>
 
       {/* Notifications Section */}
-      <div className="Notification w-full bg-gray-50 rounded-lg shadow-md p-6 mt-4">
+      <div className="Notification w-full bg-gray-50 rounded-lg shadow-md p-4 mt-4">
         <h3 className="text-lg font-semibold text-[#274C77] border-b pb-3 mb-4">
           🔔 Battery Alerts & Notifications
         </h3>
