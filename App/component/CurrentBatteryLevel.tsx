@@ -17,7 +17,7 @@ export default function CurrentBatteryLevel({ id }) {
         const queryValue = id;  // example, using 'id' passed as prop
 
         // Corrected API URL
-        const response = await axios.get(`http://192.168.137.102:8000/api/v1/dwlr/info?${queryKey}=${queryValue}`);
+        const response = await axios.get(`http://192.168.137.83:8000/api/v1/dwlr/info?${queryKey}=${queryValue}`);
         
         // Assuming the response is in the correct structure
         setData(response.data);

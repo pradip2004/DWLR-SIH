@@ -455,5 +455,3 @@ const styles = StyleSheet.create({
         fontSize: moderateScale(14),
     },
 });
-
-
