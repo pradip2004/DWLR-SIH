@@ -7,6 +7,7 @@ import {
   BellRing,
   ChartPie,
   Menu,
+  X,
 } from "lucide-react";
 import Searchbar from "./Searchbar";
 
@@ -50,13 +51,22 @@ function SideBar() {
         id="Sidebar_container"
       >
         {/* Header Section */}
-        <div className="flex items-center p-6">
+        <div
+          className={`flex items-center ${
+            isCollapsed ? "justify-center p-3" : "p-6"
+          }`}
+        >
           <div
             className="cursor-pointer flex items-center"
             onClick={isMobileOpen ? toggleMobileSidebar : toggleSidebar}
             id="hamburger_menu_container"
           >
-            <Menu className="text-white text-xl" />
+            {/* Toggle between Menu and X icons */}
+            {isMobileOpen ? (
+              <X className="text-white text-xl" />
+            ) : (
+              <Menu className="text-white text-xl" />
+            )}
           </div>
 
           {!isCollapsed && (
@@ -85,7 +95,9 @@ function SideBar() {
                   : "hover:bg-[#FFC107]"
               }`}
             >
-              <span className="text-white text-xl">{item.icon}</span>
+              <span className="flex items-center justify-center text-white text-xl w-8 h-8">
+                {item.icon}
+              </span>
               {!isCollapsed && (
                 <span className="text-left text-sm">{item.name}</span>
               )}

@@ -20,8 +20,9 @@ function LineGraphDwCounting() {
   const totalDwlr = data?.total || 0;
   const activeDwlr = data?.active || 0;
   const problematicDwlr = (data?.lowBattery || 0) + (data?.anomalyDwlr || 0);
+
   const chartData = {
-    labels: ["Total DWLRs", "Problematic DWLRs", "Active DWLRs"], // X-axis labels
+    labels: ["Total DWLRs", "Active DWLRs", "Problemetic DWLRs"], // X-axis labels
     datasets: [
       {
         label: "DWLR Data",
@@ -66,6 +67,7 @@ function LineGraphDwCounting() {
           color: "rgba(0, 0, 0, 0.1)", // Light gridlines for y-axis
         },
         ticks: {
+          stepSize: 1, // Ensure only integer values are shown
           font: {
             size: 14,
             family: "Arial, sans-serif", // Custom font for y-axis labels

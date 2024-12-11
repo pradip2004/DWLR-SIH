@@ -103,14 +103,14 @@ function DwlrCounting() {
         <div className="flex flex-col justify-evenly gap-4 h-full">
           {categories.map((category, index) => (
             <div
-              key={index}
+              key={index }
               className="flex w-full justify-between items-baseline px-6"
             >
               <h1 className="text-2xl flex items-center gap-6 font-bold uppercase tracking-wider text-black">
                 {category.label}
               </h1>
               <p className="text-5xl text-[#274C77] font-extrabold">
-                {category.value}
+                {category.value -1}
               </p>
             </div>
           ))}
