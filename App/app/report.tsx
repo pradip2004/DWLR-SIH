@@ -225,9 +225,7 @@ export default function Report() {
                                 <Text style={styles.descriptionText}>Explain in one line</Text>
                             </View>
                             <View style={{ alignItems: 'center', }}>
-                                <TouchableOpacity style={[styles.downloadButton, { marginBottom: 10 }]}>
-                                    <Text style={styles.downloadButtonText}>Details</Text>
-                                </TouchableOpacity>
+                                
                                 <TouchableOpacity style={styles.downloadButton}>
                                     <Text style={styles.downloadButtonText}>Download</Text>
                                 </TouchableOpacity>

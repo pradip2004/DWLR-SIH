@@ -21,9 +21,9 @@ function Duser() {
   }, []);
 
   return (
-    <div className="sm:w-1/2 w-full h-full bg-white">
+    <div className=" w-full h-full sm:h-1/2 bg-white">
       <h3 className="py-3 px-4 bg-[#274C77] text-white font-semibold text-lg">Current Users</h3>
-      <div className="h-72 w-full overflow-auto p-4">
+      <div className="h-52 w-full overflow-auto p-4">
         <ul className="space-y-4">
           {users.map((user) => (
             <li key={user._id} className="p-4 rounded-lg shadow-md hover:shadow-lg transition duration-200 flex items-center space-x-4 bg-zinc-100">

@@ -119,7 +119,7 @@ export default function SignIn() {
         <TouchableOpacity
           style={styles.signInButton2}
           onPress={() => {
-            Linking.openURL("http://10.150.21.189:8000/api/auth/google").catch((err) =>              console.error("Failed to open URL:", err)
+            Linking.openURL("http://10.150.21.189:8000/api/auth/google").catch((err) => console.error("Failed to open URL:", err)
             );
           }}
         >

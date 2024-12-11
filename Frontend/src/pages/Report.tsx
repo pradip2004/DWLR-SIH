@@ -1,7 +1,9 @@
+import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import Loading from '../components/Loading';
+import NotData from '../components/NotData';
 import ReportCard from '../components/ReportCard';
 import { useDwlrContext } from '../context/DwlrContext';
-import axios from 'axios';
 
 function Report() {
   const { data, loading, error } = useDwlrContext();
@@ -14,7 +16,7 @@ function Report() {
   useEffect(() => {
     const fetchStates = async () => {
       try {
-        const response = await axios.get<{ states: string[] }>('http://localhost:8000/api/v1/dwlr/states');
+        const response = await axios.get<{ states: string[] }>('http://10.107.4.188:8000/api/v1/dwlr/states');
         setStates(response.data.states);
       } catch (err) {
         console.error('Error fetching states:', err);
@@ -42,7 +44,7 @@ function Report() {
 
   const fetchDetails = async (id: string) => {
     try {
-      const response = await axios.get(`http://localhost:8000/api/v1/dwlr/details/${id}`);
+      const response = await axios.get(`http://10.107.4.188:8000/api/v1/dwlr/details/${id}`);
       return response.data;
     } catch (err) {
       console.error('Error fetching details:', err);
@@ -55,17 +57,17 @@ function Report() {
       alert("Please select a state and district.");
       return;
     }
-  
+
     const startDate = (document.getElementById("start-date") as HTMLInputElement).value;
     const endDate = (document.getElementById("end-date") as HTMLInputElement).value;
-  
+
     if (!startDate || !endDate) {
       alert("Please select both start and end dates.");
       return;
     }
-  
+
     try {
-      const response = await axios.get("http://localhost:8000/api/v1/dwlr/download-data", {
+      const response = await axios.get("http://10.107.4.188:8000/api/v1/dwlr/download-data", {
         params: {
           state: selectedState,
           district: selectedDistrict,
@@ -74,7 +76,7 @@ function Report() {
         },
         responseType: "blob", // Important for file download
       });
-  
+
       // Create a download link and trigger it
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
@@ -99,9 +101,8 @@ function Report() {
     (document.getElementById("end-date") as HTMLInputElement).value = '';
   };
 
-
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (loading) return <Loading />;
+  if (error) return <NotData />;
 
   return (
     <div className="w-full p-2 flex flex-col-reverse sm:flex-row gap-5 px-10 justify-around items-center" id="report_page_container">
