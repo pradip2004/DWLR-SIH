@@ -104,102 +104,107 @@ function Report() {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className='w-full p-2 flex justify-around items-center ' id='report_page_container'>
-      {/* Reports Section */}
-      <div className='w-[40%] h-[90%]  bg-white rounded-lg flex flex-col gap-3 overflow-y-scroll items-center p-3' id='dwlr_report_list_container'>
-        <h2 className='text-lg pb-3 font-kameron font-bold'>DWLRs Reports</h2>
-        {data?.coordinates.map((coordinate) => (
-          <ReportCard
-            key={coordinate._id}
-            id={coordinate.id}
-            problem={coordinate.anomalyDwlr ? 'Anomaly Data' : 'Low Battery'}
-            onDetailsClick={() => fetchDetails(coordinate._id)}
-          />
-        ))}
-      </div>
+    <div className="w-full p-2 flex flex-col-reverse sm:flex-row gap-5 px-10 justify-around items-center" id="report_page_container">
+  {/* Reports Section */}
+  <div
+    className="w-full sm:w-1/2 h-[60%] sm:h-[90%] bg-white rounded-lg flex flex-col gap-3 overflow-y-scroll items-center p-3"
+    id="dwlr_report_list_container"
+  >
+    <h2 className="text-lg pb-3 font-kameron font-bold text-center">DWLRs Reports</h2>
+    {data?.coordinates.map((coordinate) => (
+      <ReportCard
+        key={coordinate._id}
+        id={coordinate.id}
+        problem={coordinate.anomalyDwlr ? "Anomaly Data" : "Low Battery"}
+        onDetailsClick={() => fetchDetails(coordinate._id)}
+      />
+    ))}
+  </div>
 
-      {/* Form Section */}
-      <div className='w-[40%]  h-[90%] bg-white rounded-lg overflow-y-scroll p-6'>
-        <h2 className='text-lg pb-3 font-kameron font-bold'>Download Data</h2>
-        <form className='flex flex-col gap-4'>
-          {/* Start Date */}
-          <div className='flex flex-col'>
-            <label htmlFor='start-date' className='text-lg font-medium'>
-              Select Start Date
-            </label>
-            <input
-              type='date'
-              id='start-date'
-              className='border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-[#274C77]'
-            />
-          </div>
-
-          {/* End Date */}
-          <div className='flex flex-col'>
-            <label htmlFor='end-date' className='text-lg font-medium'>
-              Select End Date
-            </label>
-            <input
-              type='date'
-              id='end-date'
-              className='border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-[#274C77]'
-            />
-          </div>
-
-          {/* Select State */}
-          <div className='flex flex-col'>
-            <label htmlFor='state' className='text-lg font-medium'>
-              Select State
-            </label>
-            <select
-              id='state'
-              value={selectedState || ''}
-              onChange={(e) => setSelectedState(e.target.value)}
-              className='border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-[#274C77]'
-            >
-              <option value=''>Choose a state</option>
-              {states.map((state, index) => (
-                <option key={index} value={state}>
-                  {state}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Select City */}
-          <div className='flex flex-col'>
-            <label htmlFor='city' className='text-lg font-medium'>
-              Select City
-            </label>
-            <select
-              id='city'
-              value={selectedDistrict || ''}
-              onChange={(e) => setSelectedDistrict(e.target.value)}
-              disabled={!selectedState}
-              className={`border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-[#274C77] ${
-                !selectedState && 'bg-gray-200 cursor-not-allowed'
-              }`}
-            >
-              <option value=''>Choose a city</option>
-              {districts.map((district, index) => (
-                <option key={index} value={district}>
-                  {district}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Download Button */}
-          <button
-            type='button'
-            onClick={handleDownload}
-            className='mt-4 bg-[#274C77] text-white py-2 px-4 rounded-md hover:bg-[#1d3a5a] transition duration-200'
-          >
-            Download
-          </button>
-        </form>
-      </div>
+  {/* Form Section */}
+  <div className="sm:w-1/2 w-full h-[70%] sm:h-[90%] bg-white rounded-lg p-4 sm:p-6 overflow-y-auto">
+  <h2 className="text-lg pb-3 font-kameron font-bold text-center">Download Data</h2>
+  <form className="flex flex-col gap-4">
+    {/* Start Date */}
+    <div className="flex flex-col">
+      <label htmlFor="start-date" className="text-base sm:text-lg font-medium">
+        Select Start Date
+      </label>
+      <input
+        type="date"
+        id="start-date"
+        className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-[#274C77] text-sm sm:text-base"
+      />
     </div>
+
+    {/* End Date */}
+    <div className="flex flex-col">
+      <label htmlFor="end-date" className="text-base sm:text-lg font-medium">
+        Select End Date
+      </label>
+      <input
+        type="date"
+        id="end-date"
+        className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-[#274C77] text-sm sm:text-base"
+      />
+    </div>
+
+    {/* Select State */}
+    <div className="flex flex-col">
+      <label htmlFor="state" className="text-base sm:text-lg font-medium">
+        Select State
+      </label>
+      <select
+        id="state"
+        value={selectedState || ""}
+        onChange={(e) => setSelectedState(e.target.value)}
+        className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-[#274C77] text-sm sm:text-base"
+      >
+        <option value="">Choose a state</option>
+        {states.map((state, index) => (
+          <option key={index} value={state}>
+            {state}
+          </option>
+        ))}
+      </select>
+    </div>
+
+    {/* Select City */}
+    <div className="flex flex-col">
+      <label htmlFor="city" className="text-base sm:text-lg font-medium">
+        Select City
+      </label>
+      <select
+        id="city"
+        value={selectedDistrict || ""}
+        onChange={(e) => setSelectedDistrict(e.target.value)}
+        disabled={!selectedState}
+        className={`border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-[#274C77] text-sm sm:text-base ${
+          !selectedState && "bg-gray-200 cursor-not-allowed"
+        }`}
+      >
+        <option value="">Choose a city</option>
+        {districts.map((district, index) => (
+          <option key={index} value={district}>
+            {district}
+          </option>
+        ))}
+      </select>
+    </div>
+
+    {/* Download Button */}
+    <button
+      type="button"
+      onClick={handleDownload}
+      className="mt-4 bg-[#274C77] text-white py-2 px-4 w-full rounded-md hover:bg-[#1d3a5a] transition duration-200 text-center text-sm sm:text-base"
+    >
+      Download
+    </button>
+  </form>
+</div>
+
+</div>
+
   );
 }
 

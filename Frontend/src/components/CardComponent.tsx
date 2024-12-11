@@ -32,7 +32,7 @@ const CardComponent: React.FC<CardComponentProps> = ({
   };
 
   return (
-    <div className="w-full sm:w-72 h-[22vw] bg-gradient-to-br from-[#F8FAFC] to-[#EAF0F7] p-5 relative rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 ease-in-out flex flex-col justify-between overflow-hidden">
+    <div className="w-80 sm:w-72 sm:h-[23vw] h-[62vh] bg-gradient-to-br from-[#F8FAFC] to-[#EAF0F7] p-5 relative rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 ease-in-out flex flex-col justify-between overflow-hidden">
       {/* Status Badge with Animation */}
       <div className="flex justify-end items-center mb-1">
         <span

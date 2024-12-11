@@ -60,14 +60,14 @@ const AllDWLRs = () => {
 
   return (
     <div className="w-full p-4 h-full flex flex-col justify-between">
-      <div className="flex gap-4 pt-5 justify-evenly w-full">
+      <div className="flex    gap-4 pt-5 justify-evenly w-full ">
         {/* Filter Buttons Styled */}
         {filterOptions.map((filter) => (
           <button
             key={filter.value}
-            className={`flex items-center justify-center gap-2 w-[10rem] h-[3rem] text-center px-4 py-2 rounded-md bg-[#274C77] text-white ${
+            className={`flex items-center justify-center gap-2 w-full h-[3rem] text-center sm:px-4 sm:py-2 px-2 text-xs sm:text-md rounded-md bg-[#274C77] text-white ${
               selectedFilter === filter.value ? "bg-[#FED766] text-[#274C77]" : ""
-            } transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg hover:bg-[#FFA726] hover:text-white`}
+            } transition-all duration-300 ease-in-out transform  hover:shadow-lg hover:bg-[#FFA726] hover:text-white`}
             onClick={() => setSelectedFilter(filter.value)}
           >
             {filter.icon}
@@ -77,7 +77,7 @@ const AllDWLRs = () => {
       </div>
 
       <div className="w-full mt-10 min-h-[33rem] rounded-md overflow-y-scroll custom-scrollbar pb-10">
-        <div className="flex flex-wrap justify-around gap-4 p-4">
+        <div className="flex  sm:flex-row flex-col flex-wrap justify-around gap-4 p-4">
           {filteredCards.map((card) => (
             <div key={card._id} className="w-[30%]">
               <CardComponent

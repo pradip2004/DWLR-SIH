@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
 import dotenv from "dotenv";
+
 import authRoutes from "./routes/auth";
 import dwlrRoutes from "./routes/dwlrRoutes"
 import authorityRoutes from "./routes/authorityRoutes"
