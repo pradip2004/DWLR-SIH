@@ -1,3 +1,4 @@
+import { jsPDF } from "jspdf";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import {
@@ -6,9 +7,9 @@ import {
   FaFilter,
   FaRegCircle,
   FaRegQuestionCircle,
-  FaDownload, // Add the download icon
-} from "react-icons/fa"; // Example icons from react-icons
-import CardComponent from "../components/CardComponent.jsx"; // Import the CardComponent
+  FaDownload,
+} from "react-icons/fa";
+import CardComponent from "../components/CardComponent.jsx"; 
 import Loading from "../components/Loading.js";
 import NotData from "../components/NotData.js";
 
@@ -59,13 +60,44 @@ const AllDWLRs = () => {
   ];
 
   const handleDownload = () => {
-    // You can add logic here to export the data or trigger a file download
-    const dataToDownload = JSON.stringify(filteredCards, null, 2); // Converts filtered data to JSON
-    const blob = new Blob([dataToDownload], { type: "application/json" });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = "dwlr_data.json"; // Filename for the download
-    link.click();
+    const doc = new jsPDF();
+    const margin = 10;
+    const lineHeight = 10;
+    let yPosition = margin;
+
+    // Add title
+    doc.setFontSize(16);
+    doc.text("DWLR Data", margin, yPosition);
+    yPosition += 20;
+
+    // Loop through the filtered cards and add each card's data to the PDF
+    filteredCards.forEach((card, index) => {
+      // Add card details with spacing between lines
+      doc.setFontSize(12);
+      doc.text(`Location: ${card.state} - ${card.district}`, margin, yPosition);
+      yPosition += lineHeight;
+
+      doc.text(`Last Reported: ${card.lastUpdatedInHours.toFixed(2)} hours ago`, margin, yPosition);
+      yPosition += lineHeight;
+
+      doc.text(`Water Level: ${card.latestWaterLevel}`, margin, yPosition);
+      yPosition += lineHeight;
+
+      doc.text(`Battery: ${card.latestBatteryPercentage}%`, margin, yPosition);
+      yPosition += lineHeight;
+
+      doc.text(`Status: ${card.active ? "Active" : card.lowBattery ? "Low Battery" : card.anomalyDwlr ? "Abnormal Data" : "No Data"}`, margin, yPosition);
+      yPosition += 2 * lineHeight;
+
+      // Add a line break between cards
+      if (yPosition > 260) {
+        doc.addPage();
+        yPosition = margin;
+      }
+    });
+
+    // Save the generated PDF
+    doc.save("dwlr_data.pdf");
   };
 
   if (loading) return <Loading />;
