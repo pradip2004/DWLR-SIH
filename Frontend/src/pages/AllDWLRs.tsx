@@ -6,8 +6,8 @@ import {
   FaFilter,
   FaRegCircle,
   FaRegQuestionCircle,
-} from "react-icons/fa"; // Example icons from react-icons
-import CardComponent from "../components/CardComponent.jsx"; // Import the CardComponent
+} from "react-icons/fa"; 
+import CardComponent from "../components/CardComponent.jsx"; 
 import Loading from "../components/Loading.js";
 import NotData from "../components/NotData.js";
 
@@ -89,8 +89,15 @@ const AllDWLRs = () => {
                 waterLevel={card.latestWaterLevel}
                 battery={card.latestBatteryPercentage}
                 status={
-                  card.active ? "Active" : (card.lowBattery ? "Low Battery" : (card.anomalyDwlr ? "Abnormal Data" : "No Data"))
+                  card.anomalyDwlr 
+                    ? "Abnormal Data" 
+                    : card.lowBattery 
+                    ? "Low Battery" 
+                    : card.active 
+                    ? "Active" 
+                    : "No Data"
                 }
+                
               />
             </div>
           ))}

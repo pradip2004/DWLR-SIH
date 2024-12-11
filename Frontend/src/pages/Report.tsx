@@ -16,7 +16,7 @@ function Report() {
   useEffect(() => {
     const fetchStates = async () => {
       try {
-        const response = await axios.get<{ states: string[] }>('http://10.107.4.188:8000/api/v1/dwlr/states');
+        const response = await axios.get<{ states: string[] }>('http://localhost:8000/api/v1/dwlr/states');
         setStates(response.data.states);
       } catch (err) {
         console.error('Error fetching states:', err);
@@ -44,7 +44,7 @@ function Report() {
 
   const fetchDetails = async (id: string) => {
     try {
-      const response = await axios.get(`http://10.107.4.188:8000/api/v1/dwlr/details/${id}`);
+      const response = await axios.get(`http://localhost:8000/api/v1/dwlr/details/${id}`);
       return response.data;
     } catch (err) {
       console.error('Error fetching details:', err);
@@ -67,7 +67,7 @@ function Report() {
     }
 
     try {
-      const response = await axios.get("http://10.107.4.188:8000/api/v1/dwlr/download-data", {
+      const response = await axios.get("http://localhost:8000/api/v1/dwlr/download-data", {
         params: {
           state: selectedState,
           district: selectedDistrict,
