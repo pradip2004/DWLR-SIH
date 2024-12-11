@@ -21,7 +21,7 @@ function Duser() {
   }, []);
 
   return (
-    <div className="w-1/2 h-full bg-white">
+    <div className="sm:w-1/2 w-full h-full bg-white">
       <h3 className="py-3 px-4 bg-[#274C77] text-white font-semibold text-lg">Current Users</h3>
       <div className="h-72 w-full overflow-auto p-4">
         <ul className="space-y-4">

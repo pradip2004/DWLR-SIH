@@ -7,8 +7,8 @@ import {
   BellRing,
   ChartPie,
   Menu,
-} from "lucide-react"; 
-import Searchbar from "./Searchbar"; 
+} from "lucide-react";
+import Searchbar from "./Searchbar";
 
 // Define the type for the menu items
 interface MenuItem {
@@ -18,8 +18,9 @@ interface MenuItem {
 }
 
 function SideBar() {
-  const location = useLocation(); 
-  const [isCollapsed, setIsCollapsed] = useState(false); 
+  const location = useLocation();
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   const menuItems: MenuItem[] = [
     { name: "Dashboard", path: "/dashboard", icon: <LayoutDashboard /> },
@@ -33,60 +34,78 @@ function SideBar() {
     setIsCollapsed(!isCollapsed);
   };
 
-  return (
-    <div
-      className={`${
-        isCollapsed ? "w-16" : "w-60"
-      } h-full bg-[#7A8C84] rounded-tr-2xl flex flex-col transition-all duration-300 ease-in-out`}
-      id="Sidebar_container"
-    >
-      {/* Header Section */}
-      <div className="flex items-center justify-between p-6">
+  const toggleMobileSidebar = () => {
+    setIsMobileOpen(!isMobileOpen);
+  };
 
-        <div
-          className="cursor-pointer flex items-center"
-          onClick={toggleSidebar}
-          id="hamburger_menu_container"
-        >
-          <Menu className="text-white text-2xl" />
+  return (
+    <>
+      {/* Sidebar Container */}
+      <div
+        className={`${
+          isMobileOpen ? "fixed z-50 w-60" : "hidden"
+        } bg-[#7A8C84] xl:block xl:relative xl:w-${
+          isCollapsed ? "16" : "60"
+        } h-full rounded-tr-2xl flex flex-col transition-all duration-300 ease-in-out`}
+        id="Sidebar_container"
+      >
+        {/* Header Section */}
+        <div className="flex items-center p-6">
+          <div
+            className="cursor-pointer flex items-center"
+            onClick={isMobileOpen ? toggleMobileSidebar : toggleSidebar}
+            id="hamburger_menu_container"
+          >
+            <Menu className="text-white text-xl" />
+          </div>
+
+          {!isCollapsed && (
+            <h2 className="ml-2 text-white font-kameron text-lg">MENU</h2>
+          )}
         </div>
 
-
+        {/* Search Bar */}
         {!isCollapsed && (
-          <h2 className="ml-2 text-white font-kameron text-lg">MENU</h2>
+          <div className="px-4">
+            <Searchbar />
+          </div>
         )}
+
+        {/* Menu Items */}
+        <div className="flex flex-col mt-5 gap-3 px-4">
+          {menuItems.map((item) => (
+            <Link
+              to={item.path}
+              key={item.path}
+              className={`${
+                isCollapsed ? "justify-center px-5" : "gap-3 px-4"
+              } flex items-center py-3 text-white rounded-lg transition duration-300 ease-in-out w-full ${
+                location.pathname === item.path
+                  ? "bg-[#FFC107]"
+                  : "hover:bg-[#FFC107]"
+              }`}
+            >
+              <span className="text-white text-xl">{item.icon}</span>
+              {!isCollapsed && (
+                <span className="text-left text-sm">{item.name}</span>
+              )}
+            </Link>
+          ))}
+        </div>
       </div>
 
- 
-      {!isCollapsed && (
-        <div className="px-4">
-          <Searchbar />
+      {/* Mobile Hamburger */}
+      {!isMobileOpen && ( // Hide the button when the sidebar is open
+        <div className="xl:hidden fixed top-[11%] left-4 z-50">
+          <button
+            onClick={toggleMobileSidebar}
+            className="text-white bg-[#7A8C84] p-2 rounded-full"
+          >
+            <Menu className="text-xl" />
+          </button>
         </div>
       )}
-
-      {/* Menu Items */}
-      <div className="flex flex-col mt-5 gap-3 px-4">
-        {menuItems.map((item) => (
-          <Link
-            to={item.path}
-            key={item.path}
-            className={`${
-              isCollapsed ? "justify-center px-5" : "gap-3 px-4"
-            } flex items-center py-3 text-white rounded-lg transition duration-300 ease-in-out w-full ${
-              location.pathname === item.path
-                ? "bg-[#FFC107]"
-                : "hover:bg-[#FFC107]"
-            }`}
-          >
-            <span className="text-white text-xl">{item.icon}</span>
-            {/* Menu Text: Visible only when expanded */}
-            {!isCollapsed && (
-              <span className="text-left text-sm">{item.name}</span>
-            )}
-          </Link>
-        ))}
-      </div>
-    </div>
+    </>
   );
 }
 

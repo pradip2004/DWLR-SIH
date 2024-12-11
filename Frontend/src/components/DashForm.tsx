@@ -36,7 +36,7 @@ function DashForm() {
   };
 
   return (
-    <div className="w-1/2 h-full flex justify-center items-center bg-white">
+    <div className="sm:w-1/2 w-full  h-full flex justify-center items-center bg-white">
       <div className="w-full h-full p-8 space-y-6">
         <form onSubmit={handleSubmit}>
           <div className="mb-4 mt-5">

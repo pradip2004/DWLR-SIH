@@ -73,56 +73,62 @@ const Analytics: React.FC = () => {
   const isActiveTab = (path: string) => location.pathname === path;
 
   return (
-    <div className="main w-full min-h-screen mb-12 overflow-scroll bg-[#DEFFFC] p-5">
+    <div className="main w-full min-h-screen h-auto mb-12 overflow-scroll bg-[#DEFFFC] p-5">
       {/* Search and Navigation */}
-      <div className="flex space-x-4 mt-8 gap-5 items-center">
-        {/* Navigation Buttons */}
-        <div className="flex space-x-4">
-          <button
-            className={`py-2 px-4 rounded-lg transition duration-300 ${activeTab === "aiSahayak"
-                ? "bg-yellow-500 text-black"
-                : "bg-[#274C77] text-white hover:bg-blue-700"
-              }`}
-            onClick={() => {
-              setActiveTab("aiSahayak");
-              navigate("/analytics");
-            }}
-          >
-            AI Sahayak
-          </button>
-          <button
-            className={`py-2 px-4 rounded-lg transition duration-300 ${activeTab === "trainingModel"
-                ? "bg-yellow-500 text-black"
-                : "bg-[#274C77] text-white hover:bg-blue-700"
-              }`}
-            onClick={() => {
-              setActiveTab("trainingModel");
-            }}
-          >
-            Training Model
-          </button>
-        </div>
+      <div className="flex flex-col xl:flex-row xl:justify-between xl:items-center xl:space-x-4 mt-8 gap-5">
+  {/* Navigation Buttons */}
+  <div className="flex flex-col xl:flex-row xl:space-x-4 w-full xl:w-auto gap-4">
+    <button
+      className={`py-2 px-4 w-full xl:w-auto rounded-lg transition duration-300 ${
+        activeTab === "aiSahayak"
+          ? "bg-yellow-500 text-black"
+          : "bg-[#274C77] text-white hover:bg-blue-700"
+      }`}
+      onClick={() => {
+        setActiveTab("aiSahayak");
+        navigate("/analytics");
+      }}
+    >
+      AI Sahayak
+    </button>
+    <button
+      className={`py-2 px-4 w-full xl:w-auto rounded-lg transition duration-300 ${
+        activeTab === "trainingModel"
+          ? "bg-yellow-500 text-black"
+          : "bg-[#274C77] text-white hover:bg-blue-700"
+      }`}
+      onClick={() => {
+        setActiveTab("trainingModel");
+      }}
+    >
+      Training Model
+    </button>
+  </div>
 
-        {/* Search Bar */}
-        <div className="relative flex items-center">
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={handleSearchChange}
-            className="py-2 px-4 rounded-lg border border-[#274C77] text-gray-700 w-[250px] focus:outline-none focus:ring-2 focus:ring-[#274C77]"
-            placeholder="Enter DWLR id (e.g., 1, 2..)"
-          />
-          <span className="absolute right-3 text-[#274C77]">
-            <FaSearch size={20} />
-          </span>
-        </div>
-        <button
-          className="py-2 px-4 rounded-lg bg-[#274C77] text-white hover:bg-blue-700 transition duration-300"
-          onClick={handleSearchClick}
-        >
-          Search
-        </button>
-      </div>
+  {/* Search Bar */}
+  <div className="flex flex-col xl:flex-row xl:space-x-4 w-full xl:w-auto gap-4 xl:items-center">
+    <div className="relative flex items-center w-full xl:w-auto">
+      <input
+        type="text"
+        value={searchQuery}
+        onChange={handleSearchChange}
+        className="py-2 px-4 w-full xl:w-[250px] rounded-lg border border-[#274C77] text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#274C77]"
+        placeholder="Enter DWLR id (e.g., 1, 2..)"
+      />
+      <span className="absolute right-3 text-[#274C77]">
+        <FaSearch size={20} />
+      </span>
+    </div>
+    <button
+      className="py-2 px-4 w-full xl:w-auto rounded-lg bg-[#274C77] text-white hover:bg-blue-700 transition duration-300"
+      onClick={handleSearchClick}
+    >
+      Search
+    </button>
+  </div>
+</div>
+
+
 
       {/* Error Message */}
       {error && <NotData />}
@@ -131,13 +137,13 @@ const Analytics: React.FC = () => {
       <div >
       {activeTab === "aiSahayak" ? (
         <>
-          <div className="water-level w-full h-[100vh] flex gap-10 justify-between mt-10">
-            <CurrentWater id={searchValue} data={currentWaterData} loading={loading} />
-            <FutureWater id={searchValue} data={futureWaterData} loading={loading} />
-          </div>
+<div className="water-level w-full h-[100vh] flex flex-col xl:flex-row gap-10 justify-between mt-10">
+  <CurrentWater id={searchValue} data={currentWaterData} loading={loading} />
+  <FutureWater id={searchValue} data={futureWaterData} loading={loading} />
+</div>
 
         
-          <div className="battery-level w-full flex gap-10 justify-between h-[60vh] mt-10">
+<div className="battery-level w-full flex flex-col xl:flex-row gap-10 justify-between h-auto pb-10 mb-10 mt-10">
             <CurrentBatteryLevel id={searchValue} data={batteryData} loading={loading} />
             <FutureBatteryLevel data={batteryData} loading={loading} />
           </div>

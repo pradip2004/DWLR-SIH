@@ -53,7 +53,7 @@ const Dashboard = () => {
     fetchHighlightedDistricts();
   }, []);
   
-  
+   
 
   const fetchAndUpdateData = async (queryKey: string, queryValue: string) => {
     try {
@@ -110,7 +110,7 @@ const Dashboard = () => {
     return (
       <div className="w-[100vw]">
         <div className="w-full h-[90vh] p-2 bg-[#DEFFFC] flex flex-wrap justify-evenly gap-2 overflow-scroll">
-        <div className="w-full h-[5vh] flex items-center justify-between px-4">
+        <div className="w-full h-[10vh] xl:h-[5vh] flex flex-col xl:flex-row items-center justify-between px-4">
           {/* State Dropdown */}
           <div className="relative w-1/4 min-w-[200px]">
             <button
@@ -160,25 +160,25 @@ const Dashboard = () => {
         </div>
 
           <div className="w-full min-h-screen flex flex-col ">
-            <div className="flex gap-2 w-full mt-4 h-auto ">
-              <div className="w-1/2 flex flex-col h-[90vh] bg-white rounded-md overflow-hidden shadow-lg">
+            <div className="flex gap-2 w-full flex-col sm:flex-row mt-4 h-auto ">
+              <div className="sm:w-1/2 w-full flex flex-col h-[90vh] bg-white rounded-md overflow-hidden shadow-lg">
                 <DwlrCounting />
                 <LineGraphDwCounting />
               </div>
-              <div className="w-1/2 h-[90vh] p-2 bg-white rounded-md shadow-lg">
-                <div className="shadow-xl w-full h-full">
+              <div className="sm:w-1/2 w-full h-[90vh] p-2 bg-white rounded-md shadow-lg">
+                <div className="shadow-xl w-full  h-full">
                   <DashFchart selectedState={selectedState} selectedCity={selectedCity}/>
                   <DashSchart selectedState={selectedState} selectedCity={selectedCity}/>
                 </div>
               </div>
             </div>
-            <div className="flex gap-2 w-full mt-4 h-auto">
-              <div className="w-1/2 h-full bg-white rounded-md shadow-lg">
+            <div className="flex gap-2 w-full  sm:flex-row flex-col mt-4 h-auto">
+              <div className="sm:w-1/2 w-full h-full bg-white rounded-md shadow-lg">
               <DashIndia selectedState={selectedState} districtsToHighlight={highlightedDistricts} />
 
 
               </div>
-              <div className="w-1/2 h-full flex bg-white rounded-md shadow-lg">
+              <div className="sm:w-1/2 w-full h-full flex sm:flex-row flex-col bg-white rounded-md shadow-lg">
                 <DashForm />
                 <Duser />
               </div>
