@@ -9,6 +9,7 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import axios from "axios";
 import Footer from "@/component/Footer";
+import Header from "@/component/Header";
 
 export default function DWLR() {
     const router = useRouter();
@@ -17,7 +18,7 @@ export default function DWLR() {
 
     // Fetch data from API on component mount
     useEffect(() => {
-        axios.get('http://192.168.137.83:8000/api/v1/dwlr/all')
+        axios.get('http://10.150.21.189:8000/api/v1/dwlr/all')
             .then(response => setCardData(response.data))
             .catch(error => console.error("Error fetching data:", error));
     }, []);
@@ -64,15 +65,12 @@ export default function DWLR() {
             style={{ flex: 1 }}
         >
             {/* Header */}
-            <View style={{ height: 60, flexDirection: "row", backgroundColor: "white", paddingLeft: 15 }}>
-                <Image source={require("../assets/images/image1.png")} style={{ height: 46, width: 99 }} />
-                <Image source={require("../assets/images/image2.png")} style={{ height: 27, width: 45, left: 140, top: 8 }} />
-                <Image source={require("../assets/images/image3.png")} style={{ height: 30, width: 55, left: 160, top: 8 }} />
-            </View>
+            
+            <Header/>
 
             {/* Filter Options */}
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                <View style={{ flexDirection: "row", marginVertical: 20 }}>
+                <View style={{ flexDirection: "row", marginTop:80,marginVertical: 20 }}>
                     {["All", "No Data", "Low Battery", "Abnormal Data", "Active"].map(option => (
                         <TouchableOpacity key={option} onPress={() => handleOptionPress(option)}>
                             <View style={getBoxStyle(option)}>

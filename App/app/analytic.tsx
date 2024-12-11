@@ -70,7 +70,7 @@ export default function Analytic() {
     >
       <Header />
 
-      <ScrollView style={{ marginBottom: 71 }}>
+      <ScrollView style={{ marginTop:60,marginBottom: 71 }}>
         {/* AI SAHAYAK  */}
         <View
           style={{

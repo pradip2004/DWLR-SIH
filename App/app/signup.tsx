@@ -49,7 +49,7 @@ export default function Signup() {
     try {
       setLoading(true);
       const response = await axios.post(
-        "http://192.168.137.83:8000/api/auth/signup", // Change this URL if backend is hosted online
+        "http://10.150.21.189:8000/api/auth/signup", // Change this URL if backend is hosted online
         {
           name: fullName,
           email,

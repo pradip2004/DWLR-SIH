@@ -108,6 +108,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#274C77",
     flexShrink: 1,
+    fontFamily: 'Kameron-SemiBold',
   },
   estimatedDate: {
     fontSize: 16,
@@ -156,12 +157,14 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#F44336",
     flexShrink: 1,
+    fontFamily: 'Kameron-SemiBold',
   },
   alertDescription: {
     fontSize: 14,
     color: "#757575",
     marginTop: 4,
     flexShrink: 1,
+    fontFamily: 'Kameron-SemiBold',
   },
   statusContainer: {
     flexDirection: "row",

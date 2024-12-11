@@ -360,7 +360,7 @@ export default function LastBoxDash() {
 //             <View style={{ width: screenWidth + 50, alignItems: "center" }}>
 //                 {chartType === "pie" ? (
 //                     <PieChart
-//                         data={pieData}
+//                         data={pieData}               
 //                         width={screenWidth}
 //                         height={220}
 //                         chartConfig={chartConfig}

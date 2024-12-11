@@ -61,7 +61,7 @@ export default function Dashboard() {
 
     const fetchStates = async () => {
         try {
-            const response = await axios.get("http://192.168.137.83:8000/api/v1/dwlr/states");
+            const response = await axios.get("http://10.150.21.189:8000/api/v1/dwlr/states");
             setStates(response.data.states);
         } catch (error) {
             console.error("Error fetching states:", error);
@@ -71,7 +71,7 @@ export default function Dashboard() {
     const fetchDistricts = async (state: any) => {
         try {
             setLoading(true);
-            const response = await axios.get(`http://192.168.137.83:8000/api/v1/dwlr/districts?state=${state}`);
+            const response = await axios.get(`http://10.150.21.189:8000/api/v1/dwlr/districts?state=${state}`);
             setDistricts(response.data.districts);
             setLoading(false);
         } catch (error) {
@@ -83,7 +83,7 @@ export default function Dashboard() {
     const fetchDwlrData = async (queryKey: string, queryValue: string) => {
         try {
             setLoading(true);
-            const response = await axios.get(`http://192.168.137.83:8000/api/v1/dwlr/info?${queryKey}=${queryValue}`);
+            const response = await axios.get(`http://10.150.21.189:8000/api/v1/dwlr/info?${queryKey}=${queryValue}`);
             console.log("DWLR Data Response:", response.data); // Debugging log
             setDwlrData(response.data);
             setLoading(false);
@@ -169,7 +169,7 @@ export default function Dashboard() {
             <Header />
 
             {/* Dropdowns */}
-            <View style={{ flexDirection: "row", justifyContent: "space-evenly", marginVertical: 20 }}>
+            <View style={{ flexDirection: "row", justifyContent: "space-evenly", marginTop:80,marginVertical: 20 }}>
                 <TouchableOpacity
                     style={{
                         flexDirection: "row",
@@ -341,7 +341,7 @@ export default function Dashboard() {
 
                 {/* Second Box */}
                 <SecondBox>
-                    <View style={{ width: '100%', backgroundColor: '#274C77', padding: 5, paddingLeft: 20  , borderTopLeftRadius:10 , borderTopRightRadius:10}}>
+                    <View style={{ width: '100%', backgroundColor: '#274C77', padding: 5, paddingLeft: 20, borderTopLeftRadius: 10, borderTopRightRadius: 10 }}>
                         <Text style={{ fontSize: 22, fontFamily: 'Kameron-SemiBold', color: '#fff', marginBottom: 10 }}>
                             {selectedState || "State Name"}
                         </Text>
@@ -355,8 +355,8 @@ export default function Dashboard() {
 
                 {/* Third box */}
                 <SecondBox>
-                    <View style={{ width: '100%', backgroundColor: '#274C77', padding: 5, paddingLeft: 20 , borderTopLeftRadius:10 , borderTopRightRadius:10  }}>
-                        <Text style={{ fontSize: 22, fontFamily: 'Kameron-SemiBold', color: '#fff',  marginBottom: 10 }}>
+                    <View style={{ width: '100%', backgroundColor: '#274C77', padding: 5, paddingLeft: 20, borderTopLeftRadius: 10, borderTopRightRadius: 10 }}>
+                        <Text style={{ fontSize: 22, fontFamily: 'Kameron-SemiBold', color: '#fff', marginBottom: 10 }}>
                             {selectedState || "State Name"}
                         </Text>
 
@@ -377,7 +377,7 @@ export default function Dashboard() {
 
                 {/* fifth box  */}
                 <SecondBox>
-                <LastBoxDash/>
+                    <LastBoxDash />
                 </SecondBox>
 
 

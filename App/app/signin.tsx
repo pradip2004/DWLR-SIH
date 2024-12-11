@@ -52,7 +52,7 @@ export default function SignIn() {
     }
 
     try {
-      const response = await axios.post("http://192.168.137.83:8000/api/auth/signin", {
+      const response = await axios.post("http://10.150.21.189:8000/api/auth/signin", {
         email,
         password,
       });
@@ -119,8 +119,7 @@ export default function SignIn() {
         <TouchableOpacity
           style={styles.signInButton2}
           onPress={() => {
-            Linking.openURL("http://192.168.137.83:8000/api/auth/google").catch((err) =>
-              console.error("Failed to open URL:", err)
+            Linking.openURL("http://10.150.21.189:8000/api/auth/google").catch((err) =>              console.error("Failed to open URL:", err)
             );
           }}
         >

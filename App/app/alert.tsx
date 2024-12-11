@@ -11,7 +11,7 @@ import { useRouter } from "expo-router";
 import Footer from '@/component/Footer';
 import axios from 'axios'; // Make sure to import axios
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
-
+import Header from '@/component/Header';
 
 export default function Alert() {
   const router = useRouter();
@@ -25,7 +25,7 @@ export default function Alert() {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get('http://192.168.56.24:8000/api/v1/dwlr/coordinates-info'); // Backend API URL
+      const response = await axios.get('http://10.150.21.189:8000/api/v1/dwlr/coordinates-info'); // Backend API URL
       setProblematicDwlrs(response.data); // Set problematic DWLRs data
     } catch (err) {
       setError('Failed to load problematic DWLRs.');
@@ -60,11 +60,7 @@ export default function Alert() {
       style={styles.gradient}
     >
       {/* Header with Images */}
-      <View style={styles.nav}>
-        <Image source={require('./../assets/images/image 7.png')} style={styles.headerImage} />
-        <Image source={require('./../assets/images/image 7 (1).png')} style={styles.header1Image} />
-        <Image source={require('./../assets/images/image 7 (2).png')} style={styles.header2Image} />
-      </View>
+      <Header/>
 
       <View contentContainerStyle={styles.scrollContent}>
         <View style={styles.container2}>

@@ -91,7 +91,7 @@ export default function Report() {
             <SafeAreaView style={styles.container}>
                 {/* Header Section */}
                 <View style={styles.nav}>
-                    <Image source={require('./../assets/images/image 7.png')} style={styles.headerImage} />
+                    <Image source={require('./../assets/images/logo.png')} style={styles.headerImage} />
                     <Image source={require('./../assets/images/image 7 (1).png')} style={styles.header1Image} />
                     <Image source={require('./../assets/images/image 7 (2).png')} style={styles.header2Image} />
                 </View>
